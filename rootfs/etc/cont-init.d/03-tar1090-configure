@@ -1,0 +1,22 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+
+srcdir=/run/readsb
+service=readsb
+html_path=${TAR1090_INSTALL_DIR}/html
+
+# Modify nginx.conf
+sed -i.original \
+  -e "s?SOURCE_DIR?$srcdir?g" \
+  -e "s?SERVICE?$service?g" \
+  -e "s?/INSTANCE/?/?g" \
+  -e "s?/INSTANCE?/?g" \
+  -e "s?HTMLPATH?$html_path?g" \
+  "${TAR1090_INSTALL_DIR}/nginx.conf"
+sed -i '/location \/data\/ {/a \ \ access_log off;' \
+    "${TAR1090_INSTALL_DIR}/nginx.conf"
+
+# Modify tar1090 settings
+sed -i.original \
+  -e 's/skyview978/skyaware978/' \
+  "${TAR1090_INSTALL_DIR}/default"

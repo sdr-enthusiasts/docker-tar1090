@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+exec \
+  /usr/local/bin/readsb \
+    --net-only \
+    --write-json=/run/readsb \
+    --quiet \
+    --stats-every=3600 \
+    --net-connector="${BEASTHOST}","${BEASTPORT}",beast_in \
+    2>&1 | awk -W interactive '{print "[readsb] " $0}'

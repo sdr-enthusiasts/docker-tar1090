@@ -1,0 +1,23 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+
+# Remove old tar1090
+rm -rf "${TAR1090_INSTALL_DIR}"
+
+# Recreate directory
+mkdir -p "${TAR1090_INSTALL_DIR}"
+
+# Copy files into install directory
+cd "${GITPATH_TAR1090}" || exit 1
+cp -v ./nginx.conf "${TAR1090_INSTALL_DIR}"
+cp -v ./install.sh "${TAR1090_INSTALL_DIR}"
+cp -v uninstall.sh "${TAR1090_INSTALL_DIR}"
+cp -v LICENSE "${TAR1090_INSTALL_DIR}"
+cp -v README.md "${TAR1090_INSTALL_DIR}"
+cp -Rv html "${TAR1090_INSTALL_DIR}"
+cp -v tar1090.sh "${TAR1090_INSTALL_DIR}"
+cp -v default "${TAR1090_INSTALL_DIR}"
+
+# Copy database
+cp -Rv "${GITPATH_TAR1090_DB}/db" "${TAR1090_INSTALL_DIR}/html"
+mv "${TAR1090_INSTALL_DIR}/html/db" "${TAR1090_INSTALL_DIR}/html/db2"
