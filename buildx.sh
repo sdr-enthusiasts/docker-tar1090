@@ -1,5 +1,5 @@
-#!/usr/bin/env sh
-#shellcheck shell=sh
+#!/usr/bin/env bash
+#shellcheck shell=bash
 
 REPO=mikenye
 IMAGE=tar1090
@@ -17,4 +17,4 @@ docker pull "${REPO}/${IMAGE}:latest"
 VERSION=$(docker run --rm --entrypoint cat "${REPO}/${IMAGE}:latest" /VERSIONS | grep -v tar1090-db | grep tar1090 | cut -d " " -f 2)
 
 # Build & push version-specific
-docker buildx build -t "${REPO}/${IMAGE}:${VERSION:0:14}" --compress --push --platform "${PLATFORMS}" .
+docker buildx build -t "${REPO}"/"${IMAGE}":"${VERSION:0:14}" --compress --push --platform "${PLATFORMS}" .
