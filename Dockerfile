@@ -60,3 +60,5 @@ RUN set -x && \
 COPY rootfs/ /
 
 ENTRYPOINT [ "/init" ]
+
+EXPOSE 80/tcp
