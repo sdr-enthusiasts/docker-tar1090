@@ -33,6 +33,7 @@ RUN set -x && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
     echo "========== Building readsb ==========" && \
+    echo "Cloning will take some time, this is a big repo...." && \
     git clone https://github.com/Mictronics/readsb.git /src/readsb && \
     cd /src/readsb && \
     export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
