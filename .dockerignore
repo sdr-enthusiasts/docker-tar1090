@@ -4,3 +4,4 @@
 .gitattributes
 READMETEMPLATE.md
 README.md
+buildx.sh
