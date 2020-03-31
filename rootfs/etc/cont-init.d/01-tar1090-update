@@ -13,8 +13,8 @@ export DB_VERSION
 
 # Attempt to update tar1090
 cd "${GITPATH_TAR1090}" || exit 1
-git fetch origin master
-git reset --hard origin/master
+git fetch origin master || exit 0
+git reset --hard origin/master || exit 0
 
 # Print tar1090 version
 TAR1090_VERSION=$(git rev-parse --short HEAD)
