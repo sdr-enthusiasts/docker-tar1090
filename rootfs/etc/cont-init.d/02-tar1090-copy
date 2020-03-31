@@ -9,15 +9,15 @@ mkdir -p "${TAR1090_INSTALL_DIR}"
 
 # Copy files into install directory
 cd "${GITPATH_TAR1090}" || exit 1
-cp -v ./nginx.conf "${TAR1090_INSTALL_DIR}"
-cp -v ./install.sh "${TAR1090_INSTALL_DIR}"
-cp -v uninstall.sh "${TAR1090_INSTALL_DIR}"
-cp -v LICENSE "${TAR1090_INSTALL_DIR}"
-cp -v README.md "${TAR1090_INSTALL_DIR}"
-cp -Rv html "${TAR1090_INSTALL_DIR}"
-cp -v tar1090.sh "${TAR1090_INSTALL_DIR}"
-cp -v default "${TAR1090_INSTALL_DIR}"
+cp ./nginx.conf "${TAR1090_INSTALL_DIR}"
+cp ./install.sh "${TAR1090_INSTALL_DIR}"
+cp uninstall.sh "${TAR1090_INSTALL_DIR}"
+cp LICENSE "${TAR1090_INSTALL_DIR}"
+cp README.md "${TAR1090_INSTALL_DIR}"
+cp -R html "${TAR1090_INSTALL_DIR}"
+cp tar1090.sh "${TAR1090_INSTALL_DIR}"
+cp default "${TAR1090_INSTALL_DIR}"
 
 # Copy database
-cp -Rv "${GITPATH_TAR1090_DB}/db" "${TAR1090_INSTALL_DIR}/html"
+cp -R "${GITPATH_TAR1090_DB}/db" "${TAR1090_INSTALL_DIR}/html"
 mv "${TAR1090_INSTALL_DIR}/html/db" "${TAR1090_INSTALL_DIR}/html/db2"

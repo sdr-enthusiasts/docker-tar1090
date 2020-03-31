@@ -2,20 +2,20 @@
 # shellcheck shell=sh
 
 cd "${TAR1090_INSTALL_DIR}/html" || exit 1
-gzip -v -k -9 dbloader.js
-gzip -v -k -9 defaults.js
-gzip -v -k -9 early.js
-gzip -v -k -9 flags.js
-gzip -v -k -9 formatter.js
-gzip -v -k -9 layers.js
-gzip -v -k -9 markers.js
-gzip -v -k -9 planeObject.js
-gzip -v -k -9 registrations.js
-gzip -v -k -9 script.js
-gzip -v -k -9 colors.css
-gzip -v -k -9 style.css
+gzip -k -9 dbloader.js
+gzip -k -9 defaults.js
+gzip -k -9 early.js
+gzip -k -9 flags.js
+gzip -k -9 formatter.js
+gzip -k -9 layers.js
+gzip -k -9 markers.js
+gzip -k -9 planeObject.js
+gzip -k -9 registrations.js
+gzip -k -9 script.js
+gzip -k -9 colors.css
+gzip -k -9 style.css
 
-gzip -v -k -9 jquery/*.js
-gzip -v -k -9 ol/*.js
+gzip -k -9 jquery/*.js
+gzip -k -9 ol/*.js
 
-gzip -v -k -9 db2/*.js
+gzip -k -9 db2/*.js
