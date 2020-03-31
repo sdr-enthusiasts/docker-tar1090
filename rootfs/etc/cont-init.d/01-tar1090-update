@@ -3,8 +3,8 @@
 
 # Attempt to update tar1090 database
 cd "${GITPATH_TAR1090_DB}" || exit 1
-git fetch --depth 1 origin master || exit 0
-git reset --hard origin/master || exit 0
+git fetch --depth 1 origin master > /dev/null 2>&1 || exit 0
+git reset --hard origin/master > /dev/null 2>&1 || exit 0
 
 # Print tar1090 database version
 DB_VERSION=$(git rev-parse --short HEAD)
@@ -13,8 +13,8 @@ export DB_VERSION
 
 # Attempt to update tar1090
 cd "${GITPATH_TAR1090}" || exit 1
-git fetch origin master || exit 0
-git reset --hard origin/master || exit 0
+git fetch origin master > /dev/null 2>&1 || exit 0
+git reset --hard origin/master > /dev/null 2>&1 || exit 0
 
 # Print tar1090 version
 TAR1090_VERSION=$(git rev-parse --short HEAD)
