@@ -2,6 +2,7 @@ FROM debian:stable-slim
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     BEASTPORT=30005 \
+    BRANCH_READSB=v3.8.2 \
     GITPATH_TAR1090=/opt/tar1090 \
     GITPATH_TAR1090_DB=/opt/tar1090-db \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090
@@ -36,7 +37,7 @@ RUN set -x && \
     echo "Cloning will take some time, this is a big repo...." && \
     git clone https://github.com/Mictronics/readsb.git /src/readsb && \
     cd /src/readsb && \
-    export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
+    #export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
     git checkout "${BRANCH_READSB}" && \
     echo "readsb ${BRANCH_READSB}" >> /VERSIONS && \
     make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no && \
