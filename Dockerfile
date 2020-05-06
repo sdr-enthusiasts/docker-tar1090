@@ -5,7 +5,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     BRANCH_READSB=v3.8.3 \
     GITPATH_TAR1090=/opt/tar1090 \
     GITPATH_TAR1090_DB=/opt/tar1090-db \
-    TAR1090_INSTALL_DIR=/usr/local/share/tar1090
+    TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
+    MLATPORT=30105
 
 RUN set -x && \
     apt-get update && \

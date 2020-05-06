@@ -11,19 +11,19 @@ At the time of writing this README, it provides:
 * Multiple aircraft can be selected
 * Labels with the callsign can be switched on and off
 
-This container receives Beast data from a provider such as `dump1090` or `readsb`, and provides the `tar1090` web interface. It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
+This image:
+
+* Receives Beast data from a provider such as `dump1090` or `readsb`
+* Optionally, receives MLAT data from a provider such as `mlat-client`
+* Provides the `tar1090` web interface.
+
+It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
 
 ## Supported tags and respective Dockerfiles
 
 * `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`. This image is built nightly from the `master` branch `Dockerfile` for all supported architectures.
 * `development` (`master` branch, `Dockerfile`, `amd64` architecture only, built on commit, not recommended for production)
 * Specific version tags are available if required, however these are not regularly updated. It is generally recommended to run latest.
-
-## Changelog
-
-### 20200331
-
-* Original Image
 
 ## Multi Architecture Support
 
@@ -35,6 +35,11 @@ This container receives Beast data from a provider such as `dump1090` or `readsb
 
 You will need a source of Beast data. This could be an RPi running PiAware, the [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image or [`mikenye/readsb`](https://hub.docker.com/r/mikenye/readsb).
 
+Optionally, you will need a source of MLAT data. This could be:
+* ['mikenye/adsbexchange`](https://hub.docker.com/r/mikenye/adsbexchange) image
+* [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image
+* Basically anything running `mlat-client` listening for beast connections (ie: `--results beast,listen,30105`)
+
 ## Up-and-Running with `docker run`
 
 ```shell
@@ -43,12 +48,13 @@ docker run -d \
     -p 8078:80 \
     -e TZ=<TIMEZONE> \
     -e BEASTHOST=<BEASTHOST> \
+    -e MLATHOST=<MLATHOST> \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
     mikenye/tar1090:latest
 ```
 
-Replacing `TIMEZONE` with your timezone, and `BEASTHOST` with the IP address of a host that can provide Beast data.
+Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a host that can provide Beast data, and `MLATHOST` with the IP address of a host that can provide MLAT data.
 
 For example:
 
@@ -58,6 +64,7 @@ docker run -d \
     -p 8078:80 \
     -e TZ=Australia/Perth \
     -e BEASTHOST=readsb \
+    -e MLATHOST=adsbx \
     -e LAT=-33.33333 \
     -e LONG=111.11111 \
     mikenye/tar1090:latest
@@ -85,6 +92,7 @@ services:
     environment:
       - TZ=Australia/Perth
       - BEASTHOST=readsb
+      - MLATHOST=adsbx
       - LAT=-33.33333
       - LONG=111.11111
     networks:
@@ -151,6 +159,8 @@ services:
       - 8078:80
 ```
 
+*Note*: the example above excludes `MLATHOST` as `readsb` alone cannot provide MLAT data. You'll need a feeder container for this.
+
 For an explanation of the `mikenye/readsb` image's configuration, see that image's readme.
 
 ## Ports
@@ -158,6 +168,8 @@ For an explanation of the `mikenye/readsb` image's configuration, see that image
 ### Outgoing
 
 This container will try to connect to the `BEASTHOST` on TCP port `30005` by default. This can be changed by setting the `BEASTPORT` environment variable.
+
+If `MLATHOST` is set, this container will try to connecto the `MLATHOST` on TCP port `30105` by default. This can be changed to setting the `MLATPORT` environment variable.
 
 ### Incoming
 
@@ -170,9 +182,25 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | BEASTHOST | Required. IP/Hostname of a Mode-S/Beast provider (`dump1090`/`readsb`) | |
 | BEASTPORT | Optional. TCP port number of Mode-S/Beast provider (`dump1090`/`readsb`) | `30005` |
 | LAT | Optional. The latitude of your antenna | |
-| LAT | Optional. The longitude of your antenna | |
+| LONG | Optional. The longitude of your antenna | |
+| MLATHOST | Optional. IP/Hostname of an MLAT provider (`mlat-client`) | |
+| MLATPORT | Optional. TCP port number of an MLAT provider (`mlat-client`) | 30105 |
 | TZ | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
 
 ## Logging
 
 All logs are to the container's stdout and can be viewed with `docker logs [-f] container`.
+
+## Getting help
+
+Please feel free to [open an issue on the project's GitHub](https://github.com/mikenye/docker-tar1090/issues).
+
+## Changelog
+
+### 20200506
+
+* Add `MLATHOST` and `MLATPORT` options
+
+### 20200331
+
+* Original Image
