@@ -43,6 +43,8 @@ docker run -d \
     -p 8078:80 \
     -e TZ=<TIMEZONE> \
     -e BEASTHOST=<BEASTHOST> \
+    -e LAT=xx.xxxxx \
+    -e LONG=xx.xxxxx \
     mikenye/tar1090:latest
 ```
 
@@ -56,6 +58,8 @@ docker run -d \
     -p 8078:80 \
     -e TZ=Australia/Perth \
     -e BEASTHOST=readsb \
+    -e LAT=-33.33333 \
+    -e LONG=111.11111 \
     mikenye/tar1090:latest
 ```
 
@@ -81,6 +85,8 @@ services:
     environment:
       - TZ=Australia/Perth
       - BEASTHOST=readsb
+      - LAT=-33.33333
+      - LONG=111.11111
     networks:
       - adsbnet
     ports:
@@ -137,6 +143,8 @@ services:
     environment:
       - TZ=Australia/Perth
       - BEASTHOST=readsb
+      - LAT=-33.33333
+      - LONG=111.11111
     networks:
       - adsbnet
     ports:
@@ -161,6 +169,8 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 |----------------------|---------|---------|
 | BEASTHOST | Required. IP/Hostname of a Mode-S/Beast provider (`dump1090`/`readsb`) | |
 | BEASTPORT | Optional. TCP port number of Mode-S/Beast provider (`dump1090`/`readsb`) | `30005` |
+| LAT | Optional. The latitude of your antenna | |
+| LAT | Optional. The longitude of your antenna | |
 | TZ | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
 
 ## Logging
