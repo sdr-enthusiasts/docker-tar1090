@@ -1,11 +1,22 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# Define colours
+YELLOW='\033[1;33m'
+LIGHTRED='\033[1;31m'
+NOCOLOR='\033[0m'
 
 # Check to make sure the correct command line arguments have been set
 EXITCODE=0
 if [ -z "${BEASTHOST}" ]; then
-  echo "ERROR: BEASTHOST environment variable not set"
+  echo -e "${LIGHTRED}ERROR: BEASTHOST environment variable not set${NOCOLOR}"
   EXITCODE=1
+fi
+if [ -z "${LAT}" ]; then
+  echo -e "${YELLOW}WARNING: LAT environment variable not set, Home location will not be accurate${NOCOLOR}"
+fi
+if [ -z "${LONG}" ]; then
+  echo -e "${YELLOW}WARNING: LONG environment variable not set, Home location will not be accurate${NOCOLOR}"
 fi
 if [ $EXITCODE -ne 0 ]; then
   exit 1
@@ -13,7 +24,7 @@ fi
 
 # Set up timezone
 if [ -z "${TZ}" ]; then
-  echo "WARNING: TZ environment variable not set"
+  echo "${YELLOW}WARNING: TZ environment variable not set${NOCOLOR}"
 else
   ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" >/etc/timezone
 fi
