@@ -13,6 +13,7 @@ RUN set -x && \
     apt-get install --no-install-recommends -y \
       ca-certificates \
       curl \
+      file \
       gcc \
       git \
       gnupg \
@@ -50,6 +51,7 @@ RUN set -x && \
     echo "========== Clean-up ==========" && \
     apt-get remove -y \
       curl \
+      file \
       gcc \
       gnupg \
       libc-dev \
