@@ -23,6 +23,7 @@ RUN set -x && \
       ncurses-dev \
       nginx-light \
       p7zip-full \
+      wget \
       && \
     rm /etc/nginx/sites-enabled/default && \
     echo "========== Install tar1090-db ==========" && \

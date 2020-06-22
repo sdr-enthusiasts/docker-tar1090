@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline
+if [ ! -z "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
+    wget -O \
+        /usr/local/share/tar1090/html/upintheair.json \
+        "http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=12192"
+fi
