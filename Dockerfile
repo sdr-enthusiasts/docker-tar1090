@@ -23,7 +23,6 @@ RUN set -x && \
       ncurses-dev \
       nginx-light \
       p7zip-full \
-      wget \
       && \
     rm /etc/nginx/sites-enabled/default && \
     echo "========== Install tar1090-db ==========" && \
@@ -51,7 +50,6 @@ RUN set -x && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
     echo "========== Clean-up ==========" && \
     apt-get remove -y \
-      curl \
       file \
       gcc \
       gnupg \
