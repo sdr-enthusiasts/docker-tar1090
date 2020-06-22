@@ -178,13 +178,14 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
-| BEASTHOST | Required. IP/Hostname of a Mode-S/Beast provider (`dump1090`/`readsb`) | |
-| BEASTPORT | Optional. TCP port number of Mode-S/Beast provider (`dump1090`/`readsb`) | `30005` |
-| LAT | Optional. The latitude of your antenna | |
-| LONG | Optional. The longitude of your antenna | |
-| MLATHOST | Optional. IP/Hostname of an MLAT provider (`mlat-client`) | |
-| MLATPORT | Optional. TCP port number of an MLAT provider (`mlat-client`) | 30105 |
-| TZ | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
+| `BEASTHOST` | Required. IP/Hostname of a Mode-S/Beast provider (`dump1090`/`readsb`) | |
+| `BEASTPORT` | Optional. TCP port number of Mode-S/Beast provider (`dump1090`/`readsb`) | `30005` |
+| `LAT` | Optional. The latitude of your antenna | |
+| `LONG` | Optional. The longitude of your antenna | |
+| `MLATHOST` | Optional. IP/Hostname of an MLAT provider (`mlat-client`) | |
+| `MLATPORT` | Optional. TCP port number of an MLAT provider (`mlat-client`) | 30105 |
+| `TZ` | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
+| `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your <heywhatsthat.com> panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
 
 ## Logging
 
