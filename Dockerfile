@@ -50,7 +50,6 @@ RUN set -x && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
     echo "========== Clean-up ==========" && \
     apt-get remove -y \
-      curl \
       file \
       gcc \
       gnupg \
