@@ -185,7 +185,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `MLATHOST` | Optional. IP/Hostname of an MLAT provider (`mlat-client`) | |
 | `MLATPORT` | Optional. TCP port number of an MLAT provider (`mlat-client`) | 30105 |
 | `TZ` | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
-| `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your <heywhatsthat.com> panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
+| `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your `heywhatsthat.com` panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
 
 ## Logging
 
