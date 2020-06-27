@@ -2,7 +2,8 @@ FROM debian:stable-slim
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     BEASTPORT=30005 \
-    BRANCH_READSB=v3.8.3 \
+    BRANCH_READSB=dev \
+    READSB_GIT_URL="https://github.com/wiedehopf/readsb.git" \
     GITPATH_TAR1090=/opt/tar1090 \
     GITPATH_TAR1090_DB=/opt/tar1090-db \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
@@ -23,6 +24,8 @@ RUN set -x && \
       ncurses-dev \
       nginx-light \
       p7zip-full \
+      zlib1g \
+      zlib1g-dev \
       && \
     rm /etc/nginx/sites-enabled/default && \
     echo "========== Install tar1090-db ==========" && \
@@ -37,15 +40,16 @@ RUN set -x && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
     echo "========== Building readsb ==========" && \
     echo "Cloning will take some time, this is a big repo...." && \
-    git clone https://github.com/Mictronics/readsb.git /src/readsb && \
+    git clone "${READSB_GIT_URL}" /src/readsb && \
     cd /src/readsb && \
     #export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
     git checkout "${BRANCH_READSB}" && \
-    echo "readsb ${BRANCH_READSB}" >> /VERSIONS && \
     make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no && \
     cp -v /src/readsb/readsb /usr/local/bin/readsb && \
     cp -v /src/readsb/viewadsb /usr/local/bin/viewadsb && \
     mkdir -p /run/readsb && \
+    mkdir -p /var/globe_history && \
+    echo "readsb $(/usr/local/bin/readsb --version)" >> /VERSIONS && \
     echo "========== Install s6-overlay ==========" && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
     echo "========== Clean-up ==========" && \
@@ -56,6 +60,7 @@ RUN set -x && \
       libc-dev \
       make \
       ncurses-dev \
+      zlib1g-dev \
       && \
     apt-get autoremove -y && \
     rm -rf /tmp/* /src /var/lib/apt/lists/* && \
