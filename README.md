@@ -187,6 +187,15 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `TZ` | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
 | `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your `heywhatsthat.com` panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
 
+## Paths
+
+No paths need to be mapped through to persistent storage. However, if you don't want to lose your aircraft tracks/history on container restart, you can optionally map these paths:
+
+| Path | Purpose |
+|------|---------|
+| `/run/readsb` | Holds historical & current aircraft position data
+| `/var/globe_history` | Holds past 24 hours of heatmap data
+
 ## Logging
 
 All logs are to the container's stdout and can be viewed with `docker logs [-f] container`.
