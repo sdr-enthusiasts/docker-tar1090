@@ -197,6 +197,10 @@ Please feel free to [open an issue on the project's GitHub](https://github.com/m
 
 ## Changelog
 
+### 20200627
+
+* Add `tar1090`'s new `heatmap` functionality
+
 ### 20200622
 
 * Add `HEYWHATSTHAT_PANORAMA_ID` environment variable for range outline
