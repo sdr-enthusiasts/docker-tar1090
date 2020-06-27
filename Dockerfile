@@ -39,11 +39,9 @@ RUN set -x && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
     echo "========== Building readsb ==========" && \
-    echo "Cloning will take some time, this is a big repo...." && \
-    git clone "${READSB_GIT_URL}" /src/readsb && \
+    git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \
     cd /src/readsb && \
     #export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
-    git checkout "${BRANCH_READSB}" && \
     make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no && \
     cp -v /src/readsb/readsb /usr/local/bin/readsb && \
     cp -v /src/readsb/viewadsb /usr/local/bin/viewadsb && \
