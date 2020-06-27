@@ -193,8 +193,7 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/run/readsb` | Holds historical & current aircraft position data
-| `/var/globe_history` | Holds past 24 hours of heatmap data
+| `/var/globe_history` | Holds past 24 hours of heatmap data |
 
 ## Logging
 
