@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [ "${HTTP_ACCESS_LOG}" = "false" ]; then
+    sed -i 's\access_log .*\access_log off;\' /etc/nginx/nginx.conf
+else
+    sed -i 's\access_log .*\access_log /dev/stdout;\' /etc/nginx/nginx.conf
+fi
+
+if [ "${HTTP_ERROR_LOG}" = "false" ]; then
+    sed -i 's\error_log .*\error_log /dev/null crit;\' /etc/nginx/nginx.conf
+else
+    sed -i 's\error_log .*\error_log /dev/stdout notice;\' /etc/nginx/nginx.conf
+fi
