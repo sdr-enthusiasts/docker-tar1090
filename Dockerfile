@@ -26,6 +26,7 @@ RUN set -x && \
       ncurses-dev \
       nginx-light \
       p7zip-full \
+      procps \
       zlib1g \
       zlib1g-dev \
       && \
@@ -44,7 +45,7 @@ RUN set -x && \
     git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \
     cd /src/readsb && \
     #export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
-    make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no && \
+    make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no OPTIMIZE="-O3" && \
     cp -v /src/readsb/readsb /usr/local/bin/readsb && \
     cp -v /src/readsb/viewadsb /usr/local/bin/viewadsb && \
     mkdir -p /run/readsb && \
