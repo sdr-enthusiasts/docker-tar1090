@@ -24,6 +24,7 @@ RUN set -x && \
       ncurses-dev \
       nginx-light \
       p7zip-full \
+      procps \
       zlib1g \
       zlib1g-dev \
       && \
