@@ -6,6 +6,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     READSB_GIT_URL="https://github.com/wiedehopf/readsb.git" \
     GITPATH_TAR1090=/opt/tar1090 \
     GITPATH_TAR1090_DB=/opt/tar1090-db \
+    HTTP_ACCESS_LOG="false" \
+    HTTP_ERROR_LOG="true" \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
     MLATPORT=30105
 
