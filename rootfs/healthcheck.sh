@@ -28,7 +28,7 @@ else
 fi
 
 # death count for nginx
-NGINX_DEATHS=$(s6-svdt /run/s6/services/nginx | grep -c -v "exitcode 0")
+NGINX_DEATHS=$(s6-svdt /run/s6/services/nginx | grep -v "exitcode 0" | wc -l)
 if [ "$NGINX_DEATHS" -ge 1 ]; then
     echo "nginx deaths: $NGINX_DEATHS. UNHEALTHY"
     EXITCODE=1
@@ -38,7 +38,7 @@ fi
 s6-svdt-clear /run/s6/services/nginx
 
 # death count for readsb
-READSB_DEATHS=$(s6-svdt /run/s6/services/readsb | grep -c -v "exitcode 0")
+READSB_DEATHS=$(s6-svdt /run/s6/services/readsb | grep -v "exitcode 0" | wc -l)
 if [ "$READSB_DEATHS" -ge 1 ]; then
     echo "readsb deaths: $READSB_DEATHS. UNHEALTHY"
     EXITCODE=1
@@ -48,7 +48,7 @@ fi
 s6-svdt-clear /run/s6/services/readsb
 
 # death count for tar1090
-TAR1090_DEATHS=$(s6-svdt /run/s6/services/tar1090 | grep -c -v "exitcode 0")
+TAR1090_DEATHS=$(s6-svdt /run/s6/services/tar1090 | grep -v "exitcode 0" | wc -l)
 if [ "$TAR1090_DEATHS" -ge 1 ]; then
     echo "tar1090 deaths: $TAR1090_DEATHS. UNHEALTHY"
     EXITCODE=1
