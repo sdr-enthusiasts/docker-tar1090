@@ -77,3 +77,6 @@ COPY rootfs/ /
 ENTRYPOINT [ "/init" ]
 
 EXPOSE 80/tcp
+
+# Add healthcheck
+HEALTHCHECK --start-period=30s CMD /healthcheck.sh
