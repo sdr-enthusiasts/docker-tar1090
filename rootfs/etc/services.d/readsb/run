@@ -7,19 +7,19 @@ READSB_BIN="/usr/local/bin/readsb"
 READSB_CMD=(--net-only)
 READSB_CMD+=(--quiet)
 
-if [ ! -z "${LAT}" ]; then
+if [ -n "${LAT}" ]; then
     READSB_CMD+=(--lat "${LAT}")
 fi
 
-if [ ! -z "${LONG}" ]; then
+if [ -n "${LONG}" ]; then
     READSB_CMD+=(--lon "${LONG}")
 fi
 
-if [ ! -z "${MLATHOST}" ]; then
-    READSB_CMD+=(--net-connector=${MLATHOST},${MLATPORT},beast_in)
+if [ -n "${MLATHOST}" ]; then
+    READSB_CMD+=("--net-connector=${MLATHOST},${MLATPORT},beast_in")
 fi
 
-READSB_CMD+=(--net-connector="${BEASTHOST}","${BEASTPORT}",beast_in)
+READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
 
 READSB_CMD+=(--write-json=/run/readsb)
 READSB_CMD+=(--stats-every=3600)
