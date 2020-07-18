@@ -33,17 +33,19 @@ RUN set -x && \
     rm /etc/nginx/sites-enabled/default && \
     echo "========== Install tar1090-db ==========" && \
     git clone --depth 1 https://github.com/wiedehopf/tar1090-db "${GITPATH_TAR1090_DB}" && \
-    cd "${GITPATH_TAR1090_DB}" || exit 1 && \
+    pushd "${GITPATH_TAR1090_DB}" || exit 1 && \
     VERSION_TAR1090_DB=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090-db ${VERSION_TAR1090_DB}" >> /VERSIONS && \
+    popd && \
     echo "========== Install tar1090 ==========" && \
     git clone --single-branch -b master --depth 1 https://github.com/wiedehopf/tar1090 "${GITPATH_TAR1090}" && \
-    cd "${GITPATH_TAR1090}" && \
+    pushd "${GITPATH_TAR1090}" && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
+    popd && \
     echo "========== Building readsb ==========" && \
     git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \
-    cd /src/readsb && \
+    pushd /src/readsb && \
     #export BRANCH_READSB=$(git tag --sort="-creatordate" | head -1) && \
     make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no OPTIMIZE="-O3" && \
     cp -v /src/readsb/readsb /usr/local/bin/readsb && \
@@ -51,6 +53,7 @@ RUN set -x && \
     mkdir -p /run/readsb && \
     mkdir -p /var/globe_history && \
     echo "readsb $(/usr/local/bin/readsb --version)" >> /VERSIONS && \
+    popd && \
     echo "========== Install s6-overlay ==========" && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
     echo "========== Clean-up ==========" && \
