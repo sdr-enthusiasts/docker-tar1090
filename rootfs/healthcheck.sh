@@ -22,7 +22,7 @@ if [ -f "/run/readsb/aircraft.json" ]; then
 
     # get number of aircraft
     NUM_AIRCRAFT=$(cat /run/readsb/aircraft.json | jq '.aircraft | length')
-    if [ $NUM_AIRCRAFT -lt 1 ]; then
+    if [ "$NUM_AIRCRAFT" -lt 1 ]; then
         echo "total aircraft: $NUM_AIRCRAFT. UNHEALTHY"
         EXITCODE=1
     else
@@ -37,7 +37,7 @@ fi
 
 # death count for nginx
 NGINX_DEATHS=$(s6-svdt /run/s6/services/nginx | grep -v "exitcode 0" | wc -l)
-if [ $NGINX_DEATHS -ge 1 ]; then
+if [ "$NGINX_DEATHS" -ge 1 ]; then
     echo "nginx deaths: $LIGHTTPD_DEATHS. UNHEALTHY"
     EXITCODE=1
 else
@@ -47,7 +47,7 @@ s6-svdt-clear /run/s6/services/nginx
 
 # death count for readsb
 READSB_DEATHS=$(s6-svdt /run/s6/services/readsb | grep -v "exitcode 0" | wc -l)
-if [ $READSB_DEATHS -ge 1 ]; then
+if [ "$READSB_DEATHS" -ge 1 ]; then
     echo "readsb deaths: $READSB_DEATHS. UNHEALTHY"
     EXITCODE=1
 else
@@ -57,7 +57,7 @@ s6-svdt-clear /run/s6/services/readsb
 
 # death count for tar1090
 TAR1090_DEATHS=$(s6-svdt /run/s6/services/tar1090 | grep -v "exitcode 0" | wc -l)
-if [ $TAR1090_DEATHS -ge 1 ]; then
+if [ "$TAR1090_DEATHS" -ge 1 ]; then
     echo "tar1090 deaths: $TAR1090_DEATHS. UNHEALTHY"
     EXITCODE=1
 else
