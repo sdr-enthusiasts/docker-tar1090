@@ -3,6 +3,7 @@
 
 sleep 30
 
+# shellcheck source=/usr/local/share/tar1090/default
 source "${TAR1090_INSTALL_DIR}/default"
 
 srcdir=/run/readsb
