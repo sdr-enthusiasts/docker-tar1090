@@ -20,18 +20,10 @@ if [ -f "/run/readsb/aircraft.json" ]; then
         echo "readsb last updated: ${TIMESTAMP_LAST_READSB_UPDATE}, now: ${TIMESTAMP_NOW}, delta: ${TIMEDELTA}. HEALTHY"
     fi
 
-    # get number of aircraft
-    NUM_AIRCRAFT=$(jq '.aircraft | length' < /run/readsb/aircraft.json)
-    if [ "$NUM_AIRCRAFT" -lt 1 ]; then
-        echo "total aircraft: $NUM_AIRCRAFT. UNHEALTHY"
-        EXITCODE=1
-    else
-        echo "total aircraft: $NUM_AIRCRAFT. HEALTHY"
-    fi
-
 else
 
-    echo "WARNING: Cannot find /run/readsb/aircraft.json, so skipping some checks."
+    echo "ERROR: Cannot find /run/readsb/aircraft.json!"
+    EXITCODE=1
 
 fi
 
