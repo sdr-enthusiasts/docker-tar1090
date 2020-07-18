@@ -30,10 +30,10 @@ fi
 # death count for nginx
 NGINX_DEATHS=$(s6-svdt /run/s6/services/nginx | grep -c -v "exitcode 0")
 if [ "$NGINX_DEATHS" -ge 1 ]; then
-    echo "nginx deaths: $LIGHTTPD_DEATHS. UNHEALTHY"
+    echo "nginx deaths: $NGINX_DEATHS. UNHEALTHY"
     EXITCODE=1
 else
-    echo "nginx deaths: $LIGHTTPD_DEATHS. HEALTHY"
+    echo "nginx deaths: $NGINX_DEATHS. HEALTHY"
 fi
 s6-svdt-clear /run/s6/services/nginx
 
