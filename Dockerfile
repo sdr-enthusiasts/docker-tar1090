@@ -16,6 +16,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -x && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
+      bc \
       ca-certificates \
       curl \
       file \
@@ -77,3 +78,6 @@ COPY rootfs/ /
 ENTRYPOINT [ "/init" ]
 
 EXPOSE 80/tcp
+
+# Add healthcheck
+HEALTHCHECK --start-period=30s CMD /healthcheck.sh
