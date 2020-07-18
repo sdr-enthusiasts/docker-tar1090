@@ -11,6 +11,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
     MLATPORT=30105
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN set -x && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
