@@ -6,7 +6,7 @@ EXITCODE=0
 if [ -f "/run/readsb/aircraft.json" ]; then
 
     # get latest timestamp of readsb json update
-    TIMESTAMP_LAST_READSB_UPDATE=$(cat /run/readsb/aircraft.json | jq '.now')
+    TIMESTAMP_LAST_READSB_UPDATE=$(jq '.now' < /run/readsb/aircraft.json)
 
     # get current timestamp
     TIMESTAMP_NOW=$(date +"%s.%N")
@@ -21,7 +21,7 @@ if [ -f "/run/readsb/aircraft.json" ]; then
     fi
 
     # get number of aircraft
-    NUM_AIRCRAFT=$(cat /run/readsb/aircraft.json | jq '.aircraft | length')
+    NUM_AIRCRAFT=$(jq '.aircraft | length' < /run/readsb/aircraft.json)
     if [ "$NUM_AIRCRAFT" -lt 1 ]; then
         echo "total aircraft: $NUM_AIRCRAFT. UNHEALTHY"
         EXITCODE=1
