@@ -22,12 +22,9 @@ fi
 READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
 
 READSB_CMD+=(--write-json=/run/readsb)
-READSB_CMD+=(--stats-every=3600)
-
 READSB_CMD+=(--heatmap-dir /var/globe_history)
 READSB_CMD+=(--heatmap 13)
 READSB_CMD+=(--json-trace-interval 15)
-
 READSB_CMD+=(--json-reliable 1)
 
 "${READSB_BIN}" "${READSB_CMD[@]}" 2>&1 | awk -W Interactive '{print "[readsb] " $0}'
