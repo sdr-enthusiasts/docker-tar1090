@@ -176,6 +176,8 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 
 ## Runtime Environment Variables
 
+### Container Configuration
+
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
 | `BEASTHOST` | Required. IP/Hostname of a Mode-S/Beast provider (`dump1090`/`readsb`) | |
@@ -188,6 +190,18 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your `heywhatsthat.com` panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
+
+### `tar1090` Configuration
+
+All of the variables below are optional.
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `INTERVAL` | Interval at which the track history is saved | `8` |
+| `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
+| `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
+| `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
+| `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
 
 ## Paths
 

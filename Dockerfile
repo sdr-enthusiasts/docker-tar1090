@@ -9,7 +9,16 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     HTTP_ACCESS_LOG="false" \
     HTTP_ERROR_LOG="true" \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
-    MLATPORT=30105
+    MLATPORT=30105 \
+    INTERVAL=8 \
+    HISTORY_SIZE=450 \
+    ENABLE_978=no \
+    URL_978="http://127.0.0.1/skyaware978" \
+    GZIP_LVL=3 \
+    CHUNK_SIZE=60 \
+    INT_978=1 \
+    PF_URL="http://127.0.0.1:30053/ajax/aircraft" \
+    COMPRESS_978=""
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

@@ -4,7 +4,7 @@
 sleep 30
 
 # shellcheck source=/dev/null
-source "${TAR1090_INSTALL_DIR}/default"
+#source "${TAR1090_INSTALL_DIR}/default"
 
 srcdir=/run/readsb
 service=readsb
@@ -12,12 +12,11 @@ service=readsb
 /usr/local/share/tar1090/tar1090.sh \
   "/run/$service" \
   "$srcdir" \
-  "$INTERVAL" \
-  "$HISTORY_SIZE" \
-  "$CHUNK_SIZE" \
-  "$ENABLE_978" \
-  "$URL_978" \
-  "$INT_978" \
-  "$PF_URL" \
-  "$COMPRESS_978" \
   2>&1 | awk -W interactive '{print "[tar1090] " $0}'
+
+  # "$INTERVAL" \
+  # "$HISTORY_SIZE" \
+  # "$CHUNK_SIZE" \
+  # "$ENABLE_978" \
+  # "$URL_978" \
+  # "$INT_978" \
