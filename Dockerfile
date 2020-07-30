@@ -19,7 +19,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     INT_978=1 \
     PF_URL="http://127.0.0.1:30053/ajax/aircraft" \
     COMPRESS_978="" \
-    TAR1090_GIT_URL="https://github.com/mikenye/tar1090.git"
+    TAR1090_GIT_URL="https://github.com/mikenye/tar1090.git" \
+    TAR1090_GIT_BRANCH="mikenye-patch-1"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -48,12 +49,10 @@ RUN set -x && \
     git clone --depth 1 https://github.com/wiedehopf/tar1090-db "${GITPATH_TAR1090_DB}" && \
     pushd "${GITPATH_TAR1090_DB}" || exit 1 && \
     VERSION_TAR1090_DB=$(git log | head -1 | tr -s " " "_") && \
-    # Version below changed for troubleshooting
-    VERSION_TAR1090_DB="mikenye-patch-1" \
     echo "tar1090-db ${VERSION_TAR1090_DB}" >> /VERSIONS && \
     popd && \
     echo "========== Install tar1090 ==========" && \
-    git clone --single-branch -b master --depth 1 "${TAR1090_GIT_URL}" "${GITPATH_TAR1090}" && \
+    git clone --single-branch -b "${TAR1090_GIT_BRANCH}" --depth 1 "${TAR1090_GIT_URL}" "${GITPATH_TAR1090}" && \
     pushd "${GITPATH_TAR1090}" && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
