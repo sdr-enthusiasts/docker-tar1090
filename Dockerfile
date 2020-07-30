@@ -19,8 +19,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     INT_978=1 \
     PF_URL="http://127.0.0.1:30053/ajax/aircraft" \
     COMPRESS_978="" \
-    TAR1090_GIT_URL="https://github.com/mikenye/tar1090.git" \
-    TAR1090_GIT_BRANCH="mikenye-patch-1"
+    TAR1090_GIT_URL="https://github.com/wiedehopf/tar1090.git" \
+    TAR1090_GIT_BRANCH="master"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
