@@ -18,7 +18,9 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     CHUNK_SIZE=60 \
     INT_978=1 \
     PF_URL="http://127.0.0.1:30053/ajax/aircraft" \
-    COMPRESS_978=""
+    COMPRESS_978="" \
+    TAR1090_GIT_URL="https://github.com/wiedehopf/tar1090.git" \
+    TAR1090_GIT_BRANCH="master"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -50,7 +52,7 @@ RUN set -x && \
     echo "tar1090-db ${VERSION_TAR1090_DB}" >> /VERSIONS && \
     popd && \
     echo "========== Install tar1090 ==========" && \
-    git clone --single-branch -b master --depth 1 https://github.com/wiedehopf/tar1090 "${GITPATH_TAR1090}" && \
+    git clone --single-branch -b "${TAR1090_GIT_BRANCH}" --depth 1 "${TAR1090_GIT_URL}" "${GITPATH_TAR1090}" && \
     pushd "${GITPATH_TAR1090}" && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
