@@ -223,26 +223,4 @@ I also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join]
 
 ## Changelog
 
-### 20200630
-
-* Add `HTTP_ACCESS_LOG` & `HTTP_ERROR_LOG`. Change `readsb` build process for greater compatibility.
-
-### 20200627
-
-* Add `tar1090`'s new `heatmap` functionality
-
-### 20200622
-
-* Add `HEYWHATSTHAT_PANORAMA_ID` environment variable for range outline
-
-### 20200508
-
-* Add `linux/arm/v6` architecture support
-
-### 20200506
-
-* Add `MLATHOST` and `MLATPORT` options
-
-### 20200331
-
-* Original Image
+See the [GitHub commit log](https://github.com/mikenye/docker-tar1090/commits/master).
