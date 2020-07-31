@@ -71,7 +71,7 @@ docker run -d \
     mikenye/tar1090:latest
 ```
 
-You should now be able to browse to http://dockerhost:8078 to access the `tar1090` web interface.
+You should now be able to browse to http://dockerhost:8078/ to access the tar1090 web interface, and http://dockerhost:8078/?heatmap to see the heatmap for the past 24 hours.
 
 ## Up-and-Running with `docker-compose`
 
