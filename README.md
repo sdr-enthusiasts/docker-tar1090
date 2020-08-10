@@ -243,7 +243,7 @@ All of the variables below are optional.
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
 | `TAR1090_RANGERINGS` | `false` to hide range rings | `true` |
-| `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces). | `100,150,200,250` |
+| `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces, no quotes). | `100,150,200,250` |
 
 ## Paths
 
