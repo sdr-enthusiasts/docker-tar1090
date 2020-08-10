@@ -25,6 +25,11 @@ sed -i.original \
 # /etc/cont-init.d/02-tar1090-update & /etc/cont-init.d/03-tar1090-copy
 {
 
+echo ""
+echo ""
+echo "// The following configuration directives produced via '$0':"
+echo ""
+
 if [[ -n "$TAR1090_PLANECOUNTINTITLE" ]]; then
   echo "PlaneCountInTitle = ${TAR1090_PLANECOUNTINTITLE};"
 fi
