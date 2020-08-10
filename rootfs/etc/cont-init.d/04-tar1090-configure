@@ -20,3 +20,91 @@ sed -i '/location \/data\/ {/a \ \ access_log off;' \
 sed -i.original \
   -e 's/skyview978/skyaware978/' \
   "${TAR1090_INSTALL_DIR}/default"
+
+# Modify tar1090 config.js. tar1090's config.js file should be reset as part of
+# /etc/cont-init.d/02-tar1090-update & /etc/cont-init.d/03-tar1090-copy
+{
+
+if [[ -n "$TAR1090_PLANECOUNTINTITLE" ]]; then
+  echo "PlaneCountInTitle = ${TAR1090_PLANECOUNTINTITLE};"
+fi
+
+if [[ -n "$TAR1090_MESSAGERATEINTITLE" ]]; then
+  echo "MessageRateInTitle = ${TAR1090_MESSAGERATEINTITLE};"
+fi
+
+if [[ -n "$TAR1090_DISPLAYUNITS" ]]; then
+  echo "DisplayUnits = \"${TAR1090_DISPLAYUNITS}\";"
+fi
+
+if [[ -n "$TAR1090_DEFAULTCENTERLAT" ]]; then
+  echo "DefaultCenterLat = ${TAR1090_DEFAULTCENTERLAT};"
+fi
+
+if [[ -n "$TAR1090_DEFAULTCENTERLON" ]]; then
+  echo "DefaultCenterLon = ${TAR1090_DEFAULTCENTERLON};"
+fi
+
+if [[ -n "$TAR1090_DEFAULTZOOMLVL" ]]; then
+  echo "DefaultZoomLvl = ${TAR1090_DEFAULTZOOMLVL};"
+fi
+
+if [[ -n "$TAR1090_SITESHOW" ]]; then
+  echo "SiteShow = ${TAR1090_SITESHOW};"
+fi
+
+if [[ -n "$TAR1090_SITELAT" ]]; then
+  echo "SiteLat = ${TAR1090_SITELAT};"
+fi
+
+if [[ -n "$TAR1090_SITELON" ]]; then
+  echo "SiteLon = ${TAR1090_SITELON};"
+fi
+
+if [[ -n "$TAR1090_SITENAME" ]]; then
+  echo "SiteName = \"${TAR1090_SITENAME}\";"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_COLOR" ]]; then
+  echo "range_outline_color = '${TAR1090_RANGE_OUTLINE_COLOR}';"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_WIDTH" ]]; then
+  echo "range_outline_width = ${TAR1090_RANGE_OUTLINE_WIDTH};"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE" ]]; then
+  echo "range_outline_colored_by_altitude = ${TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE};"
+fi
+
+if [[ -n "$TAR1090_MAPTYPE_TAR1090" ]]; then
+  echo "MapType_tar1090 = \"${TAR1090_MAPTYPE_TAR1090}\";"
+fi
+
+if [[ -n "$TAR1090_MAPDIM" ]]; then
+  echo "MapDim = ${TAR1090_MAPDIM};"
+fi
+
+if [[ -n "$TAR1090_MAPDIMPERCENTAGE" ]]; then
+  echo "mapDimPercentage = ${TAR1090_MAPDIMPERCENTAGE};"
+fi
+
+if [[ -n "$TAR1090_MAPCONTRASTPERCENTAGE" ]]; then
+  echo "mapContrastPercentage = ${TAR1090_MAPCONTRASTPERCENTAGE};"
+fi
+
+if [[ -n "$TAR1090_RANGERINGS" ]]; then
+  echo "SiteCircles = ${TAR1090_RANGERINGS};"
+fi
+
+if [[ -n "$TAR1090_RANGERINGSDISTANCES" ]]; then
+  echo "SiteCirclesDistances = new Array($TAR1090_RANGERINGSDISTANCES);"
+fi
+
+if [[ -n "$TAR1090_BINGMAPSAPIKEY" ]]; then
+  echo "BingMapsAPIKey = \"$TAR1090_BINGMAPSAPIKEY\";"
+fi
+
+} >> "${TAR1090_INSTALL_DIR}/html/config.js"
+
+

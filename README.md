@@ -195,6 +195,8 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 
 All of the variables below are optional.
 
+#### `tar1090` Core Configuration
+
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
 | `INTERVAL` | Interval at which the track history is saved | `8` |
@@ -202,6 +204,46 @@ All of the variables below are optional.
 | `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
 | `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
+
+#### `tar1090` `config.js` Configuration - Title
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `TAR1090_PLANECOUNTINTITLE` | Show number of aircraft in the page title | `false` |
+| `TAR1090_MESSAGERATEINTITLE` | Show number of messages per second in the page title | `false` |
+
+#### `tar1090` `config.js` Configuration - Output
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `TAR1090_DISPLAYUNITS` | The DisplayUnits setting controls whether nautical (ft, NM, knots), metric (m, km, km/h) or imperial (ft, mi, mph) units are used in the plane table and in the detailed plane info. Valid values are "`nautical`", "`metric`", or "`imperial`". | `nautical` |
+
+#### `tar1090` `config.js` Configuration - Map Settings
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `TAR1090_BINGMAPSAPIKEY` | Provide a Bing Maps API key to enable the Bing imagery layer. You can obtain a free key (with usage limits) at <https://www.bingmapsportal.com/> (you need a "basic key"). | `null` |
+| `TAR1090_DEFAULTCENTERLAT` | Default center (latitude) of the map. This setting is overridden by any position information provided by dump1090/readsb. All positions are in decimal degrees. | `45.0` |
+| `TAR1090_DEFAULTCENTERLON` | Default center (longitude) of the map. This setting is overridden by any position information provided by dump1090/readsb. All positions are in decimal degrees. | `9.0` |
+| `TAR1090_DEFAULTZOOMLVL` | The google maps zoom level, `0` - `16`, lower is further out. | `7` |
+| `TAR1090_SITESHOW` | Center marker. If dump1090 provides a receiver location, that location is used and these settings are ignored. Set to `true` to show a center marker. | `false` |
+| `TAR1090_SITELAT` | Center marker. If dump1090 provides a receiver location, that location is used and these settings are ignored. Position of the marker (latitude). | `45.0` |
+| `TAR1090_SITELON` | Center marker. If dump1090 provides a receiver location, that location is used and these settings are ignored. Position of the marker (longitude). | `9.0` |
+| `TAR1090_SITENAME` | The tooltip of the center marker. | `My Radar Site` |
+| `TAR1090_RANGE_OUTLINE_COLOR` | Colour for the range outline. | `#0000DD` |
+| `TAR1090_RANGE_OUTLINE_WIDTH` | Width for the range outline. | `1.7` |
+| `TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE` | Range outline is coloured by altitude. | `false` |
+| `TAR1090_MAPTYPE_TAR1090` | Which map is displayed to new visitors. Valid values for this setting are `osm`, `esri`,  `carto_light_all`, `carto_light_nolabels`, `carto_dark_all`, `carto_dark_nolabels`, `gibs`, `osm_adsbx`, `chartbundle_sec`, `chartbundle_tac`, `chartbundle_hel`, `chartbundle_enrl`, `chartbundle_enra`, `chartbundle_enrh`, and only with bing key `bing_aerial`, `bing_roads`. | `carto_light_all` |
+| `TAR1090_MAPDIM` | Default map dim state, true or false. | `true` |
+| `TAR1090_MAPDIMPERCENTAGE` | The percentage amount of dimming used if the map is dimmed, `0`-`1` | `0.45` |
+| `TAR1090_MAPCONTRASTPERCENTAGE` | The percentage amount of contrast used if the map is dimmed, `0`-`1` | `0` |
+
+#### `tar1090` `config.js` Configuration - Range Rings
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `TAR1090_RANGERINGS` | `false` to hide range rings | `true` |
+| `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces). | `100,150,200,250` |
 
 ## Paths
 
