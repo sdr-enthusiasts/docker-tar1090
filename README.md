@@ -22,7 +22,7 @@ It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below
 ## Supported tags and respective Dockerfiles
 
 * `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`. This image is built nightly from the `master` branch `Dockerfile` for all supported architectures.
-* `development` (`master` branch, `Dockerfile`, `amd64` architecture only, built on commit, not recommended for production)
+* `latest_nohealthcheck` is the same as the `latest` version above. However, this version has the docker healthcheck removed. This is done for people running platforms (such as [Nomad](https://www.nomadproject.io)) that don't support manually disabling healthchecks, where healthchecks are not wanted.
 * Specific version tags are available if required, however these are not regularly updated. It is generally recommended to run latest.
 
 ## Multi Architecture Support
