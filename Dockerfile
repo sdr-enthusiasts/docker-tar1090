@@ -24,7 +24,11 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     TIMELAPSE1090_GIT_URL="https://github.com/wiedehopf/timelapse1090.git" \
     TIMELAPSE1090_GIT_BRANCH="master" \
     GITPATH_TIMELAPSE1090=/opt/timelapse1090 \
-    READSB_MAX_RANGE=300
+    READSB_MAX_RANGE=300 \
+    TIMELAPSE1090_SOURCE=/run/readsb \
+    TIMELAPSE1090_INTERVAL=10 \
+    TIMELAPSE1090_HISTORY=24 \
+    TIMELAPSE1090_CHUNK_SIZE=240
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -67,6 +71,7 @@ RUN set -x && \
     VERSION_TIMELAPSE1090=$(git log | head -1 | tr -s " " "_") || true && \
     echo "" && \
     echo "timelapse1090 ${VERSION_TIMELAPSE1090}" >> /VERSIONS && \
+    mkdir -p  /run/timelapse1090 && \
     popd && \
     echo "========== Building readsb ==========" && \
     git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \

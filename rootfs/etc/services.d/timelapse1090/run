@@ -1,0 +1,24 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
+
+  echo "SOURCE=$TIMELAPSE1090_SOURCE" > /etc/default/timelapse1090
+  echo "INTERVAL=$TIMELAPSE1090_INTERVAL" >> /etc/default/timelapse1090
+  echo "HISTORY=$TIMELAPSE1090_HISTORY" >> /etc/default/timelapse1090
+  echo "CHUNK_SIZE=$TIMELAPSE1090_CHUNK_SIZE" >> /etc/default/timelapse1090
+
+  pushd /opt/timelapse1090
+
+  /opt/timelapse1090/timelapse1090.sh \
+    2>&1 | awk -W interactive '{print "[timelapse1090] " $0}'
+
+  popd
+
+  sleep 30
+
+else
+
+  sleep 86400
+
+fi

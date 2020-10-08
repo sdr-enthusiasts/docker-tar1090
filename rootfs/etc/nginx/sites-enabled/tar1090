@@ -10,7 +10,7 @@ server {
   }
 
   location /timelapse/data {
-    alias /run/timelapse1090/;
+    alias /run/timelapse1090;
 
     location ~ chunk_.*\.gz$ {
       add_header Access-Control-Allow-Origin "*";
