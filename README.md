@@ -190,6 +190,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your `heywhatsthat.com` panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
+| `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
 
 ### `tar1090` Configuration
 

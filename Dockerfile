@@ -20,7 +20,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     PF_URL="http://127.0.0.1:30053/ajax/aircraft" \
     COMPRESS_978="" \
     TAR1090_GIT_URL="https://github.com/wiedehopf/tar1090.git" \
-    TAR1090_GIT_BRANCH="master"
+    TAR1090_GIT_BRANCH="master" \
+    READSB_MAX_RANGE=300
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
