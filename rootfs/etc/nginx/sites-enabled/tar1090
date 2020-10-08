@@ -1,6 +1,29 @@
 server {
-        listen 80 default_server;
-        root /var/www/html;
-        server_name _;
-        include /usr/local/share/tar1090/nginx.conf;
+  listen 80 default_server;
+  root /var/www/html;
+  server_name _;
+  include /usr/local/share/tar1090/nginx.conf;
+
+  location /timelapse {
+    alias /opt/timelapse1090/html/;
+    try_files $uri $uri/ =404;
+  }
+
+  location /timelapse/data {
+    alias /run/timelapse1090/;
+
+    location ~ chunk_.*\.gz$ {
+      add_header Access-Control-Allow-Origin "*";
+      add_header Cache-Control "must-revalidate";
+      add_header Content-Type "application/json";
+      add_header Content-Encoding "gzip";
+    }
+
+    location ~ .*\.json$ {
+      add_header Access-Control-Allow-Origin "*";
+      add_header Cache-Control "public, max-age=0";
+    }
+
+  }
+
 }
