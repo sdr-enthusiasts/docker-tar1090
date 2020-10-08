@@ -64,7 +64,8 @@ RUN set -x && \
     echo "========== Install timelapse1090 ==========" && \
     git clone -b "${TIMELAPSE1090_GIT_BRANCH}" "${TIMELAPSE1090_GIT_URL}" "${GITPATH_TIMELAPSE1090}" && \
     pushd "${GITPATH_TIMELAPSE1090}" && \
-    VERSION_TIMELAPSE1090=$(git log | head -1 | tr -s " " "_") && \
+    VERSION_TIMELAPSE1090=$(git log | head -1 | tr -s " " "_") || true && \
+    echo "" && \
     echo "timelapse1090 ${VERSION_TIMELAPSE1090}" >> /VERSIONS && \
     popd && \
     echo "========== Building readsb ==========" && \
