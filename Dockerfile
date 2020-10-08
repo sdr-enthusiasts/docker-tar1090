@@ -21,6 +21,9 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     COMPRESS_978="" \
     TAR1090_GIT_URL="https://github.com/wiedehopf/tar1090.git" \
     TAR1090_GIT_BRANCH="master" \
+    TIMELAPSE1090_GIT_URL="https://github.com/wiedehopf/timelapse1090.git" \
+    TIMELAPSE1090_GIT_BRANCH="master" \
+    GITPATH_TIMELAPSE1090=/opt/timelapse1090 \
     READSB_MAX_RANGE=300
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -57,6 +60,12 @@ RUN set -x && \
     pushd "${GITPATH_TAR1090}" && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
+    popd && \
+    echo "========== Install timelapse1090 ==========" && \
+    git clone -b "${TIMELAPSE1090_GIT_BRANCH}" "${TIMELAPSE1090_GIT_URL}" "${GITPATH_TIMELAPSE1090}" && \
+    pushd "${GITPATH_TIMELAPSE1090}" && \
+    VERSION_TIMELAPSE1090=$(git log | head -1 | tr -s " " "_") && \
+    echo "timelapse1090 ${VERSION_TIMELAPSE1090}" >> /VERSIONS && \
     popd && \
     echo "========== Building readsb ==========" && \
     git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \
