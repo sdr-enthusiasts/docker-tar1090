@@ -198,6 +198,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
 | `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
+| `ENABLE_TIMELAPSE1090` | Optional. Set to any value to enable timelapse1090. Once enableed, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
 
 ### `tar1090` Configuration
 
@@ -252,6 +253,13 @@ All of the variables below are optional.
 |----------------------|---------|---------|
 | `TAR1090_RANGERINGS` | `false` to hide range rings | `true` |
 | `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces, no quotes). | `100,150,200,250` |
+
+### `timelapse1090` Configuration
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `TIMELAPSE1090_INTERVAL` | Snapshot interval in seconds | `10` |
+| `TIMELAPSE1090_HISTORY` | Time saved in hours | `24` |
 
 ## Paths
 
