@@ -8,12 +8,12 @@ if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
   echo "HISTORY=$TIMELAPSE1090_HISTORY" >> /etc/default/timelapse1090
   echo "CHUNK_SIZE=$TIMELAPSE1090_CHUNK_SIZE" >> /etc/default/timelapse1090
 
-  pushd /opt/timelapse1090
+  pushd /opt/timelapse1090 || exit 1
 
   /opt/timelapse1090/timelapse1090.sh \
     2>&1 | awk -W interactive '{print "[timelapse1090] " $0}'
 
-  popd
+  popd || exit 1
 
   sleep 30
 
