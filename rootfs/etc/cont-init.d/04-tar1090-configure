@@ -3,6 +3,7 @@
 
 # Get DB and TAR1090 versions
 DB_VERSION=$(git --git-dir="$GITPATH_TAR1090_DB/.git" rev-parse --short HEAD)
+# shellcheck disable=SC2034
 TAR1090_VERSION="$(git --git-dir="$GITPATH_TAR1090/.git" rev-parse --short HEAD)_$DB_VERSION"
 
 # Update early.js with proper database path
