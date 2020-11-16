@@ -27,4 +27,4 @@ sed '/^HEALTHCHECK /d' < Dockerfile > Dockerfile.nohealthcheck
 docker buildx build -f Dockerfile.nohealthcheck -t "${REPO}/${IMAGE}:latest_nohealthcheck" --compress --push --platform "${PLATFORMS}" .
 
 # If there are version differences, build & push with a tag matching the build date
-docker buildx build -f Dockerfile.nohealthcheck -t "${REPO}/${IMAGE}:${VERSION}_nohealthcheck" --compress --push --platform "${PLATFORMS}" .
+docker buildx build -f Dockerfile.nohealthcheck -t "${REPO}/${IMAGE}:${VERSION:0:14}_nohealthcheck" --compress --push --platform "${PLATFORMS}" .
