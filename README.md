@@ -10,12 +10,14 @@ At the time of writing this README, it provides:
 * Map can be dimmed/darkened
 * Multiple aircraft can be selected
 * Labels with the callsign can be switched on and off
+* Heatmap of aircraft positions
 
 This image:
 
 * Receives Beast data from a provider such as `dump1090` or `readsb`
 * Optionally, receives MLAT data from a provider such as `mlat-client`
-* Provides the `tar1090` web interface.
+* Provides the `tar1090` web interface
+* Provides the `timelapse1090` web interface
 
 It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
 
@@ -37,7 +39,7 @@ It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below
 You will need a source of Beast data. This could be an RPi running PiAware, the [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image or [`mikenye/readsb`](https://hub.docker.com/r/mikenye/readsb).
 
 Optionally, you will need a source of MLAT data. This could be:
-* ['mikenye/adsbexchange`](https://hub.docker.com/r/mikenye/adsbexchange) image
+* [`mikenye/adsbexchange`](https://hub.docker.com/r/mikenye/adsbexchange) image
 * [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image
 * Basically anything running `mlat-client` listening for beast connections (ie: `--results beast,listen,30105`)
 
