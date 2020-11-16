@@ -1,11 +1,19 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+# Get DB and TAR1090 versions
+DB_VERSION=$(git --git-dir="$GITPATH_TAR1090_DB/.git" rev-parse --short HEAD)
+TAR1090_VERSION="$(git --git-dir="$GITPATH_TAR1090/.git" rev-parse --short HEAD)_$DB_VERSION"
+
+# Update early.js with proper database path
+sed -i \
+  "s/let databaseFolder =.*/let databaseFolder = \"db2-${DB_VERSION}\";/g" \
+  "${TAR1090_INSTALL_DIR}/html/early.js"
+
+# Modify nginx.conf
 srcdir=/run/readsb
 service=readsb
 html_path=${TAR1090_INSTALL_DIR}/html
-
-# Modify nginx.conf
 sed -i.original \
   -e "s?SOURCE_DIR?$srcdir?g" \
   -e "s?SERVICE?$service?g" \
@@ -111,5 +119,4 @@ if [[ -n "$TAR1090_BINGMAPSAPIKEY" ]]; then
 fi
 
 } >> "${TAR1090_INSTALL_DIR}/html/config.js"
-
 
