@@ -8,8 +8,8 @@ TAR1090_VERSION="$(git --git-dir="$GITPATH_TAR1090/.git" rev-parse --short HEAD)
 
 # Update early.js with proper database path
 sed -i \
-  "s/let databaseFolder =.*/let databaseFolder = \"db-${DB_VERSION}\";/g" \
-  "${TAR1090_INSTALL_DIR}/html/early.js"
+  "s/<script>let databaseFolder =.*<\/script>/<script>let databaseFolder = \"db-${DB_VERSION}\"<\/script>/g" \
+  "${TAR1090_INSTALL_DIR}/html/index.html"
 
 # Modify nginx.conf
 srcdir=/run/readsb
