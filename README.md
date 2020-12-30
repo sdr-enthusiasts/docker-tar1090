@@ -200,7 +200,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
 | `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
-| `ENABLE_TIMELAPSE1090` | Optional. Set to any value to enable timelapse1090. Once enableed, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
+| `ENABLE_TIMELAPSE1090` | Optional. Set to any value to enable timelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
 
 ### `tar1090` Configuration
 
