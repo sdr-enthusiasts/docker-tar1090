@@ -76,9 +76,9 @@ docker run -d \
 
 You should now be able to browse to:
 
-- <http://dockerhost:8078/> to access the tar1090 web interface
-- <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
-- <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+* <http://dockerhost:8078/> to access the tar1090 web interface
+* <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
+* <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
 ## Up-and-Running with `docker-compose`
 
@@ -111,9 +111,9 @@ services:
 
 You should now be able to browse to:
 
-- <http://dockerhost:8078/> to access the tar1090 web interface.
-- <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
-- <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+* <http://dockerhost:8078/> to access the tar1090 web interface.
+* <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
+* <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
 ## Up-and-Running with `docker-compose` including `mikenye/readsb`
 
