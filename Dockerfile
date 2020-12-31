@@ -69,6 +69,8 @@ RUN set -x && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
     popd && \
+    cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
+    rm -rvf /etc/nginx.tar1090 && \
     echo "========== Install timelapse1090 ==========" && \
     git clone -b "${TIMELAPSE1090_GIT_BRANCH}" "${TIMELAPSE1090_GIT_URL}" "${GITPATH_TIMELAPSE1090}" && \
     pushd "${GITPATH_TIMELAPSE1090}" && \
