@@ -33,6 +33,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+COPY rootfs/ /
+
 RUN set -x && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -67,6 +69,8 @@ RUN set -x && \
     VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
     echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
     popd && \
+    cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
+    rm -rvf /etc/nginx.tar1090 && \
     echo "========== Install timelapse1090 ==========" && \
     git clone -b "${TIMELAPSE1090_GIT_BRANCH}" "${TIMELAPSE1090_GIT_URL}" "${GITPATH_TIMELAPSE1090}" && \
     pushd "${GITPATH_TIMELAPSE1090}" && \
@@ -88,6 +92,8 @@ RUN set -x && \
     popd && \
     echo "========== Install s6-overlay ==========" && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
+    # Versions
+    grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION && \
     echo "========== Clean-up ==========" && \
     apt-get remove -y \
       file \
@@ -101,8 +107,6 @@ RUN set -x && \
     apt-get autoremove -y && \
     rm -rf /tmp/* /src /var/lib/apt/lists/* && \
     cat /VERSIONS
-
-COPY rootfs/ /
 
 ENTRYPOINT [ "/init" ]
 

@@ -39,6 +39,7 @@ It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below
 You will need a source of Beast data. This could be an RPi running PiAware, the [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image or [`mikenye/readsb`](https://hub.docker.com/r/mikenye/readsb).
 
 Optionally, you will need a source of MLAT data. This could be:
+
 * [`mikenye/adsbexchange`](https://hub.docker.com/r/mikenye/adsbexchange) image
 * [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image
 * Basically anything running `mlat-client` listening for beast connections (ie: `--results beast,listen,30105`)
@@ -74,9 +75,10 @@ docker run -d \
 ```
 
 You should now be able to browse to:
-- <http://dockerhost:8078/> to access the tar1090 web interface
-- <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
-- <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours. 
+
+* <http://dockerhost:8078/> to access the tar1090 web interface
+* <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
+* <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
 ## Up-and-Running with `docker-compose`
 
@@ -108,10 +110,10 @@ services:
 ```
 
 You should now be able to browse to:
-- <http://dockerhost:8078/> to access the tar1090 web interface
-- <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
-- <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours. 
 
+* <http://dockerhost:8078/> to access the tar1090 web interface.
+* <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
+* <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
 ## Up-and-Running with `docker-compose` including `mikenye/readsb`
 
