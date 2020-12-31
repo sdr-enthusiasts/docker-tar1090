@@ -33,6 +33,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+COPY rootfs/ /
+
 RUN set -x && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -103,8 +105,6 @@ RUN set -x && \
     apt-get autoremove -y && \
     rm -rf /tmp/* /src /var/lib/apt/lists/* && \
     cat /VERSIONS
-
-COPY rootfs/ /
 
 ENTRYPOINT [ "/init" ]
 
