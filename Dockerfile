@@ -50,6 +50,7 @@ RUN set -x && \
       nginx-light \
       p7zip-full \
       procps \
+      wget \
       zlib1g \
       zlib1g-dev \
       && \
