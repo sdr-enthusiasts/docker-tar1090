@@ -88,6 +88,8 @@ RUN set -x && \
     popd && \
     echo "========== Install s6-overlay ==========" && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
+    # Versions
+    grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION && \
     echo "========== Clean-up ==========" && \
     apt-get remove -y \
       file \
