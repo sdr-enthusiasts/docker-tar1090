@@ -19,7 +19,9 @@ if [ -n "${MLATHOST}" ]; then
     READSB_CMD+=("--net-connector=${MLATHOST},${MLATPORT},beast_in")
 fi
 
-READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
+if [ -n "${BEASTHOST}" ]; then
+    READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
+fi
 
 READSB_CMD+=(--write-json=/run/readsb)
 READSB_CMD+=(--heatmap-dir /var/globe_history)
@@ -28,4 +30,5 @@ READSB_CMD+=(--json-trace-interval 15)
 READSB_CMD+=(--json-reliable 1)
 READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
 
-"${READSB_BIN}" "${READSB_CMD[@]}" 2>&1 | awk -W Interactive '{print "[readsb] " $0}'
+# shellcheck disable=SC2086
+"${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | awk -W Interactive '{print "[readsb] " $0}'
