@@ -218,6 +218,7 @@ All of the variables below are optional.
 | `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
 | `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
+| `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
 
 #### `tar1090` `config.js` Configuration - Title
 
