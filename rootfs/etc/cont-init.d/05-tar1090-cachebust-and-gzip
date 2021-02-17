@@ -30,8 +30,6 @@ RENAMEFILES+=( 'registrations.js' 'script.js' 'style.css' )
 # Loop through files that need renaming
 for RENAMEFILE in "${RENAMEFILES[@]}"; do
 
-    echo "Cachebusting $RENAMEFILE"
-
     # Get filename without extension
     FILENAME_WOEXT=$(echo "${RENAMEFILE}" | rev | cut -d '.' -f 2 | rev)
 
