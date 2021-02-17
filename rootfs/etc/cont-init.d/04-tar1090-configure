@@ -1,16 +1,6 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-# Get DB and TAR1090 versions
-DB_VERSION=$(git --git-dir="$GITPATH_TAR1090_DB/.git" rev-parse --short HEAD)
-# shellcheck disable=SC2034
-TAR1090_VERSION="$(git --git-dir="$GITPATH_TAR1090/.git" rev-parse --short HEAD)_$DB_VERSION"
-
-# Update early.js with proper database path
-sed -i \
-  "s/<script>let databaseFolder =.*<\/script>/<script>let databaseFolder = \"db-${DB_VERSION}\"<\/script>/g" \
-  "${TAR1090_INSTALL_DIR}/html/index.html"
-
 # Modify nginx.conf
 srcdir=/run/readsb
 service=readsb
@@ -89,6 +79,10 @@ fi
 
 if [[ -n "$TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE" ]]; then
   echo "range_outline_colored_by_altitude = ${TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE};"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_DASH" ]]; then
+  echo "range_outline_dash = ${TAR1090_RANGE_OUTLINE_DASH};"
 fi
 
 if [[ -n "$TAR1090_MAPTYPE_TAR1090" ]]; then

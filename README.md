@@ -218,6 +218,7 @@ All of the variables below are optional.
 | `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
 | `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
+| `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
 
 #### `tar1090` `config.js` Configuration - Title
 
@@ -247,6 +248,7 @@ All of the variables below are optional.
 | `TAR1090_RANGE_OUTLINE_COLOR` | Colour for the range outline. | `#0000DD` |
 | `TAR1090_RANGE_OUTLINE_WIDTH` | Width for the range outline. | `1.7` |
 | `TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE` | Range outline is coloured by altitude. | `false` |
+| `TAR1090_RANGE_OUTLINE_DASH` | Range outline dashing. Syntax `[L, S]` where `L` is the pixel length of the line, and `S` is the pixel length of the space. | Unset |
 | `TAR1090_MAPTYPE_TAR1090` | Which map is displayed to new visitors. Valid values for this setting are `osm`, `esri`,  `carto_light_all`, `carto_light_nolabels`, `carto_dark_all`, `carto_dark_nolabels`, `gibs`, `osm_adsbx`, `chartbundle_sec`, `chartbundle_tac`, `chartbundle_hel`, `chartbundle_enrl`, `chartbundle_enra`, `chartbundle_enrh`, and only with bing key `bing_aerial`, `bing_roads`. | `carto_light_all` |
 | `TAR1090_MAPDIM` | Default map dim state, true or false. | `true` |
 | `TAR1090_MAPDIMPERCENTAGE` | The percentage amount of dimming used if the map is dimmed, `0`-`1` | `0.45` |
