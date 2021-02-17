@@ -20,11 +20,5 @@ cp -R html "${TAR1090_INSTALL_DIR}"
 cp tar1090.sh "${TAR1090_INSTALL_DIR}"
 cp default "${TAR1090_INSTALL_DIR}"
 
-# Get DB and TAR1090 versions
-DB_VERSION=$(git --git-dir="$GITPATH_TAR1090_DB/.git" rev-parse --short HEAD)
-# shellcheck disable=SC2034
-TAR1090_VERSION="$(git --git-dir="$GITPATH_TAR1090/.git" rev-parse --short HEAD)_$DB_VERSION"
-
 # Copy database
 cp -R "${GITPATH_TAR1090_DB}/db" "${TAR1090_INSTALL_DIR}/html"
-mv "${TAR1090_INSTALL_DIR}/html/db" "${TAR1090_INSTALL_DIR}/html/db-${DB_VERSION}"

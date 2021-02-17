@@ -1,0 +1,63 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# Create version string from current date/time
+TAR_VERSION=$(date +%s)
+
+# Put version in index.html
+sed -i \
+    -e "s/tar1090 on github/tar1090 on github (${TAR_VERSION})/" \
+    "$TAR1090_INSTALL_DIR/html/index.html"
+
+# Rename database
+mv "${TAR1090_INSTALL_DIR}/html/db" "${TAR1090_INSTALL_DIR}/html/db-${TAR_VERSION}"
+
+# Gzip database files
+gzip -k -9 "${TAR1090_INSTALL_DIR}/html/db-${TAR_VERSION}/"*.js 
+
+# Update early.js with renamed database path
+sed -i \
+  "s/<script>let databaseFolder =.*<\/script>/<script>let databaseFolder = \"db-${TAR_VERSION}\"<\/script>/g" \
+  "${TAR1090_INSTALL_DIR}/html/index.html"
+
+# Rename specific files
+
+# Specify files that need renaming (under $TAR1090_INSTALL_DIR/html)
+RENAMEFILES=$( 'dbloader.js' 'defaults.js' 'early.js' 'flags.js' )
+RENAMEFILES+=$( 'formatter.js' 'layers.js' 'markers.js' 'planeObject.js' )
+RENAMEFILES+=$( 'registrations.js' 'script.js' 'style.css' )
+
+# Loop through files that need renaming
+for RENAMEFILE in "${RENAMEFILES[@]}"; do
+
+    # Get filename without extension
+    FILENAME_WOEXT=$(echo "${RENAMEFILE}" | rev | cut -d '.' -f 2 | rev)
+
+    # Get filename extension only
+    FILENAME_EXTONLY=$(echo "${RENAMEFILE}" | rev | cut -d '.' -f 1 | rev)
+
+    # Use find to rename the file, using regex so if the file has previously been renamed,
+    # it can be renamed again. Matches "filename*.ext", so includes "filename_version.ext".
+    find ${TAR1090_INSTALL_DIR}/html \
+        -maxdepth 1 \
+        -type f \
+        -regex "${TAR1090_INSTALL_DIR}/html/${FILENAME_WOEXT}.*\.${FILENAME_EXTONLY}" \
+        -exec \
+            mv -v {} "${TAR1090_INSTALL_DIR}/html/${FILENAME_WOEXT}_${TAR_VERSION}.${FILENAME_EXTONLY}"
+
+    # Use sed to set the new name in index.html
+    sed -i \
+        -e "s/${FILENAME_WOEXT}.*\.${FILENAME_EXTONLY}/${FILENAME_WOEXT}_${TAR_VERSION}.${FILENAME_EXTONLY}/" \
+        "${TAR1090_INSTALL_DIR}/html/index.html"
+    
+    # Gzip the file
+    gzip -k -9 "${TAR1090_INSTALL_DIR}/html/${FILENAME_WOEXT}_${TAR_VERSION}.${FILENAME_EXTONLY}"
+
+done
+
+# Gzip libs
+gzip -k -9 "$TAR1090_INSTALL_DIR/html/libs/"*.js
+
+# Write version.json
+echo "{ \"tar1090Version\": \"$TAR_VERSION\", \"databaseVersion\": \"$TAR_VERSION\" }" > \
+    ${TAR1090_INSTALL_DIR}/html/version.json
