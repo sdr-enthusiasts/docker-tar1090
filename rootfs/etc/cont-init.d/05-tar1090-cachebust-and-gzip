@@ -23,9 +23,9 @@ sed -i \
 # Rename specific files
 
 # Specify files that need renaming (under $TAR1090_INSTALL_DIR/html)
-RENAMEFILES=$( 'dbloader.js' 'defaults.js' 'early.js' 'flags.js' )
-RENAMEFILES+=$( 'formatter.js' 'layers.js' 'markers.js' 'planeObject.js' )
-RENAMEFILES+=$( 'registrations.js' 'script.js' 'style.css' )
+RENAMEFILES=( 'dbloader.js' 'defaults.js' 'early.js' 'flags.js' )
+RENAMEFILES+=( 'formatter.js' 'layers.js' 'markers.js' 'planeObject.js' )
+RENAMEFILES+=( 'registrations.js' 'script.js' 'style.css' )
 
 # Loop through files that need renaming
 for RENAMEFILE in "${RENAMEFILES[@]}"; do
