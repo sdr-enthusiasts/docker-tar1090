@@ -47,11 +47,9 @@ RUN set -x && \
       git \
       gnupg \
       jq \
-      libc-dev \
       make \
       ncurses-dev \
       nginx-light \
-      p7zip-full \
       procps \
       wget \
       zlib1g \
@@ -98,7 +96,6 @@ RUN set -x && \
       file \
       gcc \
       gnupg \
-      libc-dev \
       make \
       ncurses-dev \
       zlib1g-dev \
