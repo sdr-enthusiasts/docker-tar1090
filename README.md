@@ -107,6 +107,9 @@ services:
       - adsbnet
     ports:
       - 8078:80
+    tmpfs:
+      - /run:rw,nosuid,nodev,exec,relatime,size=512M
+
 ```
 
 You should now be able to browse to:
