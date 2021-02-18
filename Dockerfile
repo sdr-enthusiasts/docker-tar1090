@@ -47,11 +47,9 @@ RUN set -x && \
       git \
       gnupg \
       jq \
-      libc-dev \
       make \
       ncurses-dev \
       nginx-light \
-      p7zip-full \
       procps \
       wget \
       zlib1g \
@@ -78,7 +76,6 @@ RUN set -x && \
     VERSION_TIMELAPSE1090=$(git log | head -1 | tr -s " " "_") || true && \
     echo "" && \
     echo "timelapse1090 ${VERSION_TIMELAPSE1090}" >> /VERSIONS && \
-    mkdir -p  /run/timelapse1090 && \
     popd && \
     echo "========== Building readsb ==========" && \
     git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \
@@ -87,7 +84,6 @@ RUN set -x && \
     make RTLSDR=no BLADERF=no PLUTOSDR=no HAVE_BIASTEE=no OPTIMIZE="-O3" && \
     cp -v /src/readsb/readsb /usr/local/bin/readsb && \
     cp -v /src/readsb/viewadsb /usr/local/bin/viewadsb && \
-    mkdir -p /run/readsb && \
     mkdir -p /var/globe_history && \
     echo "readsb $(/usr/local/bin/readsb --version)" >> /VERSIONS && \
     popd && \
@@ -100,7 +96,6 @@ RUN set -x && \
       file \
       gcc \
       gnupg \
-      libc-dev \
       make \
       ncurses-dev \
       zlib1g-dev \

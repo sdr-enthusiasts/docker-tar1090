@@ -2,6 +2,7 @@
 # shellcheck shell=bash
 
 if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
+  mkdir -p /run/timelapse1090
 
   {
     echo "SOURCE=$TIMELAPSE1090_SOURCE"
