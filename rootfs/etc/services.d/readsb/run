@@ -29,7 +29,12 @@ READSB_CMD+=(--heatmap 13)
 READSB_CMD+=(--json-trace-interval 15)
 READSB_CMD+=(--json-reliable 1)
 READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
-READSB_CMD+=(--net-ro-port 30002 --net-sbs-port 30003 --net-bi-port 30004,30104 --net-bo-port 30005 --forward-mlat)
+
+READSB_CMD+=(--net-ro-port=30002)
+READSB_CMD+=(--net-sbs-port=30003)
+READSB_CMD+=(--net-bi-port=30004,30104)
+READSB_CMD+=(--net-bo-port=30005)
+READSB_CMD+=(--forward-mlat)  
 
 # shellcheck disable=SC2086
 "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | awk -W Interactive '{print "[readsb] " $0}'
