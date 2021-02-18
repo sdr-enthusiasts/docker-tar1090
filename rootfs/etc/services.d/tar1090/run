@@ -1,7 +1,8 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-sleep 30
+mkdir -p /run/tar1090
+sleep 5
 
 # shellcheck source=/dev/null
 #source "${TAR1090_INSTALL_DIR}/default"
