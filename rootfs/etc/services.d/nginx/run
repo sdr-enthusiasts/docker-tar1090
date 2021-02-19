@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv sh
 #shellcheck shell=sh
 
+mkdir -p /var/log/nginx
+
 exec \
   /usr/sbin/nginx 2>&1 | awk -W interactive '{print "[nginx] " $0}'
