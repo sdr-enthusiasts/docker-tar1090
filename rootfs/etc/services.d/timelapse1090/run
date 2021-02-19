@@ -2,7 +2,10 @@
 # shellcheck shell=bash
 
 if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
-  mkdir -p /run/timelapse1090
+
+  # Move timelapse1090 out of /run, and symlink back to /run
+  mkdir -p /var/timelapse1090
+  ln -s /var/timelapse1090 /run/timelapse1090 || true
 
   {
     echo "SOURCE=$TIMELAPSE1090_SOURCE"
