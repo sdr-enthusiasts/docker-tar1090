@@ -55,6 +55,8 @@ docker run -d \
     -e MLATHOST=<MLATHOST> \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
+    --tmpfs=/run:exec,size=64M \
+    --tmpfs=/var/log \
     mikenye/tar1090:latest
 ```
 
@@ -71,6 +73,8 @@ docker run -d \
     -e MLATHOST=adsbx \
     -e LAT=-33.33333 \
     -e LONG=111.11111 \
+    --tmpfs=/run:exec,size=64M \
+    --tmpfs=/var/log \
     mikenye/tar1090:latest
 ```
 
@@ -108,7 +112,8 @@ services:
     ports:
       - 8078:80
     tmpfs:
-      - /run:rw,nosuid,nodev,exec,relatime,size=512M
+      - /run:exec,size=64M
+      - /var/log
 
 ```
 
@@ -118,63 +123,7 @@ You should now be able to browse to:
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
-## Up-and-Running with `docker-compose` including `mikenye/readsb`
-
-An example `docker-compose.xml` file is below:
-
-```shell
-version: '2.0'
-
-networks:
-  adsbnet:
-
-services:
-
-  readsb:
-    image: mikenye/readsb:latest
-    tty: true
-    container_name: readsb
-    restart: always
-    devices:
-      - /dev/bus/usb/001/007:/dev/bus/usb/001/007
-    ports:
-      - 8079:80
-    networks:
-      - adsbnet
-    command:
-      - --dcfilter
-      - --device-type=rtlsdr
-      - --fix
-      - --json-location-accuracy=2
-      - --lat=-33.33333
-      - --lon=111.11111
-      - --metric
-      - --modeac
-      - --ppm=0
-      - --net
-      - --stats-every=3600
-      - --quiet
-      - --write-json=/run/readsb
-
-  tar1090:
-    image: mikenye/tar1090:latest
-    tty: true
-    container_name: tar1090
-    restart: always
-    environment:
-      - TZ=Australia/Perth
-      - BEASTHOST=readsb
-      - LAT=-33.33333
-      - LONG=111.11111
-    networks:
-      - adsbnet
-    ports:
-      - 8078:80
-```
-
 *Note*: the example above excludes `MLATHOST` as `readsb` alone cannot provide MLAT data. You'll need a feeder container for this.
-
-For an explanation of the `mikenye/readsb` image's configuration, see that image's readme.
 
 ## Ports
 
@@ -278,6 +227,7 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 | Path | Purpose |
 |------|---------|
 | `/var/globe_history` | Holds past 24 hours of heatmap data |
+| `/var/timelapse1090` | Holds data for `timelapse1090` if enabled |
 
 ## Logging
 

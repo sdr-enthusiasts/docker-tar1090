@@ -77,6 +77,7 @@ RUN set -x && \
     echo "" && \
     echo "timelapse1090 ${VERSION_TIMELAPSE1090}" >> /VERSIONS && \
     popd && \
+    mkdir -p /var/timelapse1090 && \
     echo "========== Building readsb ==========" && \
     git clone --branch="${BRANCH_READSB}" --single-branch --depth=1 "${READSB_GIT_URL}" /src/readsb && \
     pushd /src/readsb && \
