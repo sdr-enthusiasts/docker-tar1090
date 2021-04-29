@@ -155,6 +155,9 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
 | `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
 | `ENABLE_TIMELAPSE1090` | Optional. Set to any value to enable timelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
+| `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb, for example `--write-json-globe-index --write-globe-history /var/globe_history` would cause traces being saved to disk and tar1090 similar to globe.adsbexchange.com | Unset |
+| `S6_SERVICES_GRACETIME` | Optional, set to 30000 when saving traces / globe_history | `3000` |
+
 
 ### `tar1090` Configuration
 
@@ -226,7 +229,7 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds past 24 hours of heatmap data |
+| `/var/globe_history` | Holds heatmap data (and traces if enabled) |
 | `/var/timelapse1090` | Holds data for `timelapse1090` if enabled |
 
 ## Logging
