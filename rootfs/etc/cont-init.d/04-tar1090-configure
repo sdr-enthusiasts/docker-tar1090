@@ -113,5 +113,9 @@ if [[ -n "$TAR1090_BINGMAPSAPIKEY" ]]; then
   echo "BingMapsAPIKey = \"$TAR1090_BINGMAPSAPIKEY\";"
 fi
 
+if [[ -n "$TAR1090_FLIGHTAWARELINKS" ]]; then
+  echo "flightawareLinks = true;"
+fi
+
 } >> "${TAR1090_INSTALL_DIR}/html/config.js"
 
