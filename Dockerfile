@@ -50,6 +50,7 @@ RUN set -x && \
       make \
       ncurses-dev \
       nginx-light \
+      p7zip-full \
       procps \
       wget \
       zlib1g \
