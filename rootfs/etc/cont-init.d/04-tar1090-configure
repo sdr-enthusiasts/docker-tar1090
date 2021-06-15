@@ -20,6 +20,11 @@ sed -i.original \
   -e 's/skyview978/skyaware978/' \
   "${TAR1090_INSTALL_DIR}/default"
 
+# Add in CORS header for tar1090 data/aircraft.json file
+
+sed -i 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
+"${TAR1090_INSTALL_DIR}/nginx.conf"
+
 # Modify tar1090 config.js. tar1090's config.js file should be reset as part of
 # /etc/cont-init.d/02-tar1090-update & /etc/cont-init.d/03-tar1090-copy
 {
