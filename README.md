@@ -179,6 +179,7 @@ All of the variables below are optional.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
+| `TAR1090_PAGETITLE` | Set the tar1090 web page title | `tar1090` |
 | `TAR1090_PLANECOUNTINTITLE` | Show number of aircraft in the page title | `false` |
 | `TAR1090_MESSAGERATEINTITLE` | Show number of messages per second in the page title | `false` |
 

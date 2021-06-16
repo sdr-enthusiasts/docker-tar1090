@@ -126,5 +126,9 @@ if [[ -n $"TAR1090_RANGERINGSCOLORS" ]]; then
   echo "SiteCirclesColors = new Array($TAR1090_RANGERINGSCOLORS);"
 fi
 
+if [[ -n $"TAR1090_PAGETITLE" ]]; then
+  echo "PageName = \"$TAR1090_PAGETITLE\";"
+fi
+
 } >> "${TAR1090_INSTALL_DIR}/html/config.js"
 
