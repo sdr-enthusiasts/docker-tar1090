@@ -122,11 +122,11 @@ if [[ -n "$TAR1090_FLIGHTAWARELINKS" ]]; then
   echo "flightawareLinks = true;"
 fi
 
-if [[ -n $"TAR1090_RANGERINGSCOLORS" ]]; then
+if [[ -n "$TAR1090_RANGERINGSCOLORS" ]]; then
   echo "SiteCirclesColors = new Array($TAR1090_RANGERINGSCOLORS);"
 fi
 
-if [[ -n $"TAR1090_PAGETITLE" ]]; then
+if [[ -n "$TAR1090_PAGETITLE" ]]; then
   echo "PageName = \"$TAR1090_PAGETITLE\";"
 fi
 
