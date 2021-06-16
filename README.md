@@ -166,7 +166,7 @@ All of the variables below are optional.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
-| `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | true |
+| `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
 | `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
