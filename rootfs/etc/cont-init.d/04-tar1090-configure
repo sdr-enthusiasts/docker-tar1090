@@ -122,5 +122,9 @@ if [[ -n "$TAR1090_FLIGHTAWARELINKS" ]]; then
   echo "flightawareLinks = true;"
 fi
 
+if [[ -n $"TAR1090_RANGERINGSCOLORS" ]]; then
+  echo "SiteCirclesColors = new Array($TAR1090_RANGERINGSCOLORS);"
+fi
+
 } >> "${TAR1090_INSTALL_DIR}/html/config.js"
 
