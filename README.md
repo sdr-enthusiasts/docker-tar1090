@@ -166,7 +166,7 @@ All of the variables below are optional.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
-| `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | true |
+| `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
 | `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
@@ -179,6 +179,7 @@ All of the variables below are optional.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
+| `TAR1090_PAGETITLE` | Set the tar1090 web page title | `tar1090` |
 | `TAR1090_PLANECOUNTINTITLE` | Show number of aircraft in the page title | `false` |
 | `TAR1090_MESSAGERATEINTITLE` | Show number of messages per second in the page title | `false` |
 
@@ -215,6 +216,7 @@ All of the variables below are optional.
 |----------------------|---------|---------|
 | `TAR1090_RANGERINGS` | `false` to hide range rings | `true` |
 | `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces, no quotes). | `100,150,200,250` |
+| `TAR1090_RANGERINGSCOLORS` | Colours for each of the range rings specified in `TAR1090_RANGERINGSDISTANCES`. Accepts a comma separated list of hex colour values, each enclosed in single quotes (eg `TAR1090_RANGERINGSCOLORS='#FFFFF','#00000'`). No spaces. | Blank |
 
 ### `timelapse1090` Configuration
 
