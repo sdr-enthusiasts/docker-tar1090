@@ -20,6 +20,10 @@ if [ "${UPDATE_TAR1090}" = "true" ]; then
 	# Attempt to update tar1090
 	git fetch origin master > /dev/null 2>&1 || exit 0
 	git reset --hard origin/master > /dev/null 2>&1 || exit 0
+
+	# get the aircraft db file
+	rm -f $GITPATH_TAR1090_AC_DB/aircraft.csv.gz 
+	curl https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz > $GITPATH_TAR1090_AC_DB/aircraft.csv.gz || exit 0
 fi
 
 # Print tar1090 version

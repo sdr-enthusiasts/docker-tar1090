@@ -22,3 +22,4 @@ cp default "${TAR1090_INSTALL_DIR}"
 
 # Copy database
 cp -R "${GITPATH_TAR1090_DB}/db" "${TAR1090_INSTALL_DIR}/html"
+cp "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" "${TAR1090_INSTALL_DIR}"

@@ -6,6 +6,7 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     READSB_GIT_URL="https://github.com/wiedehopf/readsb.git" \
     GITPATH_TAR1090=/opt/tar1090 \
     GITPATH_TAR1090_DB=/opt/tar1090-db \
+    GITPATH_TAR1090_AC_DB=/opt/tar1090-ac-db \
     HTTP_ACCESS_LOG="false" \
     HTTP_ERROR_LOG="true" \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
@@ -89,6 +90,9 @@ RUN set -x && \
     mkdir -p /var/globe_history && \
     echo "readsb $(/usr/local/bin/readsb --version)" >> /VERSIONS && \
     popd && \
+    echo "========== Install AircraftDB ==========" && \
+    mkdir -p $GITPATH_TAR1090_AC_DB && \
+    curl https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz > $GITPATH_TAR1090_AC_DB/aircraft.csv.gz && \
     echo "========== Install s6-overlay ==========" && \
     curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
     # Versions

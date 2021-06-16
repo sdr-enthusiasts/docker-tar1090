@@ -39,5 +39,12 @@ READSB_CMD+=(--net-bo-port=30005)
 READSB_CMD+=(--net-json-port=30047)
 READSB_CMD+=(--forward-mlat)
 
+# make sure the db file exists, and if it does, use it
+if [[ -e $TAR1090_INSTALL_DIR/aircraft.csv.gz ]]; then
+    if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
+        READSB_CMD+=("--db-file=$TAR1090_INSTALL_DIR/aircraft.csv.gz")
+    fi
+fi
+
 # shellcheck disable=SC2086
 "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | awk -W Interactive '{print "[readsb] " $0}'
