@@ -232,7 +232,7 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds heatmap data (and traces if enabled) |
+| `/var/globe_history` | Holds range outline data, heatmap data and traces if enabled |
 | `/var/timelapse1090` | Holds data for `timelapse1090` if enabled |
 
 ## Logging
