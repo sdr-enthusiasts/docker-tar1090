@@ -57,7 +57,6 @@ docker run -d \
     -e LONG=xx.xxxxx \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
-    --tmpfs=/var/globe-history \
     mikenye/tar1090:latest
 ```
 
@@ -76,7 +75,6 @@ docker run -d \
     -e LONG=111.11111 \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
-    --tmpfs=/var/globe-history \
     mikenye/tar1090:latest
 ```
 
@@ -116,7 +114,6 @@ services:
     tmpfs:
       - /run:exec,size=64M
       - /var/log
-      - /var/globe-history
 
 ```
 
@@ -231,14 +228,12 @@ All of the variables below are optional.
 
 ## Paths
 
-No paths need to be mapped through to persistent storage. However, if you don't want to lose your aircraft tracks/history on container restart, you can optionally map these paths:
+No paths need to be mapped through to persistent storage. However, if you don't want to lose your range outline and aircraft tracks/history on container restart, you can optionally map these paths:
 
 | Path | Purpose |
 |------|---------|
 | `/var/globe_history` | Holds range outline data, heatmap data and traces if enabled |
 | `/var/timelapse1090` | Holds data for `timelapse1090` if enabled |
-
-If you want to map `/var/globe-history` to get persistent range outlines, you'll need to change this path from a `tmpfs` mapping, to a "proper" bind mount or volume mapping.
 
 ## Logging
 
