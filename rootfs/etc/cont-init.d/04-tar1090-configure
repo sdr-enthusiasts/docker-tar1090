@@ -90,6 +90,18 @@ if [[ -n "$TAR1090_RANGE_OUTLINE_DASH" ]]; then
   echo "range_outline_dash = ${TAR1090_RANGE_OUTLINE_DASH};"
 fi
 
+if [[ -n "$TAR1090_ACTUAL_RANGE_OUTLINE_COLOR" ]]; then
+  echo "actual_range_outline_color = '${TAR1090_ACTUAL_RANGE_OUTLINE_COLOR}';"
+fi
+
+if [[ -n "$TAR1090_ACTUAL_RANGE_OUTLINE_WIDTH" ]]; then
+  echo "actual_range_outline_width = ${TAR1090_ACTUAL_RANGE_OUTLINE_WIDTH};"
+fi
+
+if [[ -n "$TAR1090_ACTUAL_RANGE_OUTLINE_DASH" ]]; then
+  echo "actual_range_outline_dash = ${TAR1090_ACTUAL_RANGE_OUTLINE_DASH};"
+fi
+
 if [[ -n "$TAR1090_MAPTYPE_TAR1090" ]]; then
   echo "MapType_tar1090 = \"${TAR1090_MAPTYPE_TAR1090}\";"
 fi
