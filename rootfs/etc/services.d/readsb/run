@@ -28,7 +28,7 @@ fi
 READSB_CMD+=(--write-json=/run/readsb)
 READSB_CMD+=(--heatmap-dir /var/globe_history)
 READSB_CMD+=(--heatmap 13)
-READSB_CMD+=(--write-state=/var/globe-history)
+READSB_CMD+=(--write-state=/var/globe_history)
 READSB_CMD+=(--json-trace-interval 15)
 READSB_CMD+=(--json-reliable 1)
 READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
