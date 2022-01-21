@@ -31,7 +31,7 @@ if [ "${UPDATE_TAR1090}" = "true" ]; then
     # copy new aircraft db file in to place
 	if [[ -e /aircraft.csv.gz ]]; then
 		rm -f "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz
-		mv /aircraft.csv.gz rm "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz
+		mv /aircraft.csv.gz "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz
 	fi
 fi
 
