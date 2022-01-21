@@ -22,8 +22,17 @@ if [ "${UPDATE_TAR1090}" = "true" ]; then
 	git reset --hard origin/master > /dev/null 2>&1 || exit 0
 
 	# get the aircraft db file
-	rm -f "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz
-	curl https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz > "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz || exit 0
+	curl \
+		--silent \
+		--output /aircraft.csv.gz \
+		https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz  || \
+		echo "Failed to download updated aircraft database. Using cached version"
+
+    # copy new aircraft db file in to place
+	if [[ -e /aircraft.csv.gz ]]; then
+		rm -f "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz
+		mv /aircraft.csv.gz rm "$GITPATH_TAR1090_AC_DB"/aircraft.csv.gz
+	fi
 fi
 
 # Print tar1090 version
