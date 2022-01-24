@@ -21,6 +21,10 @@ This image:
 
 It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
 
+## Note for Users running 32-bit Debian Buster-based OSes on ARM
+
+Please see: [Buster-Docker-Fixes](https://github.com/fredclausen/Buster-Docker-Fixes)!
+
 ## Supported tags and respective Dockerfiles
 
 * `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`. This image is built nightly from the `master` branch `Dockerfile` for all supported architectures.
