@@ -6,7 +6,8 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     curl \
         --silent \
         --output /usr/local/share/tar1090/html/upintheair.json \
-        "http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=12192"
+        "http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=12192" || \
+        echo "WARNING: Unable to download panorama. Outline will not be available."; exit 0
 fi
 
 exit 0
