@@ -1,4 +1,4 @@
-FROM debian:bullseye-20211220-slim
+FROM debian:bullseye-20220125-slim
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     BEASTPORT=30005 \
