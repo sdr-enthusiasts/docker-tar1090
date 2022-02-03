@@ -53,4 +53,4 @@ if [[ -e $TAR1090_INSTALL_DIR/aircraft.csv.gz ]]; then
 fi
 
 # shellcheck disable=SC2086
-"${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | awk -W Interactive '{print "[readsb] " $0}'
+"${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | mawk -W Interactive '{print "[readsb] " $0}'
