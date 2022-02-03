@@ -73,8 +73,8 @@ RUN set -x && \
     popd && \
     mkdir -p /var/timelapse1090 && \
     # aircraft-db
-    mkdir -p $GITPATH_TAR1090_AC_DB && \
-    curl https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz > $GITPATH_TAR1090_AC_DB/aircraft.csv.gz && \
+    mkdir -p "$GITPATH_TAR1090_AC_DB" && \
+    curl "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" > "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
