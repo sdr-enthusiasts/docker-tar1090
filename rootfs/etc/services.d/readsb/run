@@ -41,7 +41,7 @@ READSB_CMD+=(--net-bo-port=30005)
 READSB_CMD+=(--net-json-port=30047)
 READSB_CMD+=(--forward-mlat)
 
-if [ -n ${READSB_DEBUG} ]; then
+if [ -n "${READSB_DEBUG}" ]; then
     READSB_CMD+=("--debug=$READSB_DEBUG")
 fi
 
