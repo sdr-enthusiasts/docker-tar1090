@@ -41,6 +41,10 @@ READSB_CMD+=(--net-bo-port=30005)
 READSB_CMD+=(--net-json-port=30047)
 READSB_CMD+=(--forward-mlat)
 
+if [ -n "${READSB_DEBUG}" ]; then
+    READSB_CMD+=("--debug=$READSB_DEBUG")
+fi
+
 # make sure the db file exists, and if it does, use it
 if [[ -e $TAR1090_INSTALL_DIR/aircraft.csv.gz ]]; then
     if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
