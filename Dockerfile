@@ -1,4 +1,4 @@
-FROM ghcr.io/fredclausen/docker-baseimage:wreadsb-netonly
+FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb-netonly
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     BEASTPORT=30005 \
