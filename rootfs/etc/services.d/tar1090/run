@@ -13,7 +13,7 @@ service=readsb
 /usr/local/share/tar1090/tar1090.sh \
   "/run/$service" \
   "$srcdir" \
-  2>&1 | awk -W interactive '{print "[tar1090] " $0}'
+  2>&1 | mawk -W interactive '{print "[tar1090] " $0}'
 
   # "$INTERVAL" \
   # "$HISTORY_SIZE" \
