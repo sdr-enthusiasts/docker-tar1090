@@ -146,15 +146,15 @@ Some common ports are as follows (which may or may not be in use depending on yo
 
 Json position output:
 
-- outputs an aircraft object for every new position received for an aircraft if the --json-trace-interval has elapsed for that aircraft
-- to make it output every received position, set READSB_JSON_TRACE_INTERVAL to 0.1
-- each json object will be on a new line
-- <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+* outputs an aircraft object for every new position received for an aircraft if the --json-trace-interval has elapsed for that aircraft
+* to make it output every received position, set READSB_JSON_TRACE_INTERVAL to 0.1
+* each json object will be on a new line
+* <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 
 Aircraft.json:
 
-- <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
-- available on the same port as the web interface, example: `http://192.168.x.yy:8087/data/aircraft.json`
+* <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+* available on the same port as the web interface, example: `http://192.168.x.yy:8087/data/aircraft.json`
 
 ### Outgoing
 
