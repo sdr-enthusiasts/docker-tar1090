@@ -32,17 +32,151 @@ READSB_CMD+=(--write-state=/var/globe_history)
 READSB_CMD+=(--write-state-only-on-exit)
 READSB_CMD+=(--json-trace-interval 14)
 READSB_CMD+=(--json-reliable 1)
-READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
 
+READSB_CMD+=(--net-ri-port=30001)
 READSB_CMD+=(--net-ro-port=30002)
 READSB_CMD+=(--net-sbs-port=30003)
 READSB_CMD+=("--net-bi-port=30004,30104")
 READSB_CMD+=(--net-bo-port=30005)
+READSB_CMD+=(--net-beast-reduce-out-port=30006)
 READSB_CMD+=(--net-json-port=30047)
 READSB_CMD+=(--forward-mlat)
+READSB_CMD+=(--net-sbs-in-port=32006)
 
 if [ -n "${READSB_DEBUG}" ]; then
     READSB_CMD+=("--debug=$READSB_DEBUG")
+fi
+
+# Handle "--max-range=<dist>"
+if [[ -n "$READSB_MAX_RANGE" ]]; then
+    READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
+fi
+
+# Handle "--mlat"
+if [[ -n "$READSB_MLAT" ]]; then
+    READSB_CMD+=("--mlat")
+fi
+
+# Handle "--modeac"
+if [[ -n "$READSB_MODEAC" ]]; then
+    READSB_CMD+=("--modeac")
+fi
+
+# Handle "--stats-every=<sec>"
+if [[ -n "$READSB_STATS_EVERY" ]]; then
+    READSB_CMD+=("--stats-every=$READSB_STATS_EVERY")
+fi
+
+# Handle "--stats-range"
+if [[ -n "$READSB_STATS_RANGE" ]]; then
+    READSB_CMD+=("--stats-range")
+fi
+
+##### NETWORK OPTIONS #####
+
+# Handle "--net-beast-reduce-interval=<seconds>"
+if [[ -n "$READSB_NET_BEAST_REDUCE_INTERVAL" ]]; then
+    READSB_CMD+=("--net-beast-reduce-interval=$READSB_NET_BEAST_REDUCE_INTERVAL")
+fi
+
+# Handle "--net-beast-reduce-out-port=<ports>"
+if [[ -n "$READSB_NET_BEAST_REDUCE_OUT_PORT" ]]; then
+    READSB_CMD+=("--net-beast-reduce-out-port=$READSB_NET_BEAST_REDUCE_OUT_PORT")
+fi
+
+if [[ -n "$READSB_NET_SBS_REDUCE" ]]; then
+    READSB_CMD+=("--net-sbs-reduce")
+fi
+
+if [[ -n "$READSB_NET_BEAST_REDUCE_FILTER_DIST" ]]; then
+    READSB_CMD+=("--net-beast-reduce-filter-dist=$READSB_NET_BEAST_REDUCE_FILTER_DIST")
+fi
+
+if [[ -n "$READSB_JSON_TRACE_INTERVAL" ]]; then
+    READSB_CMD+=("--json-trace-interval=$READSB_JSON_TRACE_INTERVAL")
+fi
+
+if [[ -n "$READSB_NET_BEAST_REDUCE_FILTER_ALT" ]]; then
+    READSB_CMD+=("--net-beast-reduce-filter-alt=$READSB_NET_BEAST_REDUCE_FILTER_ALT")
+fi
+
+# Handle "--net-bi-port=<ports>"
+if [[ -n "$READSB_NET_BEAST_INPUT_PORT" ]]; then
+    READSB_CMD+=("--net-bi-port=$READSB_NET_BEAST_INPUT_PORT")
+fi
+
+# Handle "--net-bo-port=<ports>"
+if [[ -n "$READSB_NET_BEAST_OUTPUT_PORT" ]]; then
+    READSB_CMD+=("--net-bo-port=$READSB_NET_BEAST_OUTPUT_PORT")
+fi
+
+# Handle "--net-buffer=<n>"
+if [[ -n "$READSB_NET_BUFFER" ]]; then
+    READSB_CMD+=("--net-buffer=$READSB_NET_BUFFER")
+fi
+
+# Handle "--net-connector=<ip,port,protocol>"
+if [[ -n "$READSB_NET_CONNECTOR" ]]; then
+    IFS=';' read -r -a READSB_NET_CONNECTOR_ARRAY <<< "$READSB_NET_CONNECTOR"
+    for NET_CONNECTOR_ELEMENT in "${READSB_NET_CONNECTOR_ARRAY[@]}"
+    do
+        READSB_CMD+=("--net-connector=$NET_CONNECTOR_ELEMENT")
+    done
+fi
+
+# Handle "--net-connector-delay=<seconds>"
+if [[ -n "$READSB_NET_CONNECTOR_DELAY" ]]; then
+    READSB_CMD+=("--net-connector-delay=$READSB_NET_CONNECTOR_DELAY")
+fi
+
+# Handle "--net-heartbeat=<rate>"
+if [[ -n "$READSB_NET_HEARTBEAT" ]]; then
+    READSB_CMD+=("--net-heartbeat=$READSB_NET_HEARTBEAT")
+fi
+
+# Handle "--net-only"
+if [[ -n "$READSB_NET_ONLY" ]]; then
+    READSB_CMD+=("--net-only")
+fi
+
+# Handle "--net-ri-port=<ports>"
+if [[ -n "$READSB_NET_RAW_INPUT_PORT" ]]; then
+    READSB_CMD+=("--net-ri-port=$READSB_NET_RAW_INPUT_PORT")
+fi
+
+# Handle "--net-ro-interval=<rate>"
+if [[ -n "$READSB_NET_RAW_OUTPUT_INTERVAL" ]]; then
+    READSB_CMD+=("--net-ro-interval=$READSB_NET_RAW_OUTPUT_INTERVAL")
+fi
+
+# Handle "--net-ri-port=<ports>"
+if [[ -n "$READSB_NET_RAW_OUTPUT_PORT" ]]; then
+    READSB_CMD+=("--net-ro-port=$READSB_NET_RAW_OUTPUT_PORT")
+fi
+
+# Handle "--net-ro-size=<size>"
+if [[ -n "$READSB_NET_RAW_OUTPUT_SIZE" ]]; then
+    READSB_CMD+=("--net-ro-size=$READSB_NET_RAW_OUTPUT_SIZE")
+fi
+
+# Handle "--net-sbs-in-port=<ports>"
+if [[ -n "$READSB_NET_SBS_INPUT_PORT" ]]; then
+    READSB_CMD+=("--net-sbs-in-port=$READSB_NET_SBS_INPUT_PORT")
+fi
+
+# Handle "--net-sbs-port=<ports>"
+if [[ -n "$READSB_NET_SBS_OUTPUT_PORT" ]]; then
+    READSB_CMD+=("--net-sbs-port=$READSB_NET_SBS_OUTPUT_PORT")
+fi
+
+# Handle "--net-verbatim"
+if [[ -n "$REASSB_NET_VERBATIM" ]]; then
+    READSB_CMD+=("--net-verbatim")
+fi
+
+# Handle "--net-vrs-port=<ports>"
+if [[ -n "$READSB_NET_VRS_PORT" ]]; then
+    READSB_CMD+=("--net-vrs-port=$READSB_NET_VRS_PORT")
 fi
 
 # make sure the db file exists, and if it does, use it

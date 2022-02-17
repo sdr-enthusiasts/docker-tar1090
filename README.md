@@ -1,6 +1,6 @@
 # mikenye/tar1090
 
-[`tar1090`](https://github.com/wiedehopf/tar1090) is an excellent tool by [wiedehopf](https://github.com/wiedehopf) that provides an improved [`dump1090-fa`](https://github.com/flightaware/dump1090) interface.
+[`tar1090`](https://github.com/wiedehopf/tar1090) is an ADS-B viewing webinterface by [wiedehopf](https://github.com/wiedehopf) using his [`readsb fork`](https://github.com/wiedehopf/readsb) as a backend
 
 At the time of writing this README, it provides:
 
@@ -131,6 +131,29 @@ You should now be able to browse to:
 
 ## Ports
 
+Some common ports are as follows (which may or may not be in use depending on your configuration):
+
+| Port | Details |
+|------|---------|
+| `30001/tcp` | Raw protocol input |
+| `30002/tcp` | Raw protocol output |
+| `30003/tcp` | SBS/Basestation protocol output |
+| `32006/tcp` | SBS/Basestation protocol input |
+| `30004/tcp` | Beast protocol input |
+| `30005/tcp` | Beast protocol output |
+| `30006/tcp` | Beast reduce protocol output |
+| `30047/tcp` | Json position output |
+
+Json position output:
+- outputs an aircraft object for every new position received for an aircraft if the --json-trace-interval has elapsed for that aircraft
+- to make it output every received position, set READSB_JSON_TRACE_INTERVAL to 0.1
+- each json object will be on a new line
+- https://github.com/wiedehopf/readsb/blob/dev/README-json.md
+
+Aircraft.json:
+- https://github.com/wiedehopf/readsb/blob/dev/README-json.md
+- available on the same port as the web interface, example: http://192.168.x.yy:8087/data/aircraft.json
+
 ### Outgoing
 
 This container will try to connect to the `BEASTHOST` on TCP port `30005` by default. This can be changed by setting the `BEASTPORT` environment variable.
@@ -245,9 +268,71 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 | `/var/globe_history` | Holds range outline data, heatmap data and traces if enabled |
 | `/var/timelapse1090` | Holds data for `timelapse1090` if enabled |
 
+### `readsb` Network Options
+
+This container uses the readsb fork by wiedehopf as a backend to tar1090: https://github.com/wiedehopf/readsb
+
+Where the default value is "Unset", `readsb`'s default will be used.
+
+| Variable | Description | Controls which `readsb` option | Default |
+|----------|-------------|--------------------------------|---------|
+| `READSB_NET_BEAST_REDUCE_INTERVAL` | BeastReduce position update interval, longer means less data (valid range: `0.000` - `14.999`) | `--net-beast-reduce-interval=<seconds>` | `0.125` |
+| `READSB_NET_BEAST_REDUCE_FILTER_DIST` | Restrict beast-reduce output to aircraft in a radius of X nmi | `--net-beast-reduce-filter-dist=<nmi>` | Unset |
+| `READSB_NET_BEAST_REDUCE_FILTER_ALT` | Restrict beast-reduce output to aircraft below X ft | `--net-beast-reduce-filter-alt=<ft>` | Unset |
+| `READSB_NET_BEAST_REDUCE_OUT_PORT` | TCP BeastReduce output listen ports (comma separated) | `--net-beast-reduce-out-port=<ports>` | Unset |
+| `READSB_NET_BEAST_INPUT_PORT`| TCP Beast input listen ports | `--net-bi-port=<ports>` | `30004,30104` |
+| `READSB_NET_BEAST_OUTPUT_PORT` | TCP Beast output listen ports | `--net-bo-port=<ports>` | `30005` |
+| `READSB_NET_BUFFER` | TCP buffer size 64Kb * (2^n) | `--net-buffer=<n>` | `2` (256Kb) |
+| `READSB_NET_RAW_OUTPUT_INTERVAL` | TCP output flush interval in seconds (maximum interval between two network writes of accumulated data). | `--net-ro-interval=<rate>` | `0.05` |
+| `READSB_NET_RAW_OUTPUT_SIZE` | TCP output flush size (maximum amount of internally buffered data before writing to network). | `--net-ro-size=<size>` | `1200` |
+| `READSB_NET_CONNECTOR` | See "`READSB_NET_CONNECTOR` syntax" below. | `--net-connector=<ip,port,protocol>` | Unset |
+| `READSB_NET_CONNECTOR_DELAY` | Outbound re-connection delay. | `--net-connector-delay=<seconds>` | `30` |
+| `READSB_NET_HEARTBEAT` | TCP heartbeat rate in seconds (0 to disable). | `--net-heartbeat=<rate>` | `60` |
+| `READSB_NET_RAW_INPUT_PORT` | TCP raw input listen ports. | `--net-ri-port=<ports>` | `30001` |
+| `READSB_NET_RAW_OUTPUT_PORT` | TCP raw output listen ports. | `--net-ro-port=<ports>` | `30002` |
+| `READSB_NET_SBS_INPUT_PORT` | TCP BaseStation input listen ports. | `--net-sbs-in-port=<ports>` | Unset |
+| `READSB_NET_SBS_OUTPUT_PORT` | TCP BaseStation output listen ports. | `--net-sbs-port=<ports>` | `30003` |
+| `REASSB_NET_VERBATIM` | Set this to any value to forward messages unchanged. | `--net-verbatim` | Unset |
+| `READSB_NET_VRS_PORT` | TCP VRS JSON output listen ports. | `--net-vrs-port=<ports>` | Unset |
+
+#### `READSB_NET_CONNECTOR` syntax
+
+This variable allows you to configure outgoing connections. The variable takes a semicolon (`;`) separated list of `ip,port,protocol`, where:
+
+* `ip` is an IP address. Specify an IP/hostname/containername for outgoing connections.
+* `port` is a TCP port number
+* `protocol` can be one of the following:
+  * `beast_out`: Beast-format output
+  * `beast_in`: Beast-format input
+  * `raw_out`: Raw output
+  * `raw_in`: Raw input
+  * `sbs_out`: SBS-format output
+  * `vrs_out`: SBS-format output
+
+For example, to pull in MLAT results (so the performance graphs in the web interface show MLAT numbers), you could do the following:
+
+```yaml
+    environment:
+    ...
+      - READSB_NET_CONNECTOR=piaware,30105,beast_in;adsbx,30105,beast_in;rbfeeder,30105,beast_in
+    ...
+```
+
+### `readsb` General Options
+
+Where the default value is "Unset", `readsb`'s default will be used.
+
+| Variable | Description | Controls which `readsb` option | Default |
+|----------|-------------|--------------------------------|---------|
+| `READSB_JSON_TRACE_INTERVAL` | Control per plane interval for json position output and trace interval for globe history | `--json-trace-interval=<sec>` | `14` |
+| `READSB_MAX_RANGE` | Absolute maximum range for position decoding (in nm) | `--max-range=<dist>` | `300` |
+| `READSB_MLAT` | Set this to add timestamps to AVR / RAW output | `--mlat` | Unset |
+| `READSB_STATS_EVERY` | Number of seconds between showing and resetting stats. | `--stats-every=<sec>` | Unset |
+| `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
+
 ## Logging
 
-All logs are to the container's stdout and can be viewed with `docker logs [-f] container`.
+All logs are to the container's stdout and can be viewed with `docker logs -t [-f] container`.
 
 ## Getting help
 
