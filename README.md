@@ -145,14 +145,16 @@ Some common ports are as follows (which may or may not be in use depending on yo
 | `30047/tcp` | Json position output |
 
 Json position output:
+
 - outputs an aircraft object for every new position received for an aircraft if the --json-trace-interval has elapsed for that aircraft
 - to make it output every received position, set READSB_JSON_TRACE_INTERVAL to 0.1
 - each json object will be on a new line
-- https://github.com/wiedehopf/readsb/blob/dev/README-json.md
+- <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 
 Aircraft.json:
-- https://github.com/wiedehopf/readsb/blob/dev/README-json.md
-- available on the same port as the web interface, example: http://192.168.x.yy:8087/data/aircraft.json
+
+- <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+- available on the same port as the web interface, example: `http://192.168.x.yy:8087/data/aircraft.json`
 
 ### Outgoing
 
@@ -270,7 +272,7 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 ### `readsb` Network Options
 
-This container uses the readsb fork by wiedehopf as a backend to tar1090: https://github.com/wiedehopf/readsb
+This container uses the readsb fork by wiedehopf as a backend to tar1090: <https://github.com/wiedehopf/readsb>
 
 Where the default value is "Unset", `readsb`'s default will be used.
 
