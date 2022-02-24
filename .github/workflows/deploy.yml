@@ -88,7 +88,7 @@ jobs:
           file: ./Dockerfile
           no-cache: true
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm/v6,linux/arm64
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest
 
   deploy_dockerhub_multiarch_version:
@@ -143,7 +143,7 @@ jobs:
           file: ./Dockerfile
           no-cache: true
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm/v6,linux/arm64
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:${{ env.VERSION_TAG }}
 
   deploy_dockerhub_multiarch_nohealhcheck:
@@ -185,7 +185,7 @@ jobs:
           file: ./Dockerfile.nohealthcheck
           no-cache: true
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm/v6,linux/arm64
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest_nohealthcheck
 
   deploy_dockerhub_multiarch_version_nohealhcheck:
@@ -239,7 +239,7 @@ jobs:
           file: ./Dockerfile.nohealthcheck
           no-cache: true
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm/v6,linux/arm64
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:${{ env.VERSION_TAG }}_nohealthcheck
 
   deploy_dockerhub_single_arch:
@@ -302,7 +302,7 @@ jobs:
           file: ./Dockerfile
           no-cache: true
           platforms: ${{ matrix.docker-platform }}
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest_${{ env.ARCH_TAG }}
 
       # Get version from "latest"
@@ -327,7 +327,7 @@ jobs:
           file: ./Dockerfile
           no-cache: true
           platforms: ${{ matrix.docker-platform }}
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:${{ env.VERSION_TAG }}_${{ env.ARCH_TAG }}
 
       # Patch dockerfile to remove healthcheck
@@ -344,7 +344,7 @@ jobs:
           file: ./Dockerfile.nohealthcheck
           no-cache: true
           platforms: ${{ matrix.docker-platform }}
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest_nohealthcheck_${{ env.ARCH_TAG }}
 
       # Build version specific _nohealthcheck
@@ -356,7 +356,7 @@ jobs:
           file: ./Dockerfile.nohealthcheck
           no-cache: true
           platforms: ${{ matrix.docker-platform }}
-          push: ${{ env.PUSH }}
+          push: true
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:${{ env.VERSION_TAG }}_nohealthcheck_${{ env.ARCH_TAG }}
 
   deploy_ghcr_multiarch_latest:
