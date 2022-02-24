@@ -48,8 +48,8 @@ jobs:
       - name: Run hadolint against Dockerfiles
         run: docker run --rm -i -v "$PWD":/workdir --workdir /workdir --entrypoint hadolint hadolint/hadolint --ignore DL3003 --ignore DL3006 --ignore DL3010 --ignore DL4001 --ignore DL3007 --ignore DL3008 --ignore SC2068 --ignore DL3007 --ignore SC1091 --ignore DL3013 --ignore DL3010 $(find . -type f -iname "Dockerfile*")
 
-  deploy_dockerhub_multiarch:
-    name: Deploy to DockerHub (Multi-Arch)
+  deploy_dockerhub_multiarch_latest:
+    name: Deploy to DockerHub (Multi-Arch) Latest
     needs: [hadolint]
     runs-on: ubuntu-latest
 
@@ -91,6 +91,36 @@ jobs:
           push: ${{ env.PUSH }}
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest
 
+  deploy_dockerhub_multiarch_version:
+    name: Deploy to DockerHub (Multi-Arch) Version Tagged
+    needs: [hadolint, deploy_dockerhub_multiarch_latest]
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Check out our code
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+
+      # Set up QEMU for multi-arch builds
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Log into docker hub (so we can push images)
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Set up buildx for multi platform builds
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
       # Get version from "latest"
       -
         name: Get latest image version
@@ -116,6 +146,30 @@ jobs:
           push: ${{ env.PUSH }}
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:${{ env.VERSION_TAG }}
 
+  deploy_dockerhub_multiarch_nohealhcheck:
+    name: Deploy to DockerHub (Multi-Arch) No Healh Check
+    needs: [hadolint]
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Check out our code
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+
+      # Set up QEMU for multi-arch builds
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Log into docker hub (so we can push images)
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       # Patch dockerfile to remove healthcheck
       -
         name: Patch Dockerfile to remove healthcheck
@@ -133,7 +187,30 @@ jobs:
           push: ${{ env.PUSH }}
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest_nohealthcheck
 
-      # Build version specific _nohealthcheck
+  deploy_dockerhub_multiarch_version_nohealhcheck:
+    name: Deploy to DockerHub (Multi-Arch) Version Tagged No Healh Check
+    needs: [hadolint, deploy_dockerhub_multiarch_latest]
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Check out our code
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+
+      # Set up QEMU for multi-arch builds
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Log into docker hub (so we can push images)
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build & Push - version specific nohealthcheck
         uses: docker/build-push-action@v2
