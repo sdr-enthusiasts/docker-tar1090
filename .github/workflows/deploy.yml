@@ -17,6 +17,11 @@ on:
       - Dockerfile
       - rootfs/**
 
+env:
+  DOCKERHUB_REPO: mikenye
+  DOCKERHUB_IMAGE: tar1090
+  GHCR_IMAGE: ${{ github.repository }}
+  GHCR_REGISTRY: ghcr.io
 
 jobs:
   workflow-dispatch:
@@ -47,15 +52,6 @@ jobs:
     name: Deploy to DockerHub (Multi-Arch)
     needs: [hadolint]
     runs-on: ubuntu-latest
-
-    # Set job-wide environment variables
-    #  - REPO: repo name on dockerhub
-    #  - IMAGE: image name on dockerhub
-    env:
-      DOCKERHUB_REPO: mikenye
-      DOCKERHUB_IMAGE: tar1090
-      GHCR_IMAGE: ${{ github.repository }}
-      GHCR_REGISTRY: ghcr.io
 
     steps:
 
@@ -161,14 +157,6 @@ jobs:
           - linux/arm/v6
           - linux/arm/v7
           - linux/i386
-
-    # Set job-wide environment variables
-    #  - REPO: repo name on dockerhub
-    #  - IMAGE: image name on dockerhub
-    env:
-      REPO: mikenye
-      IMAGE: tar1090
-      PUSH: true
 
     steps:
 
