@@ -23,7 +23,7 @@ It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below
 
 ## Note for Users running 32-bit Debian Buster-based OSes on ARM
 
-Please see: [Buster-Docker-Fixes](https://github.com/fredclausen/Buster-Docker-Fixes)!
+Please see: [Buster-Docker-Fixes](https://github.com/sdr-enthusiasts/Buster-Docker-Fixes)!
 
 ## Supported tags and respective Dockerfiles
 
@@ -61,7 +61,7 @@ docker run -d \
     -e LONG=xx.xxxxx \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
-    mikenye/tar1090:latest
+    ghcr.io/sdr-enthusiasts/docker-tar1090:latest
 ```
 
 Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a host that can provide Beast data, and `MLATHOST` with the IP address of a host that can provide MLAT data.
@@ -79,7 +79,7 @@ docker run -d \
     -e LONG=111.11111 \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
-    mikenye/tar1090:latest
+    ghcr.io/sdr-enthusiasts/docker-tar1090:latest
 ```
 
 You should now be able to browse to:
@@ -101,7 +101,7 @@ networks:
 services:
 
   tar1090:
-    image: mikenye/tar1090:latest
+    image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
     tty: true
     container_name: tar1090
     restart: always
