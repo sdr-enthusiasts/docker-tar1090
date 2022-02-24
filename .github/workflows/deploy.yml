@@ -121,6 +121,13 @@ jobs:
         name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
+
+      # Set up buildx for multi platform builds
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       # Get version from "latest"
       -
         name: Get latest image version
@@ -170,6 +177,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Set up buildx for multi platform builds
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       # Patch dockerfile to remove healthcheck
       -
         name: Patch Dockerfile to remove healthcheck
@@ -212,6 +226,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Set up buildx for multi platform builds
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
       # Get version from "latest"
       -
@@ -564,6 +584,10 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
+
+      # Patch dockerfile to remove healthcheck
+      - name: Patch Dockerfile to remove healthcheck
+        run: sed '/^HEALTHCHECK /d' < Dockerfile > Dockerfile.nohealthcheck
 
       # Build version specific _nohealthcheck
       - name: Build & Push - version specific nohealthcheck
