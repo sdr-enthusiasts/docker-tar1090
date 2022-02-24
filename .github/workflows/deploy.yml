@@ -175,6 +175,7 @@ jobs:
         name: Patch Dockerfile to remove healthcheck
         run: sed '/^HEALTHCHECK /d' < Dockerfile > Dockerfile.nohealthcheck
 
+
       # Build "latest_nohealthcheck"
       -
         name: Build & Push - latest nohealthcheck
@@ -211,6 +212,25 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Get version from "latest"
+      -
+        name: Get latest image version
+        run: |
+          docker pull "${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest"
+          echo "VERSION_TAG=$(docker run --rm --entrypoint cat "${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest" /CONTAINER_VERSION)" >> $GITHUB_ENV
+
+      # Show version from "latest"
+      -
+        name: Show latest image version
+        run: |
+          echo "${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:latest contains version: ${{ env.VERSION_TAG }}"
+
+      # Patch dockerfile to remove healthcheck
+      -
+        name: Patch Dockerfile to remove healthcheck
+        run: sed '/^HEALTHCHECK /d' < Dockerfile > Dockerfile.nohealthcheck
+
       -
         name: Build & Push - version specific nohealthcheck
         uses: docker/build-push-action@v2
@@ -339,8 +359,8 @@ jobs:
           push: ${{ env.PUSH }}
           tags: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMAGE }}:${{ env.VERSION_TAG }}_nohealthcheck_${{ env.ARCH_TAG }}
 
-  deploy_ghcr_multiarch:
-    name: Deploy ghcr.io (Multi-Arch)
+  deploy_ghcr_multiarch_latest:
+    name: Deploy ghcr.io (Multi-Arch) Latest
     needs: [hadolint]
     runs-on: ubuntu-latest
     steps:
@@ -387,6 +407,42 @@ jobs:
           tags: ghcr.io/${{ env.GHCR_IMAGE }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
+  deploy_ghcr_multiarch_version_tagged:
+    name: Deploy ghcr.io (Multi-Arch) Version Tagged
+    needs: [hadolint, deploy_ghcr_multiarch_latest]
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out our code
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Log into ghcr (so we can push images)
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Get metadata from repo
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Set up QEMU for multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Set up buildx for multi platform builds
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       # Get version from "latest"
       - name: Get latest image version
         run: |
@@ -410,6 +466,42 @@ jobs:
           tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.VERSION_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  deploy_ghcr_multiarch_latest_no_healhcheck:
+    name: Deploy ghcr.io (Multi-Arch) Latest No Health Check
+    needs: [hadolint]
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out our code
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Log into ghcr (so we can push images)
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Get metadata from repo
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Set up QEMU for multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Set up buildx for multi platform builds
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       # Patch dockerfile to remove healthcheck
       - name: Patch Dockerfile to remove healthcheck
         run: sed '/^HEALTHCHECK /d' < Dockerfile > Dockerfile.nohealthcheck
@@ -425,6 +517,53 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.GHCR_IMAGE }}:latest_nohealthcheck
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy_ghcr_multiarch_version_tagged_no_healthcheck:
+    name: Deploy ghcr.io (Multi-Arch) Version Tagged No Health Check
+    needs: [hadolint, deploy_ghcr_multiarch_latest]
+    runs-on: ubuntu-latest
+    steps:
+
+      # Check out our code
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Log into ghcr (so we can push images)
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Get metadata from repo
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Get version from "latest"
+      - name: Get latest image version
+        run: |
+          docker pull "ghcr.io/${{ env.GHCR_IMAGE }}:latest"
+          echo "VERSION_TAG=$(docker run --rm --entrypoint cat "ghcr.io/${{ env.GHCR_IMAGE }}:latest" /CONTAINER_VERSION)" >> $GITHUB_ENV
+
+      # Show version from "latest"
+      - name: Show latest image version
+        run: |
+          echo "ghcr.io/${{ env.GHCR_IMAGE }}:latest contains version: ${{ env.VERSION_TAG }}"
+
+      # Set up QEMU for multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Set up buildx for multi platform builds
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
       # Build version specific _nohealthcheck
       - name: Build & Push - version specific nohealthcheck
