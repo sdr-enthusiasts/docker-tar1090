@@ -40,7 +40,7 @@ READSB_CMD+=("--net-bi-port=30004,30104")
 READSB_CMD+=(--net-bo-port=30005)
 READSB_CMD+=(--net-beast-reduce-out-port=30006)
 READSB_CMD+=(--net-json-port=30047)
-READSB_CMD+=(--forward-mlat)
+# READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
 
 if [ -n "${READSB_DEBUG}" ]; then
