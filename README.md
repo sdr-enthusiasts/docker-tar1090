@@ -1,4 +1,4 @@
-# mikenye/tar1090
+# sdr-enthusiasts/docker-tar1090
 
 [`tar1090`](https://github.com/wiedehopf/tar1090) is an ADS-B viewing webinterface by [wiedehopf](https://github.com/wiedehopf) using his [`readsb fork`](https://github.com/wiedehopf/readsb) as a backend
 
@@ -27,7 +27,7 @@ Please see: [Buster-Docker-Fixes](https://github.com/sdr-enthusiasts/Buster-Dock
 
 ## Supported tags and respective Dockerfiles
 
-* `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`. This image is built nightly from the `master` branch `Dockerfile` for all supported architectures.
+* `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`.
 * `latest_nohealthcheck` is the same as the `latest` version above. However, this version has the docker healthcheck removed. This is done for people running platforms (such as [Nomad](https://www.nomadproject.io)) that don't support manually disabling healthchecks, where healthchecks are not wanted.
 * Specific version tags are available if required, however these are not regularly updated. It is generally recommended to run latest.
 
@@ -40,12 +40,12 @@ Please see: [Buster-Docker-Fixes](https://github.com/sdr-enthusiasts/Buster-Dock
 
 ## Prerequisites
 
-You will need a source of Beast data. This could be an RPi running PiAware, the [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image or [`mikenye/readsb-protobuf`](https://hub.docker.com/r/mikenye/readsb-protobuf).
+You will need a source of Beast data. Examples are an RPi running PiAware or [`sdr-enthusiasts/docker-readsb-protobuf`](https://github.com/sdr-enthusiasts/docker-readsb-protobuf).
 
 Optionally, you will need a source of MLAT data. This could be:
 
-* [`mikenye/adsbexchange`](https://hub.docker.com/r/mikenye/adsbexchange) image
-* [`mikenye/piaware`](https://hub.docker.com/r/mikenye/piaware) image
+* [`sdr-enthusiasts/docker-adsbexchange`](https://github.com/sdr-enthusiasts/docker-adsbexchange) image
+* [`sdr-enthusiasts/docker-piaware`](https://github.com/sdr-enthusiasts/docker-piaware) image
 * Basically anything running `mlat-client` listening for beast connections (ie: `--results beast,listen,30105`)
 
 ## Up-and-Running with `docker run`
@@ -338,10 +338,6 @@ All logs are to the container's stdout and can be viewed with `docker logs -t [-
 
 ## Getting help
 
-Please feel free to [open an issue on the project's GitHub](https://github.com/mikenye/docker-tar1090/issues).
+Please feel free to [open an issue on the project's GitHub](https://github.com/sdr-enthusiasts/docker-tar1090/issues).
 
-I also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join](https://discord.gg/sTf9uYF) and converse.
-
-## Changelog
-
-See the [GitHub commit log](https://github.com/mikenye/docker-tar1090/commits/master).
+We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join](https://discord.gg/sTf9uYF) and converse.

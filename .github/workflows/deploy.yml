@@ -10,7 +10,6 @@ on:
   push:
     branches:
       - main
-      - master
     # Trigger only on specific files being updated.
 
     paths:
