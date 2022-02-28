@@ -6,7 +6,7 @@ mkdir -p /run/readsb
 # Build the readsb command line based on options
 READSB_BIN="/usr/local/bin/readsb"
 
-READSB_CMD=(--net-only)
+READSB_CMD=(--net)
 READSB_CMD+=(--quiet)
 
 if [ -n "${LAT}" ]; then
@@ -72,6 +72,11 @@ if [[ -n "$READSB_STATS_RANGE" ]]; then
     READSB_CMD+=("--stats-range")
 fi
 
+if [[ -n "$READSB_RANGE_OUTLINE_HOURS" ]]; then
+    READSB_CMD+=("--range-outline-hours=$READSB_RANGE_OUTLINE_HOURS")
+fi
+
+
 ##### NETWORK OPTIONS #####
 
 # Handle "--net-beast-reduce-interval=<seconds>"
@@ -134,11 +139,6 @@ if [[ -n "$READSB_NET_HEARTBEAT" ]]; then
     READSB_CMD+=("--net-heartbeat=$READSB_NET_HEARTBEAT")
 fi
 
-# Handle "--net-only"
-if [[ -n "$READSB_NET_ONLY" ]]; then
-    READSB_CMD+=("--net-only")
-fi
-
 # Handle "--net-ri-port=<ports>"
 if [[ -n "$READSB_NET_RAW_INPUT_PORT" ]]; then
     READSB_CMD+=("--net-ri-port=$READSB_NET_RAW_INPUT_PORT")
@@ -185,6 +185,75 @@ if [[ -e $TAR1090_INSTALL_DIR/aircraft.csv.gz ]]; then
         READSB_CMD+=("--db-file=$TAR1090_INSTALL_DIR/aircraft.csv.gz")
     fi
 fi
+
+# Handle "--device-type"
+if [[ -n "$READSB_DEVICE_TYPE" ]]; then
+    READSB_CMD+=("--device-type=$READSB_DEVICE_TYPE")
+fi
+
+if [[ -n "$READSB_GAIN" ]]; then
+    READSB_CMD+=("--gain=$READSB_GAIN")
+fi
+
+##### RTL-SDR OPTIONS #####
+
+# Handle "--device=<index|serial>"
+if [[ -n "$READSB_RTLSDR_DEVICE" ]]; then
+    READSB_CMD+=("--device=$READSB_RTLSDR_DEVICE")
+fi
+
+# Handle "--enable-agc"
+if [[ -n "$READSB_RTLSDR_ENABLE_AGC" ]]; then
+    READSB_CMD+=("--enable-agc")
+fi
+
+# Handle "--ppm=<correction>"
+if [[ -n "$READSB_RTLSDR_PPM" ]]; then
+    READSB_CMD+=("--ppm=$READSB_RTLSDR_PPM")
+fi
+
+##### MODE-S BEAST OPTIONS #####
+
+# Handle "--beast-crc-off"
+if [[ -n "$READSB_BEAST_CRC_OFF" ]]; then
+    READSB_CMD+=("--beast-crc-off")
+fi
+
+# Handle "--beast-df045-on"
+if [[ -n "$READSB_BEAST_DF045_ON" ]]; then
+    READSB_CMD+=("--beast-df045-on")
+fi
+
+# Handle "--beast-df1117-on"
+if [[ -n "$READSB_BEAST_DF1117_ON" ]]; then
+    READSB_CMD+=("--beast-df1117-on")
+fi
+
+# Handle "--beast-fec-off"
+if [[ -n "$READSB_BEAST_FEC_OFF" ]]; then
+    READSB_CMD+=("--beast-fec-off")
+fi
+
+# Handle "--beast-mlat-off"
+if [[ -n "$READSB_BEAST_MLAT_OFF" ]]; then
+    READSB_CMD+=("--beast-mlat-off")
+fi
+
+# Handle "--beast-modeac"
+if [[ -n "$READSB_BEAST_MODEAC" ]]; then
+    READSB_CMD+=("--beast-modeac")
+fi
+
+# Handle "--beast-serial=<path>"
+if [[ -n "$READSB_BEAST_SERIAL" ]]; then
+    READSB_CMD+=("--beast-serial=$READSB_BEAST_SERIAL")
+fi
+
+if [[ -n "$READSB_BEAST_BAUDRATE" ]]; then
+    READSB_CMD+=("--beast-baudrate=$READSB_BEAST_BAUDRATE")
+fi
+
+
 
 # shellcheck disable=SC2086
 "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | mawk -W Interactive '{print "[readsb] " $0}'
