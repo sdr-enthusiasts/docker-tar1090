@@ -118,12 +118,12 @@ services:
     tmpfs:
       - /run:exec,size=64M
       - /var/log
-
 ```
 
 You should now be able to browse to:
 
 * <http://dockerhost:8078/> to access the tar1090 web interface.
+* <http://dockerhost:8078/?replay> to see a replay of past data
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
@@ -184,9 +184,13 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
 | `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
 | `ENABLE_TIMELAPSE1090` | Optional. Set to any value to enable timelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
-| `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb, for example `--write-json-globe-index --write-globe-history /var/globe_history` would cause traces being saved to disk and tar1090 similar to globe.adsbexchange.com | Unset |
+| `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb | Unset |
 | `READSB_DEBUG` | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check | Unset |
 | `S6_SERVICES_GRACETIME` | Optional, set to 30000 when saving traces / globe_history | `3000` |
+
+READSB_EXTRA_ARGS just passes arguments to the commandline, you can check this file for more options for wiedehofps readsb fork: <https://github.com/wiedehopf/readsb/blob/dev/help.h>
+
+If you want to save historic data with tar1090, see a modified mode of operation at the end of the readme
 
 ### `tar1090` Configuration
 
@@ -331,6 +335,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_MLAT` | Set this to add timestamps to AVR / RAW output | `--mlat` | Unset |
 | `READSB_STATS_EVERY` | Number of seconds between showing and resetting stats. | `--stats-every=<sec>` | Unset |
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
+| `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
 
 ## Logging
 
@@ -341,3 +346,53 @@ All logs are to the container's stdout and can be viewed with `docker logs -t [-
 Please feel free to [open an issue on the project's GitHub](https://github.com/sdr-enthusiasts/docker-tar1090/issues).
 
 We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join](https://discord.gg/sTf9uYF) and converse.
+
+## Example for using tar1090 with an SDR:
+
+
+```shell
+version: '2.0'
+
+networks:
+  adsbnet:
+
+services:
+
+  tar1090:
+    image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
+    tty: true
+    container_name: tar1090
+    restart: always
+    environment:
+      - TZ=Australia/Perth
+      - LAT=-33.33333
+      - LONG=111.11111
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_GAIN=43.9
+    networks:
+      - adsbnet
+    ports:
+      - 8078:80
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+```
+
+## globe-history or sometimes ironically called destroy-sd-card
+
+See also: <https://github.com/wiedehopf/tar1090#0800-destroy-sd-card>
+
+```yaml
+    environment:
+    ...
+      - READSB_EXTRA_ARGS=--write-json-globe-index --write-globe-history /var/globe_history
+    ...
+    volumes:
+      - /hostpath/to/your/globe_history:/var/globe_history
+```
+
+The first part of the mount before the : is the path on the docker host, don't change the 2nd part.
+Using this volume gives you persistence for the history / heatmap / range outline
