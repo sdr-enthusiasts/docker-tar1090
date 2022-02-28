@@ -10,7 +10,6 @@ NOCOLOR='\033[0m'
 EXITCODE=0
 if [ -z "${BEASTHOST}" ]; then
   echo -e "${LIGHTRED}ERROR: BEASTHOST environment variable not set${NOCOLOR}"
-  EXITCODE=1
 fi
 if [ -z "${LAT}" ]; then
   echo -e "${YELLOW}WARNING: LAT environment variable not set, Home location will not be accurate${NOCOLOR}"
