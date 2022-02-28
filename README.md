@@ -396,3 +396,5 @@ See also: <https://github.com/wiedehopf/tar1090#0800-destroy-sd-card>
 
 The first part of the mount before the : is the path on the docker host, don't change the 2nd part.
 Using this volume gives you persistence for the history / heatmap / range outline
+
+Note that this mode will make T not work as before for displaying all tracks as tracks are only loaded when you click them.
