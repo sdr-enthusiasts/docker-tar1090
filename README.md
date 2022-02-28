@@ -347,8 +347,7 @@ Please feel free to [open an issue on the project's GitHub](https://github.com/s
 
 We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join](https://discord.gg/sTf9uYF) and converse.
 
-## Example for using tar1090 with an SDR:
-
+## Example for using tar1090 with an SDR
 
 ```shell
 version: '2.0'
