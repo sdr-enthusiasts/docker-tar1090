@@ -30,7 +30,7 @@ READSB_CMD+=(--heatmap-dir /var/globe_history)
 READSB_CMD+=(--heatmap 15)
 READSB_CMD+=(--write-state=/var/globe_history)
 READSB_CMD+=(--write-state-only-on-exit)
-READSB_CMD+=(--json-trace-interval 14)
+READSB_CMD+=(--json-trace-interval 15)
 READSB_CMD+=(--json-reliable 1)
 
 READSB_CMD+=(--net-ri-port=30001)
@@ -42,6 +42,10 @@ READSB_CMD+=(--net-beast-reduce-out-port=30006)
 READSB_CMD+=(--net-json-port=30047)
 # READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
+
+if [[ -n "$READSB_JSON_INTERVAL" ]]; then
+    READSB_CMD+=("--write-json-every=$READSB_JSON_INTERVAL")
+fi
 
 if [ -n "${READSB_DEBUG}" ]; then
     READSB_CMD+=("--debug=$READSB_DEBUG")
@@ -99,6 +103,10 @@ fi
 
 if [[ -n "$READSB_JSON_TRACE_INTERVAL" ]]; then
     READSB_CMD+=("--json-trace-interval=$READSB_JSON_TRACE_INTERVAL")
+fi
+
+if [[ -n "$READSB_HEATMAP_INTERVAL" ]]; then
+    READSB_CMD+=("--heatmap=$READSB_HEATMAP_INTERVAL")
 fi
 
 if [[ -n "$READSB_NET_BEAST_REDUCE_FILTER_ALT" ]]; then
