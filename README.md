@@ -17,7 +17,6 @@ This image:
 * Receives Beast data from a provider such as `dump1090` or `readsb`
 * Optionally, receives MLAT data from a provider such as `mlat-client`
 * Provides the `tar1090` web interface
-* Provides the `timelapse1090` web interface
 
 It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
 
@@ -85,6 +84,7 @@ docker run -d \
 You should now be able to browse to:
 
 * <http://dockerhost:8078/> to access the tar1090 web interface
+* <http://dockerhost:8078/?replay> to see a replay of past data
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
 
@@ -183,7 +183,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
 | `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
-| `ENABLE_TIMELAPSE1090` | Optional. Set to any value to enable timelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
+| `ENABLE_TIMELAPSE1090` | Optional / Legacy. Set to any value to enable timelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
 | `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb | Unset |
 | `READSB_DEBUG` | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check | Unset |
 | `S6_SERVICES_GRACETIME` | Optional, set to 30000 when saving traces / globe_history | `3000` |
@@ -200,6 +200,7 @@ All of the variables below are optional.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
+| `READSB_JSON_INTERVAL` | Update data update interval for the webinterface in seconds | `1.0` |
 | `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
@@ -260,6 +261,8 @@ All of the variables below are optional.
 
 ### `timelapse1090` Configuration
 
+Legacy: consider using <http://dockerhost:port/?replay> instead
+
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
 | `TIMELAPSE1090_INTERVAL` | Snapshot interval in seconds | `10` |
@@ -267,12 +270,13 @@ All of the variables below are optional.
 
 ## Paths
 
-No paths need to be mapped through to persistent storage. However, if you don't want to lose your range outline and aircraft tracks/history on container restart, you can optionally map these paths:
+No paths need to be mapped through to persistent storage. However, if you don't want to lose your range outline and aircraft tracks/history and heatmap / replay data on container restart, you can optionally map these paths:
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds range outline data, heatmap data and traces if enabled |
-| `/var/timelapse1090` | Holds data for `timelapse1090` if enabled |
+| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled |
+
+Note that this data won't be automatically deleted, you will need to delete it eventually if you map this path.
 
 ### `readsb` Network Options
 
@@ -330,12 +334,29 @@ Where the default value is "Unset", `readsb`'s default will be used.
 
 | Variable | Description | Controls which `readsb` option | Default |
 |----------|-------------|--------------------------------|---------|
-| `READSB_JSON_TRACE_INTERVAL` | Control per plane interval for json position output and trace interval for globe history | `--json-trace-interval=<sec>` | `14` |
+| `READSB_JSON_INTERVAL` | Update interval for the webinterface in seconds / interval between aircraft.json writes | `--write-json-every=<sec>` | `1.0` |
+| `READSB_JSON_TRACE_INTERVAL` | Per plane interval for json position output and trace interval for globe history | `--json-trace-interval=<sec>` | `15` |
+| `READSB_HEATMAP_INTERVAL` | Per plane interval for heatmap and replay (if you want to lower this, also lower json-trace-interval to this or a lower value) | `--heatmap=<sec>` | `15` |
 | `READSB_MAX_RANGE` | Absolute maximum range for position decoding (in nm) | `--max-range=<dist>` | `300` |
 | `READSB_MLAT` | Set this to add timestamps to AVR / RAW output | `--mlat` | Unset |
 | `READSB_STATS_EVERY` | Number of seconds between showing and resetting stats. | `--stats-every=<sec>` | Unset |
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
 | `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
+
+## Message decoding introspection
+
+You can look at individual messages and what information they contain, either for all or for an individual aircraft by hex:
+
+```shell
+# only for hex 3D3ED0
+docker exec -it tar1090 /usr/local/bin/viewadsb --show-only 3D3ED0
+
+# for all aircraft
+docker exec -it tar1090 /usr/local/bin/viewadsb --no-interactive
+
+# show position / CPR debugging for hex 3D3ED0
+docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
+```
 
 ## Logging
 
