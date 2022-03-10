@@ -40,6 +40,7 @@ READSB_CMD+=("--net-bi-port=30004,30104")
 READSB_CMD+=(--net-bo-port=30005)
 READSB_CMD+=(--net-beast-reduce-out-port=30006)
 READSB_CMD+=(--net-json-port=30047)
+READSB_CMD+=(--net-api-port=30152)
 # READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
 
@@ -82,6 +83,10 @@ fi
 
 
 ##### NETWORK OPTIONS #####
+#
+if [[ -n "$READSB_NET_API_PORT" ]]; then
+    READSB_CMD+=("--net-api-port=$READSB_NET_API_PORT")
+fi
 
 # Handle "--net-beast-reduce-interval=<seconds>"
 if [[ -n "$READSB_NET_BEAST_REDUCE_INTERVAL" ]]; then
