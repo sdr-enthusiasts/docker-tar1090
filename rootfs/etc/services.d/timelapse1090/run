@@ -14,10 +14,14 @@ if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
     echo "CHUNK_SIZE=$TIMELAPSE1090_CHUNK_SIZE"
   } > /etc/default/timelapse1090
 
-  pushd /opt/timelapse1090 || exit 1
+  pushd /opt/timelapse1090 >/dev/null || exit 1
+
+  while [[ ! -e /run/readsb/receiver.json ]]; do
+    sleep 10
+  done
 
   /opt/timelapse1090/timelapse1090.sh \
-    2>&1 | awk -W interactive '{print "[timelapse1090] " $0}'
+    2>&1 | mawk -W interactive '{print "[timelapse1090] " $0}'
 
   popd || exit 1
 
