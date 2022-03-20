@@ -142,6 +142,10 @@ if [[ -n "$TAR1090_PAGETITLE" ]]; then
   echo "PageName = \"$TAR1090_PAGETITLE\";"
 fi
 
+if [[ -n "$TAR1090_DWDLAYERS" ]]; then
+  echo "dwdLayers = \"$TAR1090_DWDLAYERS\";"
+fi
+
 if [[ -n "$TAR1090_LABELZOOM" ]]; then
   echo "labelZoom = \"$TAR1090_LABELZOOM\";"
 fi
@@ -151,4 +155,3 @@ if [[ -n "$TAR1090_LABELZOOMGROUND" ]]; then
 fi
 
 } >> "${TAR1090_INSTALL_DIR}/html/config.js"
-
