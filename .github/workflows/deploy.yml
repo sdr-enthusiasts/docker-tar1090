@@ -19,19 +19,19 @@ on:
 jobs:
 
   workflow-dispatch:
-      name: Triggered via Workflow Dispatch?
-      # only run this step if workflow dispatch triggered
-      # log the reason the workflow dispatch was triggered
-      if: |
-        github.event_name == 'workflow_dispatch' &&
-        github.event.inputs.reason != ''
-      runs-on: ubuntu-latest
-      steps:
-        - name: Log dispatch reason
-          env:
-            INPUTS_REASON: ${{ github.event.inputs.reason }}
-          run: |
-            echo "Workflow dispatch reason: $INPUTS_REASON"
+    name: Triggered via Workflow Dispatch?
+    # only run this step if workflow dispatch triggered
+    # log the reason the workflow dispatch was triggered
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.reason != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log dispatch reason
+        env:
+          INPUTS_REASON: ${{ github.event.inputs.reason }}
+        run: |
+          echo "Workflow dispatch reason: $INPUTS_REASON"
 
   deploy:
     name: Deploy
