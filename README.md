@@ -211,6 +211,9 @@ All of the variables below are optional.
 | `TAR1090_FLIGHTAWARELINKS` | Set to any value to enable FlightAware links in the web interface | `null` |
 | `TAR1090_ENABLE_AC_DB` | Set to `true` to enable extra information, such as aircraft type and registration, to be included in in `aircraft.json` output. Will use more memory; use caution on older Pis or similiar devices. | `false` |
 
+* For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+* TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
+
 #### `tar1090` `config.js` Configuration - Title
 
 | Environment Variable | Purpose | Default |
