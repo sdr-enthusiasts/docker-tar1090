@@ -373,13 +373,20 @@ Please feel free to [open an issue on the project's GitHub](https://github.com/s
 
 We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join](https://discord.gg/sTf9uYF) and converse.
 
-## Example for using tar1090 with an SDR
+## Using tar1090 with an SDR
+
+| Variable | Description | Controls which `readsb` option | Default |
+|----------|-------------|--------------------------------|---------|
+| `READSB_GAIN` | Set gain (in dB). Use `autogain` to have the container determine an appropriate gain, more on this below. | `--gain=<db>` | Max gain |
+| `READSB_DEVICE_TYPE` | If using an SDR, set this to `rtlsdr`, `modesbeast`, `gnshulc` depending on the model of your SDR. If not using an SDR, leave un-set. | `--device-type=<type>` | Unset |
+| `READSB_RTLSDR_DEVICE` | Select device by serial number. | `--device=<serial>` | Unset |
+| `READSB_RTLSDR_PPM` | Set oscillator frequency correction in PPM. See section [Estimating PPM](#estimating-ppm) below | `--ppm=<correction>` | Unset |
+| `READSB_BEAST_SERIAL` | only when type `modesbeast` or `gnshulc` is used: Path to Beast serial device. | `--beast-serial=<path>` | `/dev/ttyUSB0` |
+
+Example (devices: section is mandatory)
 
 ```shell
-version: '2.0'
-
-networks:
-  adsbnet:
+version: '3.8'
 
 services:
 
@@ -387,6 +394,7 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
     tty: true
     container_name: tar1090
+    hostname: tar1090
     restart: always
     environment:
       - TZ=Australia/Perth
@@ -394,8 +402,7 @@ services:
       - LONG=111.11111
       - READSB_DEVICE_TYPE=rtlsdr
       - READSB_GAIN=43.9
-    networks:
-      - adsbnet
+      - READSB_RTLSDR_DEVICE=0
     ports:
       - 8078:80
     tmpfs:
