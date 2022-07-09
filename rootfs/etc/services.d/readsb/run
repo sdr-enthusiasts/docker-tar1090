@@ -44,6 +44,11 @@ READSB_CMD+=(--net-api-port=30152)
 # READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
 
+
+if [[ -n "$READSB_RX_LOCATION_ACCURACY" ]]; then
+    READSB_CMD+=("--json-location-accuracy=$READSB_RX_LOCATION_ACCURACY")
+fi
+
 if [[ -n "$READSB_JSON_INTERVAL" ]]; then
     READSB_CMD+=("--write-json-every=$READSB_JSON_INTERVAL")
 fi
