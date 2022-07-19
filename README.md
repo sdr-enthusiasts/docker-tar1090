@@ -95,9 +95,6 @@ An example `docker-compose.xml` file is below:
 ```shell
 version: '2.0'
 
-networks:
-  adsbnet:
-
 services:
 
   tar1090:
@@ -111,8 +108,6 @@ services:
       - MLATHOST=adsbx
       - LAT=-33.33333
       - LONG=111.11111
-    networks:
-      - adsbnet
     ports:
       - 8078:80
     tmpfs:
