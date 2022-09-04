@@ -86,4 +86,4 @@ RUN set -x && \
 EXPOSE 80/tcp
 
 # Add healthcheck
-HEALTHCHECK --start-period=3600s --interval=600s CMD /healthcheck.sh
+HEALTHCHECK --start-period=300s --interval=300s CMD /healthcheck.sh
