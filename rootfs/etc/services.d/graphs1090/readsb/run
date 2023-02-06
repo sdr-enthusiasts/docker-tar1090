@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+LOOPTIME="30s"
+
+while true
+do
+    nice 19 /usr/share/graphs1090/service-graphs1090.sh
+    sleep ${LOOPTIME}
+done

@@ -42,6 +42,8 @@ RUN set -x && \
     # graphs1090
     KEPT_PACKAGES+=(collectd-core) && \
     KEPT_PACKAGES+=(rrdtool) && \
+    KEPT_PACKAGES+=(unzip) && \
+    KEPT_PACKAGES+=(bash-builtins) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
     # install packages
