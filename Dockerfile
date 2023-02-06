@@ -84,21 +84,20 @@ RUN set -x && \
         mkdir -p "/var/lib/collectd/rrd/localhost/readsb" && \
         # collectd configuration - move collectd DataDir under /run & set correct permissions.
         mv -v "/var/lib/collectd" "/run" && \
-        chown -R readsb "/run/collectd" && \
         ln -s "/run/collectd" "/var/lib" && \
         # copy our config in & remove empty dir
         mv -v /etc/collectd.readsb/collectd.conf /etc/collectd/collectd.conf && \
         rmdir /etc/collectd.readsb && \
         # collectd configuration - remove unneeded readsb plugins.
-        sed -i 's/^LoadPlugin syslog.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
-        sed -i 's/^LoadPlugin exec.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
-        sed -i 's/^LoadPlugin curl.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
+        sed -i 's/^LoadPlugin syslog.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true  && \
+        sed -i 's/^LoadPlugin exec.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
+        sed -i 's/^LoadPlugin curl.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf|| true  && \
         # collectd configuration - remove syslog configuration from readsb config (as we'll be logging to stdout/container log).
-        sed -i '/<Plugin syslog>/,/<\/Plugin>/d' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
+        sed -i '/<Plugin syslog>/,/<\/Plugin>/d' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
         # now install graphs1090
         curl -sSL -o install.sh https://github.com/wiedehopf/graphs1090/raw/master/install.sh && \
-        sed -i 's|sudo ||g' install.sh && \
-        sed -i 's|systemctl|#systemctl|g' install.sh && \
+        sed -i 's|sudo ||g' install.sh || true && \
+        sed -i 's|systemctl|#systemctl|g' install.sh || true && \
         chmod a+x install.sh && \
         ./install.sh || true && \
         # rm -f install.sh && \

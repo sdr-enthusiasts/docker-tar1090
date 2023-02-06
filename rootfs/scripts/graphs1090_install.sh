@@ -247,42 +247,42 @@ then
 	sed -i -e '/axis-format/d' $ipath/graphs1090.sh
 fi
 
-if [[ $lighttpd == yes ]]; then
-    systemctl restart lighttpd
-fi
+# if [[ $lighttpd == yes ]]; then
+#     systemctl restart lighttpd
+# fi
 
-systemctl enable collectd &>/dev/null
-systemctl restart collectd &>/dev/null || true
+# systemctl enable collectd &>/dev/null
+# systemctl restart collectd &>/dev/null || true
 
-if ! systemctl status collectd &>/dev/null; then
-    echo --------------
-    echo "collectd isn't working, trying to install various libpython versions to work around the issue."
-    echo --------------
-    apt update
-    apt-get install --no-install-suggests --no-install-recommends -y 'libpython2.7' || true
-    apt-get install --no-install-suggests --no-install-recommends -y 'libpython3.9' || \
-        apt-get install --no-install-suggests --no-install-recommends -y 'libpython3.8' || \
-        apt-get install --no-install-suggests --no-install-recommends -y 'libpython3.7' || true
+# if ! systemctl status collectd &>/dev/null; then
+#     echo --------------
+#     echo "collectd isn't working, trying to install various libpython versions to work around the issue."
+#     echo --------------
+#     apt update
+#     apt-get install --no-install-suggests --no-install-recommends -y 'libpython2.7' || true
+#     apt-get install --no-install-suggests --no-install-recommends -y 'libpython3.9' || \
+#         apt-get install --no-install-suggests --no-install-recommends -y 'libpython3.8' || \
+#         apt-get install --no-install-suggests --no-install-recommends -y 'libpython3.7' || true
 
-    systemctl restart collectd || true
-    if ! systemctl status collectd &>/dev/null; then
-        echo --------------
-        echo "Showing the log for collectd using this command: journalctl --no-pager -u collectd | tail -n40"
-        echo --------------
-        journalctl --no-pager -u collectd | tail -n40
-        echo --------------
-        echo "collectd still isn't working, you can try and rerun the install script at some other time."
-        echo "Or report this issue with the full 40 lines above."
-        echo --------------
-    fi
-fi
+#     systemctl restart collectd || true
+#     if ! systemctl status collectd &>/dev/null; then
+#         echo --------------
+#         echo "Showing the log for collectd using this command: journalctl --no-pager -u collectd | tail -n40"
+#         echo --------------
+#         journalctl --no-pager -u collectd | tail -n40
+#         echo --------------
+#         echo "collectd still isn't working, you can try and rerun the install script at some other time."
+#         echo "Or report this issue with the full 40 lines above."
+#         echo --------------
+#     fi
+# fi
 
 if ! [[ -f /usr/share/graphs1090/noMalarky ]]; then
     bash $ipath/malarky.sh
 fi
 
-systemctl enable graphs1090
-systemctl restart graphs1090
+# systemctl enable graphs1090
+# systemctl restart graphs1090
 
 #fix readonly remount logic in fr24feed update script
 sed -i -e 's?$(mount | grep " on / " | grep rw)?{ mount | grep " on / " | grep rw; }?' /usr/lib/fr24/fr24feed_updater.sh &>/dev/null || true

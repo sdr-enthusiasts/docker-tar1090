@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 #shellcheck shell=bash
 
-sleep inifinity
+sleep infinity
 
 if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
 
