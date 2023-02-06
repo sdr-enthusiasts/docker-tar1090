@@ -2,9 +2,16 @@
 # shellcheck shell=bash
 
 LOOPTIME="30s"
+WRITEAFTER="10"     # restart collectd every $WRITEAFTER loops   
 
+counter=0
 while true
 do
-    nice 19 /usr/share/graphs1090/service-graphs1090.sh
+    nice -n 19 /usr/share/graphs1090/service-graphs1090.sh
+    if [[ "$((counter++))" == "${WRITEAFTER}" ]]
+    then
+        # restart collectd by killing it. This will cause the write-back script to be invoked
+        pkill collectd
+    fi
     sleep ${LOOPTIME}
 done

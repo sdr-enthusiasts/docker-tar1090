@@ -3,6 +3,7 @@
 
 if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
 
+    /usr/share/graphs1090/readback.sh
     /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf || exit 0
 
     set -eo pipefail
@@ -13,6 +14,7 @@ if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
         -f \
         2>&1 | stdbuf -o0 awk '{print "[collectd] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
 
+    /usr/share/graphs1090/writeback.sh
 else
-    sleep 86400
+    sleep infinity
 fi
