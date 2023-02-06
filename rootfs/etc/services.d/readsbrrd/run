@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bash
 #shellcheck shell=bash
 
+sleep inifinity
+
 if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
 
     # Set environment variables that these scripts expect
