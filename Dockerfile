@@ -39,6 +39,9 @@ RUN set -x && \
     TEMP_PACKAGES+=(build-essential) && \
     # tar1090
     KEPT_PACKAGES+=(nginx-light) && \
+    # graphs1090
+    KEPT_PACKAGES+=(collectd-core) && \
+    KEPT_PACKAGES+=(rrdtool) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
     # install packages
@@ -75,6 +78,28 @@ RUN set -x && \
     # aircraft-db
     mkdir -p "$GITPATH_TAR1090_AC_DB" && \
     curl "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" > "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" && \
+    # graphs1090 with collectd and rrd
+        mkdir -p "/var/lib/collectd/rrd/localhost/readsb" && \
+        # collectd configuration - move collectd DataDir under /run & set correct permissions.
+        mv -v "/var/lib/collectd" "/run" && \
+        chown -R readsb "/run/collectd" && \
+        ln -s "/run/collectd" "/var/lib" && \
+        # copy our config in & remove empty dir
+        mv -v /etc/collectd.readsb/collectd.conf /etc/collectd/collectd.conf && \
+        rmdir /etc/collectd.readsb && \
+        # collectd configuration - remove unneeded readsb plugins.
+        sed -i 's/^LoadPlugin syslog.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
+        sed -i 's/^LoadPlugin exec.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
+        sed -i 's/^LoadPlugin curl.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
+        # collectd configuration - remove syslog configuration from readsb config (as we'll be logging to stdout/container log).
+        sed -i '/<Plugin syslog>/,/<\/Plugin>/d' /etc/collectd/collectd.conf.d/readsb.collectd.conf && \
+        # now install graphs1090
+        curl -sSL -o install.sh https://github.com/wiedehopf/graphs1090/raw/master/install.sh && \
+        sed -i 's|sudo ||g' install.sh && \
+        sed -i 's|systemctl|#systemctl|g' install.sh && \
+        chmod a+x install.sh && \
+        ./install.sh || true && \
+        # rm -f install.sh && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
