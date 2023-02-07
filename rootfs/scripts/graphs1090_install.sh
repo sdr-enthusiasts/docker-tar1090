@@ -269,7 +269,5 @@ echo "It may take up to 10 minutes until the first data is displayed"
 
 if command -v nginx &>/dev/null
 then
-	echo --------------
-	echo "To configure nginx for graphs1090, please add the following line(s) in the server {} section:"
-	echo "include /usr/share/graphs1090/nginx-graphs1090.conf;"
+    sed -i 's|^\(\s*\)\(include /usr/local/share/tar1090/nginx.conf;.*\)$|\1include /usr/share/graphs1090/nginx-graphs1090.conf;\n\n\1\2|g' /etc/nginx/sites-enabled/tar1090
 fi
