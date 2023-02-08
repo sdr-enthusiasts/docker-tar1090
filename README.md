@@ -378,17 +378,21 @@ docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
 ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the USA only. To ingest this data, you should:
 
 1. Set the following environment parameters:
+
 ```yaml
   - ENABLE_978=yes
   - URL_978=http://dump978/skyaware978
 ```
-2.  Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978)
+
+2. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978)
 
 ## Enabling AirSpy graphs in the `graphs1090` webpage
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
-1. Set the followinv environment parameter: `- ENABLE_AIRSPY=true`
-2. To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
+
+1. Set the following environment parameter: `- ENABLE_AIRSPY=true`
+1. To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
+
 ```yaml
     volumes:
       - /run/airspy_adsb:/run/airspy_adsb
