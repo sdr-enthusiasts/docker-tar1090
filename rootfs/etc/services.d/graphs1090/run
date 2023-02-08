@@ -4,16 +4,14 @@
 LOOPTIME="30s"
 WRITEAFTER="10"     # restart collectd every $WRITEAFTER loops   
 
+sleep ${LOOPTIME}
 counter=0
-while true
-do
-    nice -n 19 /usr/share/graphs1090/service-graphs1090.sh \
-        2>&1 | mawk -W Interactive '{print "[graphs1090] " $0}'
-    if (( counter++ > WRITEAFTER )) 
-    then
-        # restart collectd by killing it. This will cause the write-back script to be invoked
-        pkill collectd
-        counter=0
-    fi
-    sleep ${LOOPTIME}
-done
+nice -n 19 /usr/share/graphs1090/service-graphs1090.sh \
+    2>&1 | mawk -W Interactive '{print "[graphs1090] " $0}'
+if (( counter++ > WRITEAFTER )) 
+then
+    # restart collectd by killing it. This will cause the write-back script to be invoked
+    pkill collectd
+    counter=0
+fi
+# sleep ${LOOPTIME}

@@ -3,6 +3,8 @@
 
 if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
 
+    sleep 10
+
     /usr/share/graphs1090/readback.sh
     /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf || exit 0
 
