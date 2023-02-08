@@ -3,10 +3,14 @@
 
 if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
 
-    sleep 10
+    # wait for neccessary input file to exist before starting
+    echo "Waiting for readsb to start..." | stdbuf -o0 awk '{print "[collectd] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
+    while [[ ! -e /usr/share/graphs1090/data-symlink/data/stats.json ]]; do
+        sleep 10
+    done
 
     /usr/share/graphs1090/readback.sh
-    /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf || exit 0
+    /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf > /dev/null 2>&1
 
     set -eo pipefail
 
