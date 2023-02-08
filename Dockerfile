@@ -168,9 +168,9 @@ RUN set -x && \
     # add tar1090 specific stuff
     sed -i '$a\\n' /etc/collectd/collectd.conf && \
     sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
-    sed -i '$a<Include\ "/etc/collectd/collectd.conf.d">' /etc/collectd/collectd.conf && \
-    sed -i '$a\ \ \ \ Filter\ "*.conf"' /etc/collectd/collectd.conf && \
-    sed -i '$a<\/Include>' /etc/collectd/collectd.conf && \
+    # sed -i '$a<Include\ "/etc/collectd/collectd.conf.d">' /etc/collectd/collectd.conf && \
+    # sed -i '$a\ \ \ \ Filter\ "*.conf"' /etc/collectd/collectd.conf && \
+    # sed -i '$a<\/Include>' /etc/collectd/collectd.conf && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
