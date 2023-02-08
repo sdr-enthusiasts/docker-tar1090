@@ -390,8 +390,8 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
 
-1. Set the following environment parameter: `- ENABLE_AIRSPY=true`
-1. To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
+* Set the following environment parameter: `- ENABLE_AIRSPY=true`
+* To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
 
 ```yaml
     volumes:
