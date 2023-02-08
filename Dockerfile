@@ -81,24 +81,6 @@ RUN set -x && \
     # aircraft-db
     mkdir -p "$GITPATH_TAR1090_AC_DB" && \
     curl -o "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
-    # graphs1090 with collectd and rrd
-        # mkdir -p "/var/lib/collectd/rrd/localhost/readsb" && \
-        # # collectd configuration - move collectd DataDir under /run & set correct permissions.
-        # mv -v "/var/lib/collectd" "/run" && \
-        # ln -s "/run/collectd" "/var/lib" && \
-        # # copy our config in & remove empty dir
-        # mv -v /etc/collectd.readsb/collectd.conf /etc/collectd/collectd.conf && \
-        # rmdir /etc/collectd.readsb && \
-        # # collectd configuration - remove unneeded readsb plugins.
-        # sed -i 's/^LoadPlugin syslog.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true  && \
-        # sed -i 's/^LoadPlugin exec.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
-        # sed -i 's/^LoadPlugin curl.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf|| true  && \
-        # # collectd configuration - remove syslog configuration from readsb config (as we'll be logging to stdout/container log).
-        # sed -i '/<Plugin syslog>/,/<Plugin>/d' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
-        # now install graphs1090
-        # /scripts/graphs1090_install.sh && \
-        # Deploy graphs1090
-
     # clone graphs1090 repo
     git clone \
         -b master \
@@ -168,27 +150,29 @@ RUN set -x && \
     # add tar1090 specific stuff
     sed -i '$a\\n' /etc/collectd/collectd.conf && \
     sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
-    # sed -i '$a<Include\ "/etc/collectd/collectd.conf.d">' /etc/collectd/collectd.conf && \
-    # sed -i '$a\ \ \ \ Filter\ "*.conf"' /etc/collectd/collectd.conf && \
-    # sed -i '$a<\/Include>' /etc/collectd/collectd.conf && \
+    # remove disk plugin as not supported in docker
+    sed -i '/LoadPlugin\ disk/d' /etc/collectd/collectd.conf && \
+    sed -i '/<Plugin\ "disk">/,/<\/Plugin>/d' /etc/collectd/collectd.conf && \
+    # remove disk graphs
+    sed -i '/<a\ id\ ="system-disk_io_iops-link"/,/<\/a>/d' /usr/share/graphs1090/html/index.html && \
+    sed -i '/<a\ id\ ="system-disk_io_octets-link"\ href="#">/,/<\/a>/d' /usr/share/graphs1090/html/index.html && \
+    # remove misc graph that doesn't seem to work
+    sed -i '/<a\ id\ ="dump1090-misc-link"/,/<\/a>/d' /usr/share/graphs1090/html/index.html && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* && \
     # document versions
     grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION && \
-    cat /VERSIONS
-
+    cat /VERSIONS && \
     # Add Container Version
-RUN set -x && \
     branch="##BRANCH##" && \
     [[ "${branch:0:1}" == "#" ]] && branch="main" || true && \
     git clone --depth=1 -b $branch https://github.com/sdr-enthusiasts/docker-tar1090.git /tmp/clone && \
     pushd /tmp/clone && \
-    echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION && \
+    bash -c 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
     rm -rf /tmp/*
-
 
 EXPOSE 80/tcp
 
