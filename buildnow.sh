@@ -1,5 +1,7 @@
 #!/bin/bash
-# shellcheck disable=SC2086,SC2162
+# shellcheck disable=SC2086,SC2162,SC2153
+
+## LOCAL BUILD SCRIPT FOR KX1T -- YOU CAN IGNORE THIS FILE
 
 
 [[ "$1" != "" ]] && BRANCH="$1" || BRANCH="$(git branch --show-current)"
