@@ -22,8 +22,8 @@ fi
 
 # Enable DarkMode if configured:
 if [[ -n "${GRAPHS1090_DARKMODE}" ]]; then
-    sed -i 's|colorscheme=default|colorscheme=dark' /etc/default/graphs1090
+    sed -i 's|colorscheme=default|colorscheme=dark|g' /etc/default/graphs1090
 else
-    sed -i 's|colorscheme=dark|colorscheme=default' /etc/default/graphs1090
+    sed -i 's|colorscheme=dark|colorscheme=default|g' /etc/default/graphs1090
 fi
 
