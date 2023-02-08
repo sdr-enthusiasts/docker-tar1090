@@ -132,7 +132,7 @@ RUN set -x && \
         /etc/collectd/collectd.conf \
         && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
-    sed -ie '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf && \
+    sed -i '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L179
     cp -rv \
         /usr/share/graphs1090/git/html \
