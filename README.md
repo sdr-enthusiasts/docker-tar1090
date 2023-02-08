@@ -384,7 +384,7 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
   - URL_978=http://dump978/skyaware978
 ```
 
-2. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978)
+1. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978)
 
 ## Enabling AirSpy graphs in the `graphs1090` webpage
 
