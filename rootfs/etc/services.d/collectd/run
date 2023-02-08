@@ -18,7 +18,8 @@ if [[ -z "$DISABLE_PERFORMANCE_GRAPHS" ]]; then
     /usr/sbin/collectd \
         -C /etc/collectd/collectd.conf \
         -f \
-        2>&1 | stdbuf -o0 awk '{print "[collectd] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
+        2>&1 | grep -v "successfully loaded\." \
+        | stdbuf -o0 awk '{print "[collectd] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
 
     /usr/share/graphs1090/writeback.sh
 else
