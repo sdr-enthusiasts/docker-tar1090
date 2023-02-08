@@ -80,7 +80,7 @@ RUN set -x && \
     mkdir -p /var/timelapse1090 && \
     # aircraft-db
     mkdir -p "$GITPATH_TAR1090_AC_DB" && \
-    curl "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" > "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" && \
+    curl -o "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
     # graphs1090 with collectd and rrd
         # mkdir -p "/var/lib/collectd/rrd/localhost/readsb" && \
         # # collectd configuration - move collectd DataDir under /run & set correct permissions.
@@ -94,41 +94,83 @@ RUN set -x && \
         # sed -i 's/^LoadPlugin exec.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
         # sed -i 's/^LoadPlugin curl.*//g' /etc/collectd/collectd.conf.d/readsb.collectd.conf|| true  && \
         # # collectd configuration - remove syslog configuration from readsb config (as we'll be logging to stdout/container log).
-        # sed -i '/<Plugin syslog>/,/<\/Plugin>/d' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
+        # sed -i '/<Plugin syslog>/,/<Plugin>/d' /etc/collectd/collectd.conf.d/readsb.collectd.conf || true && \
         # now install graphs1090
         # /scripts/graphs1090_install.sh && \
+        # Deploy graphs1090
 
-            # Deploy graphs1090
-        git clone \
-            -b master \
-            --depth 1 \
-            https://github.com/wiedehopf/graphs1090.git \
-            /usr/share/graphs1090/git \
-            && \
-        pushd /usr/share/graphs1090/git && \
-            git log | head -1 | tr -s " " "_" | tee /VERSION && \
-            git log | head -1 | tr -s " " "_" | cut -c1-14 > /CONTAINER_VERSION && \
-            cp -v /usr/share/graphs1090/git/dump1090.db /usr/share/graphs1090/ && \
-            cp -v /usr/share/graphs1090/git/dump1090.py /usr/share/graphs1090/ && \
-            cp -v /usr/share/graphs1090/git/system_stats.py /usr/share/graphs1090/ && \
-            cp -v /usr/share/graphs1090/git/LICENSE /usr/share/graphs1090/ && \
-            cp -v /usr/share/graphs1090/git/*.sh /usr/share/graphs1090/ && \
-            cp -v /usr/share/graphs1090/git/collectd.conf /etc/collectd/collectd.conf && \
-            cp -v /usr/share/graphs1090/git/nginx-graphs1090.conf /usr/share/graphs1090/ && \
-            chmod -v a+x /usr/share/graphs1090/*.sh && \
-            sed -i -e 's/XFF.*/XFF 0.8/' /etc/collectd/collectd.conf && \
-            sed -i -e 's/skyview978/skyaware978/' /etc/collectd/collectd.conf && \
-            cp -rv /usr/share/graphs1090/git/html /usr/share/graphs1090/ && \
-            sed -i -e "s/__cache_version__/$(date +%s | tail -c5)/g" /usr/share/graphs1090/html/index.html && \
-            mkdir -p /usr/share/graphs1090/data-symlink && \
-            mkdir -p /var/lib/collectd/rrd/localhost/dump1090-localhost && \
-            mkdir -p /data && \
-            ln -s /data /usr/share/graphs1090/data-symlink/data && \
-            mkdir -p /run/graphs1090 && \
-            sed -i 's|^\(\s*\)\(include /usr/local/share/tar1090/nginx.conf;.*\)$|\1include /usr/share/graphs1090/nginx-graphs1090.conf;\n\n\1\2|g' /etc/nginx/sites-enabled/tar1090 && \
-        popd && \
-        # /scripts/graphs1090_install.sh && \
-
+    # clone graphs1090 repo
+    git clone \
+        -b master \
+        --depth 1 \
+        https://github.com/wiedehopf/graphs1090.git \
+        /usr/share/graphs1090/git \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L145
+    cp -v \  
+        /usr/share/graphs1090/git/dump1090.db \
+        /usr/share/graphs1090/git/dump1090.py \
+        /usr/share/graphs1090/git/system_stats.py \
+        /usr/share/graphs1090/git/LICENSE \
+        /usr/share/graphs1090/ \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L146
+    cp -v \
+        /usr/share/graphs1090/git/*.sh \
+        /usr/share/graphs1090/ \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L147
+    cp -v \
+        /usr/share/graphs1090/git/malarky.conf \
+        /usr/share/graphs1090/ \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L148
+    chmod -v a+x /usr/share/graphs1090/*.sh && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L151
+    cp -v \
+        /usr/share/graphs1090/git/collectd.conf \
+        /etc/collectd/collectd.conf \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
+    sed -ie '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L179
+    cp -rv \
+        /usr/share/graphs1090/git/html \
+        /usr/share/graphs1090/ \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L180
+    cp -v \
+        /usr/share/graphs1090/git/default \
+        /etc/default/graphs1090 \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L302
+    cp -v \
+        /usr/share/graphs1090/git/nginx-graphs1090.conf \
+        /usr/share/graphs1090/ \
+        && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L212
+    mkdir -p /usr/share/graphs1090/data-symlink && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L217
+    ln -vsnf /run/readsb /usr/share/graphs1090/data-symlink/data && \
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L218
+    sed -i -e 's?URL .*?URL "file:///usr/share/graphs1090/data-symlink"?' /etc/collectd/collectd.conf && \
+    ## Lines below merge the tar1090 collectd config with the graphs1090 collectd config
+    # remove the default syslog config in collectd.conf
+    sed -i '/<Plugin\ syslog>/,/<\/Plugin>/d' /etc/collectd/collectd.conf && \
+    # replace syslog plugin with logfile plugin in collectd.conf
+    sed -i 's/LoadPlugin\ syslog/LoadPlugin logfile/' /etc/collectd/collectd.conf && \
+    # add configuration to log to STDOUT in collectd.conf ("/a" == append lines after match)
+    sed -i '/LoadPlugin\ logfile/a\\n<Plugin\ logfile>\n<\/Plugin>' /etc/collectd/collectd.conf && \
+    sed -i '/<Plugin\ logfile>/a\ \ \ \ PrintSeverity\ true' /etc/collectd/collectd.conf && \
+    sed -i '/<Plugin\ logfile>/a\ \ \ \ Timestamp\ false' /etc/collectd/collectd.conf && \
+    sed -i '/<Plugin\ logfile>/a\ \ \ \ File\ STDOUT' /etc/collectd/collectd.conf && \
+    sed -i '/<Plugin\ logfile>/a\ \ \ \ LogLevel\ "notice"' /etc/collectd/collectd.conf && \
+    # add tar1090 specific stuff
+    sed -i '$a\\n' /etc/collectd/collectd.conf && \
+    sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
+    sed -i '$a<Include\ "/etc/collectd/collectd.conf.d">' /etc/collectd/collectd.conf && \
+    sed -i '$a\ \ \ \ Filter\ "*.conf"' /etc/collectd/collectd.conf && \
+    sed -i '$a<\/Include>' /etc/collectd/collectd.conf && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
