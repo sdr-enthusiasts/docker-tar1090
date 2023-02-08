@@ -19,3 +19,10 @@ else
     sed -i 's/div id="panel_978" class="panel panel-default" style="display:block"/div id="panel_978" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
     sed -i "s|^\(\s*\)\(URL_978.*$\)|#\1\2|g" /etc/collectd/collectd.conf
 fi
+
+# Enable DarkMode if configured:
+if [[ -n "${GRAPHS1090_DARKMODE}" ]]; then
+    sed -i 's|colorscheme=default|colorscheme=dark' /etc/default/graphs1090
+else
+    sed -i 's|colorscheme=dark|colorscheme=default' /etc/default/graphs1090
+fi

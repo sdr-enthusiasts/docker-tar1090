@@ -355,6 +355,13 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
 | `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
 
+
+### `graphs1090` Options
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `GRAPHS1090_DARKMODE` | If set to any value, `graphs1090` will be rendered in "dark mode". | Unset |
+
 ## Message decoding introspection
 
 You can look at individual messages and what information they contain, either for all or for an individual aircraft by hex:
@@ -387,7 +394,7 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
 
-* Set the following environment parameter: `- ENABLE_AIRSPY=true`
+* Set the following environment parameter: `- ENABLE_AIRSPY=yes`
 * To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
 
 ```yaml
