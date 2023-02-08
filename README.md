@@ -116,7 +116,10 @@ services:
       - LAT=-33.33333
       - LONG=111.11111
     volumes:
-      - graphs1090:/var/lib/collectd
+     - /opt/test/tartest/globe_history:/var/globe_history
+      - /opt/test/tartest/timelapse1090:/var/timelapse1090
+      - /opt/test/tartest/graphs1090:/var/lib/collectd
+    # - /run/airspy_adsb:/run/airspy_adsb
     ports:
       - 8078:80
     tmpfs:
@@ -192,6 +195,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb | Unset |
 | `READSB_DEBUG` | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check | Unset |
 | `S6_SERVICES_GRACETIME` | Optional, set to 30000 when saving traces / globe_history | `3000` |
+| `ENABLE_AIRSPY` | Optional, set to any non-empty value if you want to enable the special AirSpy graphs. See below for additional configuration requirements | Unset |
 
 READSB_EXTRA_ARGS just passes arguments to the commandline, you can check this file for more options for wiedehofps readsb fork: <https://github.com/wiedehopf/readsb/blob/dev/help.h>
 
@@ -209,7 +213,7 @@ All of the variables below are optional.
 | `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
-| `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
+| `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090`. This will also enable UAT-specific graphs in graphs1090 | `no` |
 | `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
 | `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
@@ -367,6 +371,28 @@ docker exec -it tar1090 /usr/local/bin/viewadsb --no-interactive
 
 # show position / CPR debugging for hex 3D3ED0
 docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
+```
+
+## Enabling UAT data
+
+ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the USA only. To ingest this data, you should:
+
+1. Set the following environment parameters:
+```yaml
+  - ENABLE_978=yes
+  - URL_978=http://dump978/skyaware978
+```
+2.  Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978)
+
+## Enabling AirSpy graphs in the `graphs1090` webpage
+
+Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
+1. Set the followinv environment parameter: `- ENABLE_AIRSPY=true`
+2. To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
+```yaml
+    volumes:
+      - /run/airspy_adsb:/run/airspy_adsb
+      ...
 ```
 
 ## Logging
