@@ -50,6 +50,7 @@ Optionally, you will need a source of MLAT data. This could be:
 ## Up-and-Running with `docker run`
 
 ```shell
+docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
     -p 8078:80 \
@@ -58,6 +59,7 @@ docker run -d \
     -e MLATHOST=<MLATHOST> \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
+    -v graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
@@ -68,6 +70,7 @@ Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a ho
 For example:
 
 ```shell
+docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
     -p 8078:80 \
@@ -76,6 +79,7 @@ docker run -d \
     -e MLATHOST=adsbx \
     -e LAT=-33.33333 \
     -e LONG=111.11111 \
+    -v graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
@@ -87,16 +91,16 @@ You should now be able to browse to:
 * <http://dockerhost:8078/?replay> to see a replay of past data
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+* <http://dockerhost:8078/graphs1090/> to see performance graphs
 
 ## Up-and-Running with `docker-compose`
 
 An example `docker-compose.xml` file is below:
 
 ```shell
-version: '2.0'
+version: '3.8'
 
 services:
-
   tar1090:
     image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
     tty: true
@@ -108,6 +112,11 @@ services:
       - MLATHOST=adsbx
       - LAT=-33.33333
       - LONG=111.11111
+    volumes:
+      - /opt/adsb/tar1090/globe_history:/var/globe_history
+      - /opt/adsb/tar1090/timelapse1090:/var/timelapse1090
+      - /opt/adsb/tar1090/graphs1090:/var/lib/collectd
+    # - /run/airspy_adsb:/run/airspy_adsb
     ports:
       - 8078:80
     tmpfs:
@@ -121,6 +130,7 @@ You should now be able to browse to:
 * <http://dockerhost:8078/?replay> to see a replay of past data
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+* <http://dockerhost:8078/graphs1090/> to see performance graphs
 
 *Note*: the example above excludes `MLATHOST` as `readsb` alone cannot provide MLAT data. You'll need a feeder container for this.
 
@@ -182,6 +192,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb | Unset |
 | `READSB_DEBUG` | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check | Unset |
 | `S6_SERVICES_GRACETIME` | Optional, set to 30000 when saving traces / globe_history | `3000` |
+| `ENABLE_AIRSPY` | Optional, set to any non-empty value if you want to enable the special AirSpy graphs. See below for additional configuration requirements | Unset |
 
 READSB_EXTRA_ARGS just passes arguments to the commandline, you can check this file for more options for wiedehofps readsb fork: <https://github.com/wiedehopf/readsb/blob/dev/help.h>
 
@@ -199,7 +210,7 @@ All of the variables below are optional.
 | `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
-| `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090` | `no` |
+| `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090`. This will also enable UAT-specific graphs in graphs1090 | `no` |
 | `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
 | `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
@@ -273,9 +284,9 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled |
-
-Note that this data won't be automatically deleted, you will need to delete it eventually if you map this path.
+| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled.<br/>*Note: this data won't be automatically deleted, you will need to delete it eventually if you map this path.* |
+| `/var/timelapse1090` | Holds timelaps1090 data if enabled |
+| `/var/lib/collectd`  | Holds graphs1090 & performance data |
 
 ### `readsb` Network Options
 
@@ -357,6 +368,32 @@ docker exec -it tar1090 /usr/local/bin/viewadsb --no-interactive
 
 # show position / CPR debugging for hex 3D3ED0
 docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
+```
+
+## Enabling UAT data
+
+ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the USA only. To ingest this data, you should:
+
+1. Set the following environment parameters:
+
+```yaml
+  - ENABLE_978=yes
+  - URL_978=http://dump978/skyaware978
+```
+
+1. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only container newer than Feb 7, 2023 will work
+
+## Enabling AirSpy graphs in the `graphs1090` webpage
+
+Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
+
+* Set the following environment parameter: `- ENABLE_AIRSPY=true`
+* To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
+
+```yaml
+    volumes:
+      - /run/airspy_adsb:/run/airspy_adsb
+      ...
 ```
 
 ## Logging

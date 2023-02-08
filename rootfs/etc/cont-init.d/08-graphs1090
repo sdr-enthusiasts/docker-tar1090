@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+mkdir -p /run/graphs1090
+mkdir -p /run/collectd/localhost
+
+# Enable AIRSPY graphs if requested:
+if [[ -n "${ENABLE_AIRSPY}" ]]; then
+    sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:none"/div id="panel_airspy" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
+else
+    sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:block"/div id="panel_airspy" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
+fi
+
+# Enable UAT graphs if requested:
+if [[ -n "${ENABLE_978}" ]] && [[ "${ENABLE_978,,}" != "no" ]] && [[ -n "${URL_978}" ]]; then
+    sed -i 's/div id="panel_978" class="panel panel-default" style="display:none"/div id="panel_978" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
+    sed -i "s|^\(\s*\)\(URL_978.*$\)|#\1\2\n\1URL_978 \"${URL_978}\"|g" /etc/collectd/collectd.conf
+else
+    sed -i 's/div id="panel_978" class="panel panel-default" style="display:block"/div id="panel_978" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
+    sed -i "s|^\(\s*\)\(URL_978.*$\)|#\1\2|g" /etc/collectd/collectd.conf
+fi

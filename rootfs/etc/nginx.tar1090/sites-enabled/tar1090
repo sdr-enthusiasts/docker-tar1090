@@ -26,4 +26,7 @@ server {
 
   }
 
+  #ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L302
+  include /usr/share/graphs1090/nginx-graphs1090.conf;
+
 }
