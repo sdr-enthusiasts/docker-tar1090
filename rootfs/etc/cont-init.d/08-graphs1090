@@ -26,3 +26,4 @@ if [[ -n "${GRAPHS1090_DARKMODE}" ]]; then
 else
     sed -i 's|colorscheme=dark|colorscheme=default' /etc/default/graphs1090
 fi
+
