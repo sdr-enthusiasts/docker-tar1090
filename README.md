@@ -50,6 +50,7 @@ Optionally, you will need a source of MLAT data. This could be:
 ## Up-and-Running with `docker run`
 
 ```shell
+docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
     -p 8078:80 \
@@ -58,6 +59,7 @@ docker run -d \
     -e MLATHOST=<MLATHOST> \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
+    -v graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
@@ -68,6 +70,7 @@ Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a ho
 For example:
 
 ```shell
+docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
     -p 8078:80 \
@@ -76,6 +79,7 @@ docker run -d \
     -e MLATHOST=adsbx \
     -e LAT=-33.33333 \
     -e LONG=111.11111 \
+    -v graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
@@ -87,6 +91,7 @@ You should now be able to browse to:
 * <http://dockerhost:8078/?replay> to see a replay of past data
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+* <http://dockerhost:8078/graphs1090/> to see performance graphs
 
 ## Up-and-Running with `docker-compose`
 
@@ -95,8 +100,10 @@ An example `docker-compose.xml` file is below:
 ```shell
 version: '2.0'
 
-services:
+volumes:
+  graphs1090:
 
+services:
   tar1090:
     image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
     tty: true
@@ -108,6 +115,8 @@ services:
       - MLATHOST=adsbx
       - LAT=-33.33333
       - LONG=111.11111
+    volumes:
+      - graphs1090:/var/lib/collectd
     ports:
       - 8078:80
     tmpfs:
@@ -121,6 +130,7 @@ You should now be able to browse to:
 * <http://dockerhost:8078/?replay> to see a replay of past data
 * <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
 * <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+* <http://dockerhost:8078/graphs1090/> to see performance graphs
 
 *Note*: the example above excludes `MLATHOST` as `readsb` alone cannot provide MLAT data. You'll need a feeder container for this.
 
@@ -273,9 +283,9 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled |
-
-Note that this data won't be automatically deleted, you will need to delete it eventually if you map this path.
+| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled.<br/>*Note: this data won't be automatically deleted, you will need to delete it eventually if you map this path.* |
+| `/var/timelapse1090` | Holds timelaps1090 data if enabled |
+| `/var/lib/collectd`  | Holds graphs1090 & performance data |
 
 ### `readsb` Network Options
 
