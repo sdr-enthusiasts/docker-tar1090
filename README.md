@@ -98,10 +98,7 @@ You should now be able to browse to:
 An example `docker-compose.xml` file is below:
 
 ```shell
-version: '2.0'
-
-volumes:
-  graphs1090:
+version: '3.8'
 
 services:
   tar1090:
@@ -116,9 +113,9 @@ services:
       - LAT=-33.33333
       - LONG=111.11111
     volumes:
-     - /opt/test/tartest/globe_history:/var/globe_history
-      - /opt/test/tartest/timelapse1090:/var/timelapse1090
-      - /opt/test/tartest/graphs1090:/var/lib/collectd
+      - /opt/adsb/tar1090/globe_history:/var/globe_history
+      - /opt/adsb/tar1090/timelapse1090:/var/timelapse1090
+      - /opt/adsb/tar1090/graphs1090:/var/lib/collectd
     # - /run/airspy_adsb:/run/airspy_adsb
     ports:
       - 8078:80
@@ -384,7 +381,7 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
   - URL_978=http://dump978/skyaware978
 ```
 
-1. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978)
+1. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only container newer than Feb 7, 2023 will work
 
 ## Enabling AirSpy graphs in the `graphs1090` webpage
 
