@@ -49,7 +49,7 @@ Optionally, you will need a source of MLAT data. This could be:
 
 ## Up-and-Running with `docker run`
 
-```shell
+```bash
 docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
@@ -69,7 +69,7 @@ Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a ho
 
 For example:
 
-```shell
+```bash
 docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
@@ -97,7 +97,7 @@ You should now be able to browse to:
 
 An example `docker-compose.xml` file is below:
 
-```shell
+```yaml
 version: '3.8'
 
 services:
@@ -355,12 +355,23 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
 | `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
 
-
 ### `graphs1090` Options
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `GRAPHS1090_DARKMODE` | If set to any value, `graphs1090` will be rendered in "dark mode". | Unset |
+| `GRAPHS1090_RRD_STEP` | Interval in seconds to feed data into RRD files. | `60` |
+| `GRAPHS1090_SIZE` | Set graph size, possible values: `small`, `default`, `large`, `huge`, `custom`. | `default` |
+| `GRAPHS1090_GRAPH_ALL_LARGE` | Make the small graphs as large as the big ones by setting to `yes`. | `no` |
+| `GRAPHS1090_FONT_SIZE` | Font size (relative to graph size). | `10.0` |
+| `GRAPHS1090_MAX_MESSAGES_LINE` | Set to any value to draw a reference line at the maximum message rate. | Unset |
+| `GRAPHS1090_LARGE_WIDTH` | Defines the width of the larger graphs. | `1096` |
+| `GRAPHS1090_LARGE_HEIGHT` | Defines the height of the larger graphs. | `235` |
+| `GRAPHS1090_SMALL_WIDTH` | Defines the width of the smaller graphs. | `619` |
+| `GRAPHS1090_SMALL_HEIGHT` | Defines the height of the smaller graphs. | `324` |
+| `GRAPHS1090_DISK_DEVICE` | Defines which disk device (`mmc0`, `sda`, `sdc`, etc) is shown. Leave empty for default device | Unset |
+| `GRAPHS1090_ETHERNET_DEVICE` | Defines which (wired) ethernet device (`eth0`, `enp0s`, etc) is shown. Leave empty for default device | Unset |
+| `GRAPHS1090_WIFI_DEVICE` | Defines which (wireless) WiFi device (`wlan0`, `wlp3s0`, etc) is shown. Leave empty for default device | Unset |
 
 ## Message decoding introspection
 
@@ -388,13 +399,20 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
   - URL_978=http://dump978/skyaware978
 ```
 
-1. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only container newer than Feb 7, 2023 will work
+2. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only containers downloaded/deployed on/after Feb 8, 2023 will work.
+
+For the UAT-specific graphs to actually receive data, you **must** configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
 
 ## Enabling AirSpy graphs in the `graphs1090` webpage
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
 
-* Set the following environment parameter: `- ENABLE_AIRSPY=yes`
+* Set the following environment parameter:
+
+```yaml
+      - ENABLE_AIRSPY=yes
+```
+
 * To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
 
 ```yaml
@@ -425,7 +443,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 
 Example (devices: section is mandatory)
 
-```shell
+```yaml
 version: '3.8'
 
 services:

@@ -27,3 +27,89 @@ else
     sed -i 's|colorscheme=dark|colorscheme=default|g' /etc/default/graphs1090
 fi
 
+#  Set Interval in seconds to feed data into RRD files.
+if [[ -n "${GRAPHS1090_RRD_STEP}" ]]; then
+    sed -i "s|DRAW_INTERVAL=.*|DRAW_INTERVAL=${GRAPHS1090_RRD_STEP}|g" /etc/default/graphs1090
+else
+    sed -i "s|DRAW_INTERVAL=.*|DRAW_INTERVAL=60|g" /etc/default/graphs1090
+fi
+
+# Set graph size, possible values: `small`, `default`, `large`, `huge`, `custom`
+# shellcheck disable=SC2076
+if [[ -n "${GRAPHS1090_SIZE}" ]] && [[ " small default large huge custom " =~ " ${GRAPHS1090_SIZE} " ]]; then
+    sed -i "s|graph_size=.*|graph_size=${GRAPHS1090_SIZE}|g" /etc/default/graphs1090
+elif [[ -n "${GRAPHS1090_SIZE}" ]] && [[ ! " small default large huge custom " =~ " ${GRAPHS1090_SIZE} " ]]; then
+    echo "[$(date)][08-graphs1090] WARNING: GRAPHS1090_SIZE set to \"${GRAPHS1090_SIZE}\", which an invalid value!"
+else
+    sed -i "s|all_large=.*|graph_size=default|g" /etc/default/graphs1090
+fi   
+
+# Make the small graphs as large as the big ones by setting to `yes`
+if [[ -n "${GRAPHS1090_GRAPH_ALL_LARGE}" ]]; then
+    sed -i "s|all_large=.*|all_large=yes|g" /etc/default/graphs1090
+else
+    sed -i "s|all_large=.*|all_large=no|g" /etc/default/graphs1090
+fi
+
+# Font size (relative to graph size).
+if [[ -n "${GRAPHS1090_FONT_SIZE}" ]]; then
+    sed -i "s|font_size=.*|font_size=${GRAPHS1090_FONT_SIZE}|g" /etc/default/graphs1090
+else
+    sed -i "s|font_size=.*|font_size=10\.0|g" /etc/default/graphs1090
+fi
+
+# Set to 1 to draw a reference line at the maximum message rate.
+if [[ -n "${GRAPHS1090_MAX_MESSAGES_LINE}" ]]; then
+    sed -i "s|max_message_line=.*|max_message_line=1|g" /etc/default/graphs1090
+else
+    sed -i "s|max_message_line=.*|max_message_line=0|g" /etc/default/graphs1090
+fi
+
+# Defines the width of the larger graphs.
+if [[ -n "${GRAPHS1090_LARGE_WIDTH}" ]]; then
+    sed -i "s|lwidth=.*|lwidth=${GRAPHS1090_LARGE_WIDTH}|g" /etc/default/graphs1090
+else
+    sed -i "s|lwidth=.*|lwidth=1096|g" /etc/default/graphs1090
+fi
+
+# Defines the height of the larger graphs.
+if [[ -n "${GRAPHS1090_LARGE_HEIGTH}" ]]; then
+    sed -i "s|lheigth=.*|lheigth=${GRAPHS1090_LARGE_HEIGTH}|g" /etc/default/graphs1090
+else
+    sed -i "s|lheigth=.*|lheigth=235|g" /etc/default/graphs1090
+fi
+
+# Defines the width of the smaller graphs.
+if [[ -n "${GRAPHS1090_SMALL_WIDTH}" ]]; then
+    sed -i "s|lwidth=.*|lwidth=${GRAPHS1090_LARGE_WIDTH}|g" /etc/default/graphs1090
+else
+    sed -i "s|lwidth=.*|lwidth=1096|g" /etc/default/graphs1090
+fi
+
+# Defines the height of the smaller graphs.
+if [[ -n "${GRAPHS1090_SMALL_HEIGTH}" ]]; then
+    sed -i "s|lheigth=.*|sheigth=${GRAPHS1090_LARGE_HEIGTH}|g" /etc/default/graphs1090
+else
+    sed -i "s|lheigth=.*|sheigth=235|g" /etc/default/graphs1090
+fi
+
+# Sets disk device for graphs -- leave empty for default.
+if [[ -n "${GRAPHS1090_DISK_DEVICE}" ]]; then
+    sed -i "s|disk=.*|disk=${GRAPHS1090_DISK_DEVICE}|g" /etc/default/graphs1090
+else
+    sed -i "s|disk=.*|disk=|g" /etc/default/graphs1090
+fi
+
+# Sets (wired) ethernet device for graphs -- leave empty for default.
+if [[ -n "${GRAPHS1090_ETHER_DEVICE}" ]]; then
+    sed -i "s|ether=.*|ether=${GRAPHS1090_ETHER_DEVICE}|g" /etc/default/graphs1090
+else
+    sed -i "s|ether=.*|ether=|g" /etc/default/graphs1090
+fi
+
+# Sets wifi device for graphs -- leave empty for default.
+if [[ -n "${GRAPHS1090_WIFI_DEVICE}" ]]; then
+    sed -i "s|wifi=.*|wifi=${GRAPHS1090_WIFI_DEVICE}|g" /etc/default/graphs1090
+else
+    sed -i "s|wifi=.*|wifi=|g" /etc/default/graphs1090
+fi
