@@ -403,7 +403,6 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
 
 For the UAT-specific graphs to actually receive data, you **must** configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
 
-
 ## Enabling AirSpy graphs in the `graphs1090` webpage
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
