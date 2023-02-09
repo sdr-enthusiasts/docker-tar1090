@@ -4,6 +4,14 @@
 mkdir -p /run/graphs1090
 mkdir -p /run/collectd/localhost
 
+# If ${GRAPHS1090_DISABLE} is set, remove access to the graphs1090 website. We don't need to worry about putting this file back
+# after graphs1090 is re-enabled, because when changing env params, the container MUST be recreated.
+if [[ -n "${GRAPHS1090_DISABLE}" ]]; then
+    mv -f /usr/share/graphs1090/nginx-graphs1090.conf /usr/share/graphs1090/nginx-graphs1090.conf.backup
+    touch /usr/share/graphs1090/nginx-graphs1090.conf
+    exit 0
+fi
+
 # Enable AIRSPY graphs if requested:
 if [[ -n "${ENABLE_AIRSPY}" ]]; then
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:none"/div id="panel_airspy" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
@@ -113,3 +121,6 @@ if [[ -n "${GRAPHS1090_WIFI_DEVICE}" ]]; then
 else
     sed -i "s|wifi=.*|wifi=|g" /etc/default/graphs1090
 fi
+
+# Finally, add a link to graphs1090 to the tar1090 web page:
+sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' /usr/local/share/tar1090/html/index.html

@@ -1,6 +1,10 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+if [[ -n "${GRAPHS1090_DISABLE}" ]]; then
+    sleep infinity
+fi
+
 LOOPTIME="30s"
 WRITEAFTER="10"     # restart collectd every $WRITEAFTER loops   
 
