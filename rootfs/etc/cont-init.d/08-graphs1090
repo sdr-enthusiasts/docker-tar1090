@@ -35,6 +35,7 @@ else
 fi
 
 # Set graph size, possible values: `small`, `default`, `large`, `huge`, `custom`
+# shellcheck disable=SC2076
 if [[ -n "${GRAPHS1090_SIZE}" ]] && [[ " small default large huge custom " =~ " ${GRAPHS1090_SIZE} " ]]; then
     sed -i "s|graph_size=.*|graph_size=${GRAPHS1090_SIZE}|g" /etc/default/graphs1090
 elif [[ -n "${GRAPHS1090_SIZE}" ]] && [[ ! " small default large huge custom " =~ " ${GRAPHS1090_SIZE} " ]]; then
