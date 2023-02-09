@@ -372,7 +372,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `GRAPHS1090_DISK_DEVICE` | Defines which disk device (`mmc0`, `sda`, `sdc`, etc) is shown. Leave empty for default device | Unset |
 | `GRAPHS1090_ETHERNET_DEVICE` | Defines which (wired) ethernet device (`eth0`, `enp0s`, etc) is shown. Leave empty for default device | Unset |
 | `GRAPHS1090_WIFI_DEVICE` | Defines which (wireless) WiFi device (`wlan0`, `wlp3s0`, etc) is shown. Leave empty for default device | Unset |
-| `GRAPHS1090_DISABLE` | Set to any value to disable the GRAPHS1090 web page | Unset | 
+| `GRAPHS1090_DISABLE` | Set to any value to disable the GRAPHS1090 web page | Unset |
 
 ## Message decoding introspection
 
