@@ -45,7 +45,7 @@ else
 fi   
 
 # Make the small graphs as large as the big ones by setting to `yes`
-if [[ -n "${GRAPHS1090_GRAPH_ALL_LARGE}" ]]; then
+if [[ -n "${GRAPHS1090_ALL_LARGE}" ]]; then
     sed -i "s|all_large=.*|all_large=yes|g" /etc/default/graphs1090
 else
     sed -i "s|all_large=.*|all_large=no|g" /etc/default/graphs1090
