@@ -361,6 +361,18 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `GRAPHS1090_DARKMODE` | If set to any value, `graphs1090` will be rendered in "dark mode". | Unset |
+| `GRAPHS1090_RRD_STEP` | Interval in seconds to feed data into RRD files. | `60` |
+| `GRAPHS1090_SIZE` | Set graph size, possible values: `small`, `default`, `large`, `huge`, `custom`. | `default` |
+| `GRAPHS1090_GRAPH_ALL_LARGE` | Make the small graphs as large as the big ones by setting to `yes`. | `no` |
+| `GRAPHS1090_FONT_SIZE` | Font size (relative to graph size). | `10.0` |
+| `GRAPHS1090_MAX_MESSAGES_LINE` | Set to any value to draw a reference line at the maximum message rate. | Unset |
+| `GRAPHS1090_LARGE_WIDTH` | Defines the width of the larger graphs. | `1096` |
+| `GRAPHS1090_LARGE_HEIGHT` | Defines the height of the larger graphs. | `235` |
+| `GRAPHS1090_SMALL_WIDTH` | Defines the width of the smaller graphs. | `619` |
+| `GRAPHS1090_SMALL_HEIGHT` | Defines the height of the smaller graphs. | `324` |
+| `GRAPHS1090_DISK_DEVICE` | Defines which disk device (`mmc0`, `sda`, `sdc`, etc) is shown. Leave empty for default device | Unset |
+| `GRAPHS1090_ETHERNET_DEVICE` | Defines which (wired) ethernet device (`eth0`, `enp0s`, etc) is shown. Leave empty for default device | Unset |
+| `GRAPHS1090_WIFI_DEVICE` | Defines which (wireless) WiFi device (`wlan0`, `wlp3s0`, etc) is shown. Leave empty for default device | Unset |
 
 ## Message decoding introspection
 
