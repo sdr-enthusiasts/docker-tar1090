@@ -49,7 +49,7 @@ Optionally, you will need a source of MLAT data. This could be:
 
 ## Up-and-Running with `docker run`
 
-```shell
+```bash
 docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
@@ -69,7 +69,7 @@ Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a ho
 
 For example:
 
-```shell
+```bash
 docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
@@ -97,7 +97,7 @@ You should now be able to browse to:
 
 An example `docker-compose.xml` file is below:
 
-```shell
+```yaml
 version: '3.8'
 
 services:
@@ -399,13 +399,21 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
   - URL_978=http://dump978/skyaware978
 ```
 
-1. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only container newer than Feb 7, 2023 will work
+2. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only containers downloaded/deployed on/after Feb 8, 2023 will work.
+
+For the UAT-specific graphs to actually receive data, you **must** configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
+
 
 ## Enabling AirSpy graphs in the `graphs1090` webpage
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
 
-* Set the following environment parameter: `- ENABLE_AIRSPY=yes`
+* Set the following environment parameter:
+
+```yaml
+      - ENABLE_AIRSPY=yes
+```
+
 * To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
 
 ```yaml
@@ -436,7 +444,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 
 Example (devices: section is mandatory)
 
-```shell
+```yaml
 version: '3.8'
 
 services:
