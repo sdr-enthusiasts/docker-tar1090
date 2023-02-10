@@ -116,6 +116,7 @@ services:
       - /opt/adsb/tar1090/globe_history:/var/globe_history
       - /opt/adsb/tar1090/timelapse1090:/var/timelapse1090
       - /opt/adsb/tar1090/graphs1090:/var/lib/collectd
+      - /proc/diskstats:/proc/diskstats:ro
     # - /run/airspy_adsb:/run/airspy_adsb
     ports:
       - 8078:80
