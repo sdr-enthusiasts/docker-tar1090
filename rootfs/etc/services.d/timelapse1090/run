@@ -29,6 +29,6 @@ if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
 
 else
 
-  sleep 86400
+  sleep infinity
 
 fi

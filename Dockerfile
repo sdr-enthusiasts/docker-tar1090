@@ -150,14 +150,6 @@ RUN set -x && \
     # add tar1090 specific stuff
     sed -i '$a\\n' /etc/collectd/collectd.conf && \
     sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
-    # remove disk plugin as not supported in docker
-    sed -i '/LoadPlugin\ disk/d' /etc/collectd/collectd.conf && \
-    sed -i '/<Plugin\ "disk">/,/<\/Plugin>/d' /etc/collectd/collectd.conf && \
-    # remove disk graphs
-    sed -i '/<a\ id\ ="system-disk_io_iops-link"/,/<\/a>/d' /usr/share/graphs1090/html/index.html && \
-    sed -i '/<a\ id\ ="system-disk_io_octets-link"\ href="#">/,/<\/a>/d' /usr/share/graphs1090/html/index.html && \
-    # remove misc graph that doesn't seem to work
-    sed -i '/<a\ id\ ="dump1090-misc-link"/,/<\/a>/d' /usr/share/graphs1090/html/index.html && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
