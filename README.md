@@ -455,8 +455,7 @@ Something similar to this will be show:
 /sys/class/thermal/thermal_zone4 - TMEM - 39050
 /sys/class/thermal/thermal_zone5 - pch_skylake - 40500
 /sys/class/thermal/thermal_zone6 - B0D4 - 54050
-cat: /sys/class/thermal/thermal_zone7/temp: No data available
-/sys/class/thermal/thermal_zone7 - iwlwifi_1 - 
+/sys/class/thermal/thermal_zone7 - iwlwifi_1 -
 /sys/class/thermal/thermal_zone8 - x86_pkg_temp - 57000
 ```
 
@@ -471,7 +470,7 @@ Note that you will have to add `- privileged: true` capabilities to the containe
       ...
 ```
 
-Note - on some systems (DietPi comes to mind), `/sys/class/thermal/` may not be available.  
+Note - on some systems (DietPi comes to mind), `/sys/class/thermal/` may not be available.
 
 ## Logging
 
