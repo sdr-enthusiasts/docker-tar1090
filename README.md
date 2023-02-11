@@ -184,7 +184,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `MLATPORT` | Optional. TCP port number of an MLAT provider (`mlat-client`) | 30105 |
 | `TZ` | Optional. Your local timezone in [TZ-database-name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format | |
 | `HEYWHATSTHAT_PANORAMA_ID` | Optional. Your `heywhatsthat.com` panorama ID. See <https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline>. | |
-| `HEYWHATSTHAT_ALTS` | Optional. Comma separated altitudes in m for multiple outlines. | 12192 |
+| `HEYWHATSTHAT_ALTS` | Optional. Comma separated altitudes for multiple outlines. Use no units or `ft` for feet, or `m` for meters | `12192m` (=40000 ft) |
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
 | `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |

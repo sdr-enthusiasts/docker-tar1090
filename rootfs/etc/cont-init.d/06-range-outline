@@ -3,6 +3,25 @@
 
 # https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline
 if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
+
+    # convert all elements to meters
+    readarray -td, alts_array <<< "${HEYWHATSTHAT_ALTS:-12192m}"
+    for i in "${!alts_array[@]}"
+    do
+        alts_array[i]="${alts_array[i]//$'\n'/}"
+        if [[ ${alts_array[i]: -1} == "m" ]]; then
+            alts_array[i]="${alts_array[i]:0:-1}"
+        elif [[ ${alts_array[i]: -2} == "ft" ]]; then
+            alts_array[i]="$(bc -l <<< "scale=0; ${alts_array[i]:0:-2}/3.281")"
+        else
+            alts_array[i]="$(bc -l <<< "scale=0; ${alts_array[i]}/3.281")"
+        fi
+    done
+
+    # write the results back to $HEYWHATSTHAT_ALTS:
+    printf -v HEYWHATSTHAT_ALTS -- "%s," "${alts_array[@]}"
+    HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:0:-1}"
+
     curl \
         --silent \
         --output /usr/local/share/tar1090/html/upintheair.json \
