@@ -50,7 +50,6 @@ Optionally, you will need a source of MLAT data. This could be:
 ## Up-and-Running with `docker run`
 
 ```bash
-docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
     -p 8078:80 \
@@ -59,7 +58,7 @@ docker run -d \
     -e MLATHOST=<MLATHOST> \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
-    -v graphs1090:/var/lib/collectd \
+    -v /opt/adsb/tar1090/graphs1090graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
@@ -70,7 +69,6 @@ Replacing `TIMEZONE` with your timezone, `BEASTHOST` with the IP address of a ho
 For example:
 
 ```bash
-docker volume create graphs1090
 docker run -d \
     --name=tar1090 \
     -p 8078:80 \
@@ -79,7 +77,7 @@ docker run -d \
     -e MLATHOST=adsbx \
     -e LAT=-33.33333 \
     -e LONG=111.11111 \
-    -v graphs1090:/var/lib/collectd \
+    -v /opt/adsb/tar1090/graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
@@ -357,7 +355,24 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
 | `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
 
-### `graphs1090` Options
+## Message decoding introspection
+
+You can look at individual messages and what information they contain, either for all or for an individual aircraft by hex:
+
+```shell
+# only for hex 3D3ED0
+docker exec -it tar1090 /usr/local/bin/viewadsb --show-only 3D3ED0
+
+# for all aircraft
+docker exec -it tar1090 /usr/local/bin/viewadsb --no-interactive
+
+# show position / CPR debugging for hex 3D3ED0
+docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
+```
+
+## Configuring `graphs1090`
+
+### `graphs1090` Environment Parameters
 
 | Variable | Description | Default |
 |----------|-------------|---------|
@@ -376,24 +391,9 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `GRAPHS1090_WIFI_DEVICE` | Defines which (wireless) WiFi device (`wlan0`, `wlp3s0`, etc) is shown. Leave empty for default device | Unset |
 | `GRAPHS1090_DISABLE` | Set to any value to disable the GRAPHS1090 web page | Unset |
 
-## Message decoding introspection
+### Enabling UAT data
 
-You can look at individual messages and what information they contain, either for all or for an individual aircraft by hex:
-
-```shell
-# only for hex 3D3ED0
-docker exec -it tar1090 /usr/local/bin/viewadsb --show-only 3D3ED0
-
-# for all aircraft
-docker exec -it tar1090 /usr/local/bin/viewadsb --no-interactive
-
-# show position / CPR debugging for hex 3D3ED0
-docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
-```
-
-## Enabling UAT data
-
-ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the USA only. To ingest this data, you should:
+ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the USA only. To display the corresponding graphs, you should:
 
 1. Set the following environment parameters:
 
@@ -404,9 +404,9 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
 
 2. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only containers downloaded/deployed on/after Feb 8, 2023 will work.
 
-For the UAT-specific graphs to actually receive data, you **must** configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
+Note that you **must** configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
 
-## Enabling AirSpy graphs in the `graphs1090` webpage
+### Enabling AirSpy graphs
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
 
@@ -423,6 +423,54 @@ Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the 
       - /run/airspy_adsb:/run/airspy_adsb
       ...
 ```
+
+### Enabling Disk IO and IOPS data
+
+To allow the container access to the Disk IO data, you should map the following volume:
+
+```yaml
+    volumes:
+      - /proc/diskstats:/proc/diskstats:ro
+      ...
+```
+
+### Configuring the Core Temperature graphs
+By default, the system will use the temperature available at Thermal Zone 0. This generally works well on Raspberry Pi devices, and no additional changes are needed.
+
+On different devices, the Core Temperature is mapped to a different Thermal Zone. To ensure the Core Temperature graph works, follow these steps
+
+First check out which Thermal Zone contains the temperature you want to monitor. On your host system, do this:
+
+```bash
+for i in /sys/class/thermal/thermal_zone* ; do echo "$i - $(cat ${i}/type) - $(cat ${i}/temp 2>/dev/null)"; done
+```
+
+Something similar to this will be show:
+
+```bash
+/sys/class/thermal/thermal_zone0 - acpitz - 25000
+/sys/class/thermal/thermal_zone1 - INT3400 Thermal - 20000
+/sys/class/thermal/thermal_zone2 - TSKN - 43050
+/sys/class/thermal/thermal_zone3 - NGFF - 32050
+/sys/class/thermal/thermal_zone4 - TMEM - 39050
+/sys/class/thermal/thermal_zone5 - pch_skylake - 40500
+/sys/class/thermal/thermal_zone6 - B0D4 - 54050
+/sys/class/thermal/thermal_zone7 - iwlwifi_1 -
+/sys/class/thermal/thermal_zone8 - x86_pkg_temp - 57000
+```
+
+Repeat this a few times to ensure that the temperature varies and isn't hardcoded to a value. In our case, either Thermal Zone 5 (`pch_skylake` is the Intel Core name) or Thermal Zone 8 (the temp of the entire SOC package) can be used. Once you have determined which Thermal Zone number you want to use, map it to a volume like this. Make sure that the part to the left of the first `:` reflects your Thermal Zone directory; the part to the right of the first `:` should always be `/sys/class/thermal/thermal_zone0:ro`.
+
+Note that you will have to add `- privileged: true` capabilities to the container. This is less than ideal as it will give the container access to all of your system devices and processes. Make sure you feel comfortable with this before you do this.
+
+```yaml
+    privileged: true
+    volumes:
+      - /sys/class/thermal/thermal_zone8:/sys/class/thermal/thermal_zone0:ro
+      ...
+```
+
+Note - on some systems (DietPi comes to mind), `/sys/class/thermal/` may not be available.
 
 ## Logging
 
