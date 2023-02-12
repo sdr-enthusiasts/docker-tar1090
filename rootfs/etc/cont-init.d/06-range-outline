@@ -2,7 +2,38 @@
 # shellcheck shell=bash
 
 # https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline
+
 if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
+
+    HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:-12192m}"
+
+    if grep -e "[^0-9kmft,]" <<< "${HEYWHATSTHAT_ALTS}" >/dev/null 2>&1; then 
+        echo "[$(date)][06-range-outline] FATAL: Illegal character in HEYWHATSTHAT_ALTS=${HEYWHATSTHAT_ALTS}"
+        exit 1
+    fi
+
+    # convert all elements to meters
+    readarray -td, alts_array <<< "${HEYWHATSTHAT_ALTS:-12192m}"
+    for i in "${!alts_array[@]}"
+    do
+        alts_array[i]="${alts_array[i]//$'\n'/}"
+        if [[ ${alts_array[i]: -2} == "km" ]]; then
+            alts_array[i]="${alts_array[i]:0:-2}000"
+        elif [[ ${alts_array[i]: -1} == "m" ]]; then
+            alts_array[i]="${alts_array[i]:0:-1}"
+        elif [[ ${alts_array[i]: -2} == "ft" ]]; then
+            alts_array[i]="$(bc -l <<< "scale=0; ${alts_array[i]:0:-2}/3.281")"
+        else
+            alts_array[i]="$(bc -l <<< "scale=0; ${alts_array[i]}/3.281")"
+        fi
+    done
+
+    # write the results back to $HEYWHATSTHAT_ALTS:
+    printf -v HEYWHATSTHAT_ALTS -- "%s," "${alts_array[@]}"
+    HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:0:-1}"
+
+    echo "[$(date)][06-range-outline] Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
+
     curl \
         --silent \
         --output /usr/local/share/tar1090/html/upintheair.json \
