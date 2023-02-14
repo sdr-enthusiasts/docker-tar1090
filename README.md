@@ -58,7 +58,7 @@ docker run -d \
     -e MLATHOST=<MLATHOST> \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
-    -v /opt/adsb/tar1090/graphs1090graphs1090:/var/lib/collectd \
+    -v /opt/adsb/tar1090/graphs1090:/var/lib/collectd \
     --tmpfs=/run:exec,size=64M \
     --tmpfs=/var/log \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
