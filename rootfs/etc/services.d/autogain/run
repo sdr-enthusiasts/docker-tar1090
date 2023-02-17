@@ -13,13 +13,13 @@
 READSB_AUTOGAIN_INITIAL_INTERVAL="${READSB_AUTOGAIN_INITIAL_INTERVAL:-120}"
 READSB_AUTOGAIN_SUBSEQUENT_INTERVAL="${READSB_AUTOGAIN_SUBSEQUENT_INTERVAL:-86400}"
 
-if [[ " true on enabled " =~ " ${READSB_AUTOGAIN,,} " ]]; then
+if [[ ! " true on enabled " =~ " ${READSB_AUTOGAIN,,} " ]]; then
     # Autogain is not enabled, so let's do nothing forever
     sleep infinity
 fi
 
 if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]] || [[ -z "${READSB_RTLSDR_DEVICE}" ]]; then
-    echo "[autogain] ERROR: RTL_AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain is disabled."
+    echo "[autogain] ERROR: READSB_AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain is disabled."
     sleep infinity
 fi
 
