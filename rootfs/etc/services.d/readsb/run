@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2076
 
 mkdir -p /run/readsb
 
@@ -209,8 +209,14 @@ if [[ -n "$READSB_DEVICE_TYPE" ]]; then
     READSB_CMD+=("--device-type=$READSB_DEVICE_TYPE")
 fi
 
-if [[ -n "$READSB_GAIN" ]]; then
-    READSB_CMD+=("--gain=$READSB_GAIN")
+# Handle "--gain"
+if [[ -n "$READSB_GAIN" ]] || [[ " on enabled true " =~ " ${READSB_AUTOGAIN,,} " ]]; then
+    if [[ " on enabled true " =~ " ${READSB_AUTOGAIN,,} " ]] && [[ -f /var/globe_history/autogain/gain ]]; then
+        read -r gain < /var/globe_history/autogain/gain
+        READSB_CMD+=("--gain=$gain") 
+    elif [[ -n "$READSB_GAIN" ]]; then
+        READSB_CMD+=("--gain=${READSB_GAIN}")
+    fi
 fi
 
 ##### RTL-SDR OPTIONS #####
