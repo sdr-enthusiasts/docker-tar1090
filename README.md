@@ -284,7 +284,8 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled.<br/>*Note: this data won't be automatically deleted, you will need to delete it eventually if you map this path.* |
+| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled.  
+*Note: this data won't be automatically deleted, you will need to delete it eventually if you map this path.* |
 | `/var/timelapse1090` | Holds timelapse1090 data if enabled |
 | `/var/lib/collectd`  | Holds graphs1090 & performance data |
 
@@ -315,6 +316,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_NET_SBS_OUTPUT_PORT` | TCP BaseStation output listen ports. | `--net-sbs-port=<ports>` | `30003` |
 | `REASSB_NET_VERBATIM` | Set this to any value to forward messages unchanged. | `--net-verbatim` | Unset |
 | `READSB_NET_VRS_PORT` | TCP VRS JSON output listen ports. | `--net-vrs-port=<ports>` | Unset |
+| `READSB_WRITE_STATE_ONLY_ON_EXIT` | if set to anything, it will only write the status range outlines, etc. upon termination of `readsb` | `--write-state-only-on-exit` | Unset |
 
 #### `READSB_NET_CONNECTOR` syntax
 
@@ -435,6 +437,7 @@ To allow the container access to the Disk IO data, you should map the following 
 ```
 
 ### Configuring the Core Temperature graphs
+
 By default, the system will use the temperature available at Thermal Zone 0. This generally works well on Raspberry Pi devices, and no additional changes are needed.
 
 On different devices, the Core Temperature is mapped to a different Thermal Zone. To ensure the Core Temperature graph works, follow these steps
@@ -489,7 +492,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 | `READSB_GAIN` | Set gain (in dB). Use `autogain` to have the container determine an appropriate gain, more on this below. | `--gain=<db>` | Max gain |
 | `READSB_DEVICE_TYPE` | If using an SDR, set this to `rtlsdr`, `modesbeast`, `gnshulc` depending on the model of your SDR. If not using an SDR, leave un-set. | `--device-type=<type>` | Unset |
 | `READSB_RTLSDR_DEVICE` | Select device by serial number. | `--device=<serial>` | Unset |
-| `READSB_RTLSDR_PPM` | Set oscillator frequency correction in PPM. See section [Estimating PPM](#estimating-ppm) below | `--ppm=<correction>` | Unset |
+| `READSB_RTLSDR_PPM` | Set oscillator frequency correction in PPM. See section [Estimating PPM](https://github.com/docker-readsb/README.MD#estimating-ppm) below | `--ppm=<correction>` | Unset |
 | `READSB_BEAST_SERIAL` | only when type `modesbeast` or `gnshulc` is used: Path to Beast serial device. | `--beast-serial=<path>` | `/dev/ttyUSB0` |
 
 Example (devices: section is mandatory)
