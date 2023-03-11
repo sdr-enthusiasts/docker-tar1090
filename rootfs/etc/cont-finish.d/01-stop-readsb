@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-pkill readsb
-sleep 10
+pkill readsb 
+# sleep 10
