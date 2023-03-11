@@ -6,15 +6,19 @@ mkdir -p /run/readsb
 # Build the readsb command line based on options
 READSB_BIN="/usr/local/bin/readsb"
 
-READSB_CMD=(--net)
-READSB_CMD+=(--quiet)
+READSB_CMD=("--net")
+READSB_CMD+=("--quiet")
+
+if [ -n "${READSB_NET_ONLY}" ]; then
+    READSB_CMD+=("--net-only")
+fi
 
 if [ -n "${LAT}" ]; then
-    READSB_CMD+=(--lat "${LAT}")
+    READSB_CMD+=(--lat="${LAT}")
 fi
 
 if [ -n "${LONG}" ]; then
-    READSB_CMD+=(--lon "${LONG}")
+    READSB_CMD+=(--lon="${LONG}")
 fi
 
 if [ -n "${MLATHOST}" ]; then
@@ -25,24 +29,27 @@ if [ -n "${BEASTHOST}" ]; then
     READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
 fi
 
-READSB_CMD+=(--write-json=/run/readsb)
-READSB_CMD+=(--heatmap-dir /var/globe_history)
-READSB_CMD+=(--heatmap 15)
-READSB_CMD+=(--write-state=/var/globe_history)
-READSB_CMD+=(--json-trace-interval 15)
-READSB_CMD+=(--json-reliable 1)
+READSB_CMD+=("--write-json=/run/readsb")
+READSB_CMD+=("--heatmap-dir /var/globe_history")
+READSB_CMD+=("--heatmap=15")
+READSB_CMD+=("--write-state=/var/globe_history")
+READSB_CMD+=("--json-trace-interval=15")
+READSB_CMD+=("--json-reliable=1")
 
-READSB_CMD+=(--net-ri-port=30001)
-READSB_CMD+=(--net-ro-port=30002)
-READSB_CMD+=(--net-sbs-port=30003)
+READSB_CMD+=("--net-ri-port=30001")
+READSB_CMD+=("--net-ro-port=30002")
+READSB_CMD+=("--net-sbs-port=30003")
 READSB_CMD+=("--net-bi-port=30004,30104")
-READSB_CMD+=(--net-bo-port=30005)
-READSB_CMD+=(--net-beast-reduce-out-port=30006)
-READSB_CMD+=(--net-json-port=30047)
-READSB_CMD+=(--net-api-port=30152)
+READSB_CMD+=("--net-bo-port=30005")
+READSB_CMD+=("--net-beast-reduce-out-port=30006")
+READSB_CMD+=("--net-json-port=30047")
+
 # READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
 
+if [[ -n "${READSB_FORWARD_MLAT}" ]]; then
+    READSB_CMD+=("--forward-mlat")
+fi
 
 if [[ -n "$READSB_RX_LOCATION_ACCURACY" ]]; then
     READSB_CMD+=("--json-location-accuracy=$READSB_RX_LOCATION_ACCURACY")
@@ -95,6 +102,8 @@ fi
 #
 if [[ -n "$READSB_NET_API_PORT" ]]; then
     READSB_CMD+=("--net-api-port=$READSB_NET_API_PORT")
+else 
+    READSB_CMD+=("--net-api-port=30152")
 fi
 
 # Handle "--net-beast-reduce-interval=<seconds>"
@@ -147,7 +156,7 @@ if [[ -n "$READSB_NET_CONNECTOR" ]]; then
     IFS=';' read -r -a READSB_NET_CONNECTOR_ARRAY <<< "$READSB_NET_CONNECTOR"
     for NET_CONNECTOR_ELEMENT in "${READSB_NET_CONNECTOR_ARRAY[@]}"
     do
-        READSB_CMD+=("--net-connector=$NET_CONNECTOR_ELEMENT")
+        READSB_CMD+=("--net-connector=${NET_CONNECTOR_ELEMENT// /}")
     done
 fi
 
