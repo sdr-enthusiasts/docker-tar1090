@@ -154,4 +154,12 @@ if [[ -n "$TAR1090_LABELZOOMGROUND" ]]; then
   echo "labelZoomGround = \"$TAR1090_LABELZOOMGROUND\";"
 fi
 
+if [[ -n "$TAR1090_USEROUTEAPI" ]]; then
+  echo "useRouteAPI = ${TAR1090_USEROUTEAPI};"
+fi
+
+if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
+  echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
+fi
+
 } >> "${TAR1090_INSTALL_DIR}/html/config.js"

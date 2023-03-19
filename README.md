@@ -269,6 +269,13 @@ All of the variables below are optional.
 | `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces, no quotes). | `100,150,200,250` |
 | `TAR1090_RANGERINGSCOLORS` | Colours for each of the range rings specified in `TAR1090_RANGERINGSDISTANCES`. Accepts a comma separated list of hex colour values, each enclosed in single quotes (eg `TAR1090_RANGERINGSCOLORS='#FFFFF','#00000'`). No spaces. | Blank |
 
+### `tar1090` Route Display Configuration
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `TAR1090_USEROUTEAPI` | Enable route lookup for callsigns | off |
+| `TAR1090_ROUTEAPIURL` | API URL used | `https://api.adsb.lol/api/0/routeset` |
+
 ### `timelapse1090` Configuration
 
 Legacy: consider using <http://dockerhost:port/?replay> instead
