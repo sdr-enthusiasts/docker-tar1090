@@ -14,11 +14,15 @@ if [ -n "${READSB_NET_ONLY}" ]; then
 fi
 
 if [ -n "${LAT}" ]; then
-    READSB_CMD+=(--lat="${LAT}")
+    READSB_CMD+=(--lat "${LAT}")
+elif [ -n "${READSB_LAT}" ]; then
+    READSB_CMD+=(--lat "${READSB_LAT}")
 fi
 
 if [ -n "${LONG}" ]; then
-    READSB_CMD+=(--lon="${LONG}")
+    READSB_CMD+=(--lon "${LONG}")
+elif [ -n "${READSB_LON}" ]; then
+    READSB_CMD+=(--lon "${READSB_LON}")
 fi
 
 if [ -n "${MLATHOST}" ]; then
@@ -27,6 +31,10 @@ fi
 
 if [ -n "${BEASTHOST}" ]; then
     READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
+fi
+
+if [ -n "${UUID}" ]; then
+    READSB_CMD+=("--uuid-file=/run/uuid")
 fi
 
 READSB_CMD+=("--write-json=/run/readsb")
@@ -287,4 +295,4 @@ fi
 
 
 # shellcheck disable=SC2086
-"${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | mawk -W Interactive '{print "[readsb] " $0}'
+"${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | mawk -W Interactive '{print "[" strftime("%Y/%m/%d %H:%M:%S", systime()) "][readsb] " $0}'
