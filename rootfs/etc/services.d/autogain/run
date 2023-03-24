@@ -19,7 +19,7 @@ if [[ "${READSB_GAIN,,}" != "autogain" ]]; then
 fi
 
 if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]] || [[ -z "${READSB_RTLSDR_DEVICE}" ]]; then
-    echo "[autogain] ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain disabled."
+    echo "[$(date)][autogain] ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain disabled."
     sleep infinity
 fi
 
@@ -27,19 +27,19 @@ mkdir -p /var/globe_history/autogain
 
 # Do special things if it's the first time AUTOGAIN is running
 if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
-    echo "[autogain] Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_INTERVAL / 60 )) minutes to do an initial gain assessment."
+    echo "[$(date)][autogain] Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_INTERVAL / 60 )) minutes to do an initial gain assessment."
     # run autogain every $READSB_AUTOGAIN_INITIAL_INTERVAL secs (default 5 mins) for $READSB_AUTOGAIN_INITIAL_TIMEPERIOD secs (default 2 hours)
     for (( i=0; i<$(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / READSB_AUTOGAIN_INITIAL_INTERVAL )); i++ ))
     do
         sleep "$READSB_AUTOGAIN_INITIAL_INTERVAL"   # sleep first to give readsb the opportunity to collect some initial data
-        /usr/local/bin/autogain1090 2>&1 | mawk -W Interactive '{print "[autogain] " $0}'
+        /usr/local/bin/autogain1090 2>&1 | mawk -W Interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][autogain] " $0}'
     done
     touch /var/globe_history/autogain/autogain_initialized
 fi
 
-echo "[autogain] Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_INITIAL_INTERVAL / 60 )) minutes if gain needs to be adjusted."
+echo "[$(date)][autogain] Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_INITIAL_INTERVAL / 60 )) minutes if gain needs to be adjusted."
 while true
 do
     sleep "$READSB_AUTOGAIN_SUBSEQUENT_INTERVAL"
-    /usr/local/bin/autogain1090 2>&1 | mawk -W Interactive '{print "[autogain] " $0}'
+    /usr/local/bin/autogain1090 2>&1 | mawk -W Interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][autogain] " $0}'
 done
