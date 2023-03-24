@@ -358,6 +358,45 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
 | `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
 
+### `autogain` Options
+
+AutoGain is based on @Wiedehopf's [AutoGain script](https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-gain-optimization-for-readsb-and-dump1090-fa) and will attempt to optimize your RTL-SDR based receiver for optimum gain. 
+This will only work if your RTL-SDR is directly connected to the `docker-tar1090` container. If you get your data from another container, you will have to run AutoGain there.
+
+#### Autogain phased execution
+
+Autogain runs in 2 phases:
+
+- The "initial" interval, in which the system will attempt to correct the gain more frequently. If using the default values, the system will initially read data 30x in an interval of 2 minutes and adjust gain based on this. That should give the system a rough approximation of the correct gain. Although we advise not to change the initial interval period, this can be adjusted with the `READSB_AUTOGAIN_INITIAL_INTERVAL` environment parameter. The starting point for gain adjustments will use the `READSB_GAIN` environment parameter, or `44` if this parameter is missing.
+- The "subsequent" interval. After the initial interval is complete, the system will automatically reassess the gain in longer intervals. The default value for this interval is 1 day, and can be adjusted with the `READSB_AUTOGAIN_SUBSEQUENT_INTERVAL` environment parameter.
+
+#### Autogain reset/restart
+
+If, for any reason, you want to reset and restart your autogain adjustments, you can do so by using this parameter on the host machine:
+
+```bash
+docker exec -it tar1090 /usr/local/bin/autogain1090 reset
+```
+
+#### Autogain persistency
+
+Autogain piggybacks on the heatmap/tracks mapped volume. In order to ensure that your autogain settings survive container recreation, please map the following volume:
+
+```yaml
+    volumes:
+      - /opt/adsb/tar1090/globe_history:/var/globe_history
+```
+
+#### Autogain related variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `READSB_AUTOGAIN` | Set to `true`, `on`, or `enabled` to switch autogain on | Unset (off) |
+| `READSB_AUTOGAIN_INITIAL_INTERVAL` | Time in seconds to run autogain during initial assessment period | `120` |
+| `READSB_AUTOGAIN_SUBSEQUENT_INTERVAL` | Time in seconds to run autogain after initial assessment period | `86400` (=1 day) |
+
+Additionally, the `READSB_GAIN` variable can be used to set the starting gain at initialization.
+
 ## Message decoding introspection
 
 You can look at individual messages and what information they contain, either for all or for an individual aircraft by hex:
@@ -490,7 +529,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 
 | Variable | Description | Controls which `readsb` option | Default |
 |----------|-------------|--------------------------------|---------|
-| `READSB_GAIN` | Set gain (in dB). Use `autogain` to have the container determine an appropriate gain, more on this below. | `--gain=<db>` | Max gain |
+| `READSB_GAIN` | Set gain (in dB). | `--gain=<db>` | Max gain |
 | `READSB_DEVICE_TYPE` | If using an SDR, set this to `rtlsdr`, `modesbeast`, `gnshulc` depending on the model of your SDR. If not using an SDR, leave un-set. | `--device-type=<type>` | Unset |
 | `READSB_RTLSDR_DEVICE` | Select device by serial number. | `--device=<serial>` | Unset |
 | `READSB_RTLSDR_PPM` | Set oscillator frequency correction in PPM. See section [Estimating PPM](https://github.com/docker-readsb/README.MD#estimating-ppm) below | `--ppm=<correction>` | Unset |
