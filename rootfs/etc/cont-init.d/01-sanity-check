@@ -11,11 +11,11 @@ EXITCODE=0
 if [ -z "${BEASTHOST}" ] && [ -z "${MLATHOST}" ] && [ -z "${READSB_DEVICE_TYPE}" ] && [ -z "${READSB_NET_CONNECTOR}" ]; then
   echo -e "${YELLOW}WARNING: No obvious data input configured: BEASTHOST / MLATHOST / READSB_NET_CONNECTOR / READSB_DEVICE_TYPE environment variables not set${NOCOLOR}"
 fi
-if [ -z "${LAT}" ]; then
-  echo -e "${YELLOW}WARNING: LAT environment variable not set, Home location will not be accurate${NOCOLOR}"
+if [ -z "${LAT}" ] && [ -z "${READSB_LAT}" ]; then
+  echo -e "${YELLOW}WARNING: LAT / READSB_LAT environment variable not set, Home location will not be accurate${NOCOLOR}"
 fi
-if [ -z "${LONG}" ]; then
-  echo -e "${YELLOW}WARNING: LONG environment variable not set, Home location will not be accurate${NOCOLOR}"
+if [ -z "${LONG}" ] && [ -z "${READSB_LON}" ]; then
+  echo -e "${YELLOW}WARNING: LONG / READSB_LON environment variable not set, Home location will not be accurate${NOCOLOR}"
 fi
 if [ $EXITCODE -ne 0 ]; then
   exit 1

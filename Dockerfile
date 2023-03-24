@@ -1,6 +1,8 @@
 FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_SERVICES_GRACETIME=10000 \
+    S6_KILL_GRACETIME=10000 \
     BEASTPORT=30005 \
     GITPATH_TAR1090=/opt/tar1090 \
     GITPATH_TAR1090_DB=/opt/tar1090-db \
