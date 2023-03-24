@@ -1,10 +1,10 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-low=0.5
-high=7.0
+low="${READSB_AUTOGAIN_LOW_PCT:-2.5}"
+high="${READSB_AUTOGAIN_HIGH_PCT:-6.0}"
 ga=(0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 -10)
-tmp=/tmp/autogain1090
+tmp=/var/globe_history/autogain
 mkdir -p $tmp
 mkdir -p /var/globe_history/autogain
 
@@ -22,7 +22,7 @@ stats=/run/$APP/stats.json
 
 if [[ "$1" == "reset" ]]; then
     echo "Reset AutoGain - restarting with initial values and initialization process"
-    rm -f /var/globe_history/autogain/gain >/dev/null 2>&1
+    rm -f /var/globe_history/autogain/* >/dev/null 2>&1
     pkill -f "s6-supervise autogain"
     exit 0
 fi
@@ -54,7 +54,7 @@ fi
 
 if ! awk "BEGIN{ exit  ($total < 1000) }"; then
     echo "The decoder hasn't been running long enough, wait a bit!"
-    exit 1
+    exit 0
 fi
 
 
@@ -78,24 +78,12 @@ if [[ $strong == "nan" ]]; then echo "Error, can't automatically adjust gain!"; 
 
 
 # Get the gain -- updated for docker-tar1090 use by kx1t
-# originally was:
-# if [ -f /boot/adsb-config.txt ]; then
-#     oldgain=$(grep -P -e 'GAIN=\K[0-9-.]*' -o /boot/adsb-config.txt)
-# else
-#     oldgain=$(grep -P -e 'gain \K[0-9-.]*' -o /etc/default/$APP)
-# fi
-#
-# if [[ "$oldgain" == "" ]]; then
-#     oldgain=44
-# fi
-
-
 if [[ ! -f /var/globe_history/autogain/gain ]]; then
-    oldgain="${READSB_GAIN:-44}"
-    mkdir -p /var/globe_history/autogain
+    oldgain="49.6"
     echo "Initial run. Starting point for adjusting gain is $oldgain"
 else
     read -r oldgain < /var/globe_history/autogain/gain
+    oldgain="${oldgain:-49.6}"    # needed for stupidity reasons
 fi
 
 gain_index=28
@@ -111,18 +99,18 @@ if ! awk "BEGIN{ exit  (${oldgain} > 49.6) }"; then
 fi
 
 if [[ "$oldgain" == "-10" ]]; then
-    gain_index=29
+    gain_index=28
 fi
 
 
 if ! awk "BEGIN{ exit ($strong > $low) }" && ! awk "BEGIN{ exit ($strong < $high) }"; then
-	echo "No gain change needed, percentage of messages >-3dB is in nominal range. (${strong}%)"
+	echo "No gain change needed, ${strong}% percentage of messages >-3dB is in nominal range. (${low}% < ${strong}% < ${high}%)"
 	exit 0
 
 fi
 
-if ! awk "BEGIN{ exit ($strong < $low) }" && [[ $gain_index == 29 ]]; then
-    echo "Gain already at maximum! (${strong}% messages >-3dB)"
+if ! awk "BEGIN{ exit ($strong < $low) }" && [[ $gain_index == 28 ]]; then
+    echo "Could have used some more gain, but gain is already at maximum! Strong (>-3dB) messages ${strong}% < ${low}%"
     exit 0
 fi
 
@@ -132,7 +120,7 @@ if ! awk "BEGIN{ exit ($strong < $low) }"; then
 fi
 
 if ! awk "BEGIN{ exit ($strong > $high) }" && [[ $gain_index == 0 ]]; then
-    echo "Gain already at minimum! (${strong}% messages >-3dB)"
+    echo "Could have used some lower gain, but gain already at minimum! Strong (>-3dB) messages ${strong}% > ${high}%"
     exit 0
 fi
 
@@ -143,25 +131,12 @@ fi
 
 gain="${ga[$gain_index]}"
 
-if [[ $gain == "" ]]; then echo "Gain already at maximum! (${strong}% messages >-3dB)"; exit 0; fi
+if [[ $gain == "" ]] || [[ $gain == "-10" ]]; then
+    echo "Could have used some more gain, but gain is already at maximum! Strong (>-3dB) messages ${strong}% < ${low}%"
+    exit 0
+fi
 
 # Set the gain -- updated for docker-tar1090 use by kx1t
-# originally was:
-# if [ -f /boot/piaware-config.txt ]; then
-# 	piaware-config rtlsdr-gain $gain
-# fi
-#
-# if [ -f /boot/adsb-config.txt ]; then
-#     sed --follow-symlinks -i -E -e "s/^GAIN.*/GAIN=$gain/" /boot/adsb-config.txt
-# else
-#     if ! grep gain /etc/default/$APP &>/dev/null && grep -E 'device-type.*rtlsdr' /etc/default/$APP &>/dev/null; then
-#       sed --follow-symlinks -i -e 's/RECEIVER_OPTIONS="/RECEIVER_OPTIONS="--gain 49.6 /' /etc/default/$APP
-#     fi
-#     sed --follow-symlinks -i -E -e "s/--gain -?[0-9]*\.?[0-9]*/--gain $gain/" /etc/default/$APP
-# fi
-#
-# systemctl restart $APP
-
 echo "$gain" > /var/globe_history/autogain/gain
 pkill readsb
 
@@ -169,4 +144,8 @@ pkill readsb
 echo 0 > $tmp/strong
 echo 0 > $tmp/total
 
-echo "$action gain to $gain (${strong}% messages >-3dB)"
+if [[ "$action" == "Increasing" ]]; then
+    echo "Increasing gain to $gain (${strong}% messages >-3dB exceed lower boundary of ${low}%)"
+elif [[ "$action" == "Decreasing" ]]; then
+    echo "Decreasing gain to $gain (${strong}% messages >-3dB exceed upper boundary of ${high}%)"
+fi
