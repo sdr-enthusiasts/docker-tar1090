@@ -358,44 +358,36 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_RANGE` | Set this to any value to collect range statistics for polar plot. | `--stats-range` |  Unset |
 | `READSB_RANGE_OUTLINE_HOURS` | Change which past timeframe the range outline is based on | `--range-outline-hours` |  `24` |
 
-### `autogain` Options
+### AutoGain for RTLSDR Devices
 
-AutoGain is based on @Wiedehopf's [AutoGain script](https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-gain-optimization-for-readsb-and-dump1090-fa) and will attempt to optimize your RTL-SDR based receiver for optimum gain. 
-This will only work if your RTL-SDR is directly connected to the `docker-tar1090` container. If you get your data from another container, you will have to run AutoGain there.
+If you have set `READSB_GAIN=autogain`, then the system will take signal strength measurements to determine the optimal gain. The AutoGain functionality is based on a (slightly) modified version of [Wiedehopf's AutoGain](https://github.com/wiedehopf/autogain). AutoGain will only work with `rtlsdr` style receivers.
 
-#### Autogain phased execution
+There are 2 distinct periods in which the container will attempt to figure out the gain:
 
-Autogain runs in 2 phases:
+* The initial period of 2 hours, in which an adjustment is done every 5 minutes
+* The subsequent period, in which an adjustment is done once every day
 
-- The "initial" interval, in which the system will attempt to correct the gain more frequently. If using the default values, the system will initially read data 30x in an interval of 2 minutes and adjust gain based on this. That should give the system a rough approximation of the correct gain. Although we advise not to change the initial interval period, this can be adjusted with the `READSB_AUTOGAIN_INITIAL_INTERVAL` environment parameter. The starting point for gain adjustments will use the `READSB_GAIN` environment parameter, or `44` if this parameter is missing.
-- The "subsequent" interval. After the initial interval is complete, the system will automatically reassess the gain in longer intervals. The default value for this interval is 1 day, and can be adjusted with the `READSB_AUTOGAIN_SUBSEQUENT_INTERVAL` environment parameter.
+Please note that in order for the initial period to complete, the container must run for 90 minutes without restarting.
 
-#### Autogain reset/restart
+When taking measurements, if the percentage of "strong signals" (i.e., ADSB messages with RSSI > 3 dB) is larger than 6%, AutoGain will reduce the receiver's gain by 1 setting. Similarly, if the percentage of strong signals is smaller than 2.5%, AutoGain will increment the receiver's gain by 1 setting. When AutoGain changes the gain value, the `readsb` component of the container will restart. This may show as a disconnect / reconnected in container logs.
 
-If, for any reason, you want to reset and restart your autogain adjustments, you can do so by using this parameter on the host machine:
+We recommend running the initial period during times when there are a lot of planes overhead, so the system will get a good initial view of what signals look like when traffic is at its peak for your location. If you forgot to do this for any reason, feel free to give the AutoGain reset command (see below) during flights busy hour.
+
+Although not recommended, you can change the measurement intervals and low/high cutoffs with these parameters:
+
+| Environment Variable | Purpose | Default |
+|----------------------|---------|---------|
+| `READSB_AUTOGAIN_INITIAL_TIMEPERIOD` | How long the Initial Time Period should last (in seconds) | `7200` |
+| `READSB_AUTOGAIN_INITIAL_INTERVAL` | The measurement interval to optimize gain during the initial period of 90 minutes (in seconds) | `300` |
+| `READSB_AUTOGAIN_SUBSEQUENT_INTERVAL` | The measurement interval to optimize gain during the subsequent period (in seconds) | `86400` |
+| `READSB_AUTOGAIN_LOW_PCT` | If the percentage of "strong signals" (stronger than 3dBFS RSSI) is below this number, gain will be increased | `2.5` |
+| `READSB_AUTOGAIN_HIGH_PCT` | If the percentage of "strong signals" (stronger than 3dBFS RSSI) is above this number, gain will be decreased | `6.0` |
+
+If you need to reset AutoGain and start over determining the gain, you can do so with this command:
 
 ```bash
-docker exec -it tar1090 /usr/local/bin/autogain1090 reset
+docker exec -it ultrafeeder /usr/local/bin/autogain1090 reset
 ```
-
-#### Autogain persistency
-
-Autogain piggybacks on the heatmap/tracks mapped volume. In order to ensure that your autogain settings survive container recreation, please map the following volume:
-
-```yaml
-    volumes:
-      - /opt/adsb/tar1090/globe_history:/var/globe_history
-```
-
-#### Autogain related variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `READSB_AUTOGAIN` | Set to `true`, `on`, or `enabled` to switch autogain on | Unset (off) |
-| `READSB_AUTOGAIN_INITIAL_INTERVAL` | Time in seconds to run autogain during initial assessment period | `120` |
-| `READSB_AUTOGAIN_SUBSEQUENT_INTERVAL` | Time in seconds to run autogain after initial assessment period | `86400` (=1 day) |
-
-Additionally, the `READSB_GAIN` variable can be used to set the starting gain at initialization.
 
 ## Message decoding introspection
 
