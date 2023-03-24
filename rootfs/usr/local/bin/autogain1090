@@ -80,6 +80,7 @@ if [[ $strong == "nan" ]]; then echo "Error, can't automatically adjust gain!"; 
 # Get the gain -- updated for docker-tar1090 use by kx1t
 if [[ ! -f /var/globe_history/autogain/gain ]]; then
     oldgain="49.6"
+    echo "$oldgain" > /var/globe_history/autogain/gain
     echo "Initial run. Starting point for adjusting gain is $oldgain"
 else
     read -r oldgain < /var/globe_history/autogain/gain
