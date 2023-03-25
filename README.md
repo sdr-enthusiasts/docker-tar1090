@@ -271,10 +271,12 @@ All of the variables below are optional.
 
 ### `timelapse1090` Configuration
 
-Legacy: consider using <http://dockerhost:port/?replay> instead
+Legacy: we do NOT recommend you enable this feature as it will cause substantial additional writes to disk. On a Pi, this may reduce the lifespan of your SD card. Instead, use <http://dockerhost:port/?replay> which provides the same functionality, but without additional load to the disk.
+The feature is included for legacy purposes only, and is disabled by default.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
+| `ENABLE_TIMELAPSE1090` | If set to any non-empty value, the legacy Timelapse1090 feature will be enabled | Unset |
 | `TIMELAPSE1090_INTERVAL` | Snapshot interval in seconds | `10` |
 | `TIMELAPSE1090_HISTORY` | Time saved in hours | `24` |
 
