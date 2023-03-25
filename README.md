@@ -286,8 +286,7 @@ No paths need to be mapped through to persistent storage. However, if you don't 
 
 | Path | Purpose |
 |------|---------|
-| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled.  
-*Note: this data won't be automatically deleted, you will need to delete it eventually if you map this path.* |
+| `/var/globe_history` | Holds range outline data, heatmap / replay data and traces if enabled.</br>*Note: this data won't be automatically deleted, you will need to delete it eventually if you map this path.* |
 | `/var/timelapse1090` | Holds timelapse1090 data if enabled |
 | `/var/lib/collectd`  | Holds graphs1090 & performance data |
 
