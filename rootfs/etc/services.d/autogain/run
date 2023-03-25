@@ -27,7 +27,7 @@ mkdir -p /var/globe_history/autogain
 
 # Do special things if it's the first time AUTOGAIN is running
 if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
-    echo "[$(date)][autogain] Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_INTERVAL / 60 )) minutes to do an initial gain assessment."
+    echo "[$(date)][autogain] Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / 60 )) minutes to do an initial gain assessment."
     # run autogain every $READSB_AUTOGAIN_INITIAL_INTERVAL secs (default 5 mins) for $READSB_AUTOGAIN_INITIAL_TIMEPERIOD secs (default 2 hours)
     for (( i=0; i<$(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / READSB_AUTOGAIN_INITIAL_INTERVAL )); i++ ))
     do
