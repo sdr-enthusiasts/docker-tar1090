@@ -600,4 +600,4 @@ In order for Telegraf to serve a [Prometheus](https://prometheus.io) endpoint, t
 
 | Variable | Description |
 | ---- | ---- |
-| `PROMETHEUS_ENABLE` | Set to `true` for a Prometheus endpoint on TCP port `9273` |
+| `PROMETHEUS_ENABLE` | Set to `true` for a Prometheus endpoint on `http://0.0.0.0:9273/metrics` |
