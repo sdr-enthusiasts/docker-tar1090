@@ -320,24 +320,27 @@ Where the default value is "Unset", `readsb`'s default will be used.
 
 #### `READSB_NET_CONNECTOR` syntax
 
-This variable allows you to configure outgoing connections. The variable takes a semicolon (`;`) separated list of `ip,port,protocol`, where:
+Instead of (or in addition to) using `BEASTHOST`, you can also define ADSB data ingests using the `READSB_NET_CONNECTOR` parameter. This is the preferred way if you have multiple sources or destinations for your ADSB data. This variable allows you to configure incoming and outgoing connections. The variable takes a semicolon (`;`) separated list of `host,port,protocol[,uuid=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX]`, where:
 
-* `ip` is an IP address. Specify an IP/hostname/containername for outgoing connections.
+* `host` is an IP address. Specify an IP/hostname/containername for incoming or outgoing connections.
 * `port` is a TCP port number
 * `protocol` can be one of the following:
+  * `beast_reduce_out`: Beast-format output with lower data throughput (saves bandwidth and CPU)
+  * `beast_reduce_plus_out`: Beast-format output with extra data (UUID). This is the preferred format when feeding the "new" aggregator services
   * `beast_out`: Beast-format output
   * `beast_in`: Beast-format input
   * `raw_out`: Raw output
   * `raw_in`: Raw input
   * `sbs_out`: SBS-format output
   * `vrs_out`: SBS-format output
+* `uuid=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX` is an optional parameter that sets the UUID for this specific instance. It will override the global `UUID` parameter. This is only needed when you want to send different UUIDs to different aggregators.
 
-For example, to pull in MLAT results (so the performance graphs in the web interface show MLAT numbers), you could do the following:
+NOTE: If you have a UAT dongle and use `dump978` to decode this, you should use `READSB_NET_CONNECTOR` to ingest UAT data from `dump978`. See example below
 
 ```yaml
     environment:
     ...
-      - READSB_NET_CONNECTOR=piaware,30105,beast_in;adsbx,30105,beast_in;rbfeeder,30105,beast_in
+      - READSB_NET_CONNECTOR=dump978,37981,raw_in;another-data-aggregator.com,30005,beast_reduce_plus_out
     ...
 ```
 
