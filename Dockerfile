@@ -33,6 +33,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY rootfs/ /
 
+# add telegraf
+COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
+
 RUN set -x && \
     TEMP_PACKAGES=() && \
     KEPT_PACKAGES=() && \
