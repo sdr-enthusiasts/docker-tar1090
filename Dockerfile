@@ -33,7 +33,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY rootfs/ /
 
-# add telegraf
+# add telegraf binary
 COPY --from=library/telegraf /usr/bin/telegraf /usr/bin/telegraf
 
 RUN set -x && \
@@ -155,6 +155,9 @@ RUN set -x && \
     # add tar1090 specific stuff
     sed -i '$a\\n' /etc/collectd/collectd.conf && \
     sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
+    # set up base telegraf config
+    mkdir -p /etc/telegraf/telegraf.d && \
+    bash -c "telegraf config > /etc/telegraf/telegraf.conf" && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
