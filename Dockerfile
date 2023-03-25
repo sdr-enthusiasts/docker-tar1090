@@ -68,14 +68,12 @@ RUN set -x && \
     git clone --depth 1 https://github.com/wiedehopf/tar1090-db "${GITPATH_TAR1090_DB}" && \
     # tar1090-db: document version
     pushd "${GITPATH_TAR1090_DB}" || exit 1 && \
-    VERSION_TAR1090_DB=$(git log | head -1 | tr -s " " "_") && \
-    echo "tar1090-db ${VERSION_TAR1090_DB}" >> /VERSIONS && \
+    bash -ec 'echo "tar1090-db $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
     # tar1090: clone
     git clone --single-branch --depth 1 "https://github.com/wiedehopf/tar1090.git" "${GITPATH_TAR1090}" && \
     pushd "${GITPATH_TAR1090}" && \
-    VERSION_TAR1090=$(git log | head -1 | tr -s " " "_") && \
-    echo "tar1090 ${VERSION_TAR1090}" >> /VERSIONS && \
+    bash -ec 'echo "tar1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
     # tar1090: add nginx config
     cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
@@ -83,8 +81,7 @@ RUN set -x && \
     # timelapse1090
     git clone --single-branch --depth 1 "https://github.com/wiedehopf/timelapse1090.git" "${GITPATH_TIMELAPSE1090}" && \
     pushd "${GITPATH_TIMELAPSE1090}" && \
-    VERSION_TIMELAPSE1090=$(git log | head -1 | tr -s " " "_") || true && \
-    echo "timelapse1090 ${VERSION_TIMELAPSE1090}" >> /VERSIONS && \
+    bash -ec 'echo "timelapse1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
     mkdir -p /var/timelapse1090 && \
     # aircraft-db
@@ -159,22 +156,23 @@ RUN set -x && \
     # add tar1090 specific stuff
     sed -i '$a\\n' /etc/collectd/collectd.conf && \
     sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
-    # set up base telegraf config
+    # set up base telegraf config directories
     mkdir -p /etc/telegraf/telegraf.d && \
-    bash -c "telegraf config > /etc/telegraf/telegraf.conf" && \
+    # document telegraf version
+    bash -ec "telegraf --version >> /VERSIONS" && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* && \
     # document versions
-    grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION && \
+    bash -ec 'grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION' && \
     cat /VERSIONS && \
     # Add Container Version
     branch="##BRANCH##" && \
     [[ "${branch:0:1}" == "#" ]] && branch="main" || true && \
     git clone --depth=1 -b $branch https://github.com/sdr-enthusiasts/docker-tar1090.git /tmp/clone && \
     pushd /tmp/clone && \
-    bash -c 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
+    bash -ec 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
     rm -rf /tmp/*
 
