@@ -1,0 +1,23 @@
+#!/usr/bin/with-contenv bash
+#shellcheck shell=bash
+
+TELEGRAF_OUTPUT_FILE="/etc/telegraf/telegraf.d/output.conf"
+
+# start with a fresh config
+rm "$TELEGRAF_OUTPUT_FILE" > /dev/null 2>&1 || true
+
+# configure InfluxDB v2 if a URL is given
+if [[ -n "$INFLUXDBV2_URL" ]]; then
+    echo "[[outputs.influxdb_v2]]" >> "$TELEGRAF_OUTPUT_FILE"
+    echo "  urls = [\"$INFLUXDBV2_URL\"]" >> "$TELEGRAF_OUTPUT_FILE"
+    echo "  token = \"$INFLUXDBV2_TOKEN\"" >> "$TELEGRAF_OUTPUT_FILE"
+    echo "  bucket = \"$INFLUXDBV2_BUCKET\"" >> "$TELEGRAF_OUTPUT_FILE"
+    echo "" >> "$TELEGRAF_OUTPUT_FILE"
+fi
+
+# configure Prometheus if required
+if [[ ${PROMETHEUS_ENABLE^^} == "TRUE" ]]; then
+    echo "[[outputs.prometheus_client]]" >> "$TELEGRAF_OUTPUT_FILE"
+    echo "  listen = \":9273\"" >> "$TELEGRAF_OUTPUT_FILE"
+    echo "" >> "$TELEGRAF_OUTPUT_FILE"
+fi
