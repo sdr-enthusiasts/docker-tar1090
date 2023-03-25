@@ -21,7 +21,7 @@ if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
   done
 
   /opt/timelapse1090/timelapse1090.sh \
-    2>&1 | mawk -W interactive '{print "[timelapse1090] " $0}'
+    2>&1 | mawk -W interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][timelapse1090] " $0}'
 
   popd || exit 1
 
