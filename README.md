@@ -579,3 +579,25 @@ The first part of the mount before the : is the path on the docker host, don't c
 Using this volume gives you persistence for the history / heatmap / range outline
 
 Note that this mode will make T not work as before for displaying all tracks as tracks are only loaded when you click them.
+
+## Metrics
+
+This image contains [Telegraf](https://docs.influxdata.com/telegraf/), which will be used to capture metrics from `readsb` if an output is enabled.
+
+### Output to InfluxDBv2
+
+In order for Telegraf to output metrics to an [InfluxDBv2](https://docs.influxdata.com/influxdb/) time-series database, the following environment variables can be used:
+
+| Variable | Description |
+| ---- | ---- |
+| `INFLUXDBV2_URL` | The URL of the InfluxDB instance |
+| `INFLUXDBV2_TOKEN` | The token for authentication |
+| `INFLUXDBV2_BUCKET` | Destination bucket to write into |
+
+### Output to Prometheus
+
+In order for Telegraf to serve a [Prometheus](https://prometheus.io) endpoint, the following environment variables can be used:
+
+| Variable | Description |
+| ---- | ---- |
+| `PROMETHEUS_ENABLE` | Set to `true` for a Prometheus endpoint on TCP port `9273` |
