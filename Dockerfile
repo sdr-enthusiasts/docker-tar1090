@@ -1,3 +1,7 @@
+FROM telegraf:1.26 AS telegraf
+
+RUN touch /tmp/emptyfile
+
 FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
@@ -34,7 +38,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY rootfs/ /
 
 # add telegraf binary
-COPY --from=library/telegraf /usr/bin/telegraf /usr/bin/telegraf
+COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
 
 RUN set -x && \
     TEMP_PACKAGES=() && \
