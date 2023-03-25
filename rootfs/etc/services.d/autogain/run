@@ -37,7 +37,7 @@ if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
     touch /var/globe_history/autogain/autogain_initialized
 fi
 
-echo "[$(date)][autogain] Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_INITIAL_INTERVAL / 60 )) minutes if gain needs to be adjusted."
+echo "[$(date)][autogain] Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_SUBSEQUENT_INTERVAL / 60 )) minutes if gain needs to be adjusted."
 while true
 do
     sleep "$READSB_AUTOGAIN_SUBSEQUENT_INTERVAL"
