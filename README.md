@@ -1,6 +1,6 @@
 # sdr-enthusiasts/docker-tar1090
 
-[`tar1090`](https://github.com/wiedehopf/tar1090) is an ADS-B viewing webinterface by [wiedehopf](https://github.com/wiedehopf) using his [`readsb fork`](https://github.com/wiedehopf/readsb) as a backend
+This container [`tar1090`](https://github.com/wiedehopf/tar1090) runs [`@wiedehopf's readsb fork`](https://github.com/wiedehopf/readsb)  ADS-B decoding engine in to feed the graphic tar1090 viewing webinterface, also by [wiedehopf](https://github.com/wiedehopf) (as is the viewadsb text-based output) to provide digital representations of the readsb output.
 
 At the time of writing this README, it provides:
 
