@@ -390,7 +390,7 @@ Although not recommended, you can change the measurement intervals and low/high 
 If you need to reset AutoGain and start over determining the gain, you can do so with this command:
 
 ```bash
-docker exec -it ultrafeeder /usr/local/bin/autogain1090 reset
+docker exec -it tar1090 /usr/local/bin/autogain1090 reset
 ```
 
 ## Message decoding introspection
