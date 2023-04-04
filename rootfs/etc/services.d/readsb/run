@@ -56,7 +56,16 @@ READSB_CMD+=("--net-json-port=30047")
 READSB_CMD+=(--net-sbs-in-port=32006)
 
 if [[ -n "${READSB_FORWARD_MLAT}" ]]; then
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")][readsb] WARNING -- READSB_FORWARD_MLAT has been set! Do not feed the output of this container to any aggregators!"
     READSB_CMD+=("--forward-mlat")
+fi
+
+if [[ -n "${READSB_FORWARD_MLAT_SBS}" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "false" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "off" ]]; then
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")][readsb] WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
+    READSB_CMD+=("--forward-mlat-sbs")
+elif [[ -n "${READSB_FORWARD_MLAT}" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "false" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "off" ]]; then
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")][readsb] WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
+    READSB_CMD+=("--forward-mlat-sbs")
 fi
 
 if [[ -n "$READSB_RX_LOCATION_ACCURACY" ]]; then
