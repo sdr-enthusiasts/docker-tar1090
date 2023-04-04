@@ -1,4 +1,4 @@
-FROM telegraf:1.26 AS telegraf
+FROM telegraf:1.26.1 AS telegraf
 
 RUN touch /tmp/emptyfile
 
