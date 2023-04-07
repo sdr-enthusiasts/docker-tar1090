@@ -12,6 +12,7 @@ if [[ -n "$INFLUXDBV2_URL" ]]; then
         echo "[[outputs.influxdb_v2]]"
         echo "  urls = [\"$INFLUXDBV2_URL\"]"
         echo "  token = \"$INFLUXDBV2_TOKEN\""
+        echo "  organization = \"$INFLUXDBV2_ORG\""
         echo "  bucket = \"$INFLUXDBV2_BUCKET\""
         echo ""
     } >> "$TELEGRAF_OUTPUT_FILE"
