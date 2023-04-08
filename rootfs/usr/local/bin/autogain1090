@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
 
 low="${READSB_AUTOGAIN_LOW_PCT:-2.5}"
 high="${READSB_AUTOGAIN_HIGH_PCT:-6.0}"

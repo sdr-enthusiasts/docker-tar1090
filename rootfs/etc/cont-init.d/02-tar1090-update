@@ -1,9 +1,11 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
 
 cd "${GITPATH_TAR1090_DB}" || exit 1
 
-if [ "${UPDATE_TAR1090}" = "true" ]; then 
+if chk_enabled "${UPDATE_TAR1090}"; then 
 	# Attempt to update tar1090 database
 	git fetch --depth 1 origin master > /dev/null 2>&1 || exit 0
 	git reset --hard origin/master > /dev/null 2>&1 || exit 0
@@ -16,7 +18,7 @@ export DB_VERSION
 
 cd "${GITPATH_TAR1090}" || exit 1
 
-if [ "${UPDATE_TAR1090}" = "true" ]; then 
+if chk_enabled "${UPDATE_TAR1090}"; then 
 	# Attempt to update tar1090
 	git fetch origin master > /dev/null 2>&1 || exit 0
 	git reset --hard origin/master > /dev/null 2>&1 || exit 0

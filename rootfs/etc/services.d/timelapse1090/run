@@ -1,7 +1,9 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC1091
 
-if [[ -n "$ENABLE_TIMELAPSE1090" ]]; then
+source /scripts/common
+
+if chk_enabled "$ENABLE_TIMELAPSE1090"; then
 
   # Move timelapse1090 out of /run, and symlink back to /run
   mkdir -p /var/timelapse1090

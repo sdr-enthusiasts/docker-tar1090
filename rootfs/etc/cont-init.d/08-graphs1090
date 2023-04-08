@@ -1,26 +1,28 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
 
 mkdir -p /run/graphs1090
 mkdir -p /run/collectd/localhost
 
 # If ${GRAPHS1090_DISABLE} is set, remove access to the graphs1090 website. We don't need to worry about putting this file back
 # after graphs1090 is re-enabled, because when changing env params, the container MUST be recreated.
-if [[ -n "${GRAPHS1090_DISABLE}" ]]; then
+if chk_enabled "${GRAPHS1090_DISABLE}"; then
     mv -f /usr/share/graphs1090/nginx-graphs1090.conf /usr/share/graphs1090/nginx-graphs1090.conf.backup
     touch /usr/share/graphs1090/nginx-graphs1090.conf
     exit 0
 fi
 
 # Enable AIRSPY graphs if requested:
-if [[ -n "${ENABLE_AIRSPY}" ]]; then
+if chk_enabled "${ENABLE_AIRSPY}"; then
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:none"/div id="panel_airspy" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
 else
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:block"/div id="panel_airspy" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
 fi
 
 # Enable UAT graphs if requested:
-if [[ -n "${ENABLE_978}" ]] && [[ "${ENABLE_978,,}" != "no" ]] && [[ -n "${URL_978}" ]]; then
+if chk_enabled "${ENABLE_978}" && [[ -n "${URL_978}" ]]; then
     sed -i 's/div id="panel_978" class="panel panel-default" style="display:none"/div id="panel_978" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
     sed -i "s|^\(\s*\)\(URL_978.*$\)|#\1\2\n\1URL_978 \"${URL_978}\"|g" /etc/collectd/collectd.conf
 else
@@ -29,7 +31,7 @@ else
 fi
 
 # Enable DarkMode if configured:
-if [[ -n "${GRAPHS1090_DARKMODE}" ]]; then
+if chk_enabled "${GRAPHS1090_DARKMODE}"; then
     sed -i 's|colorscheme=default|colorscheme=dark|g' /etc/default/graphs1090
 else
     sed -i 's|colorscheme=dark|colorscheme=default|g' /etc/default/graphs1090
@@ -53,7 +55,7 @@ else
 fi   
 
 # Make the small graphs as large as the big ones by setting to `yes`
-if [[ -n "${GRAPHS1090_ALL_LARGE}" ]]; then
+if chk_enabled "${GRAPHS1090_ALL_LARGE}"; then
     sed -i "s|all_large=.*|all_large=yes|g" /etc/default/graphs1090
 else
     sed -i "s|all_large=.*|all_large=no|g" /etc/default/graphs1090
@@ -67,7 +69,7 @@ else
 fi
 
 # Set to 1 to draw a reference line at the maximum message rate.
-if [[ -n "${GRAPHS1090_MAX_MESSAGES_LINE}" ]]; then
+if chk_enabled "${GRAPHS1090_MAX_MESSAGES_LINE}"; then
     sed -i "s|max_message_line=.*|max_message_line=1|g" /etc/default/graphs1090
 else
     sed -i "s|max_message_line=.*|max_message_line=0|g" /etc/default/graphs1090
@@ -81,24 +83,24 @@ else
 fi
 
 # Defines the height of the larger graphs.
-if [[ -n "${GRAPHS1090_LARGE_HEIGTH}" ]]; then
-    sed -i "s|lheigth=.*|lheigth=${GRAPHS1090_LARGE_HEIGTH}|g" /etc/default/graphs1090
+if [[ -n "${GRAPHS1090_LARGE_HEIGHT}" ]]; then
+    sed -i "s|lheight=.*|lheight=${GRAPHS1090_LARGE_HEIGHT}|g" /etc/default/graphs1090
 else
-    sed -i "s|lheigth=.*|lheigth=235|g" /etc/default/graphs1090
+    sed -i "s|lheight=.*|lheight=235|g" /etc/default/graphs1090
 fi
 
 # Defines the width of the smaller graphs.
 if [[ -n "${GRAPHS1090_SMALL_WIDTH}" ]]; then
-    sed -i "s|lwidth=.*|lwidth=${GRAPHS1090_LARGE_WIDTH}|g" /etc/default/graphs1090
+    sed -i "s|lwidth=.*|lwidth=${GRAPHS1090_SMALL_WIDTH}|g" /etc/default/graphs1090
 else
     sed -i "s|lwidth=.*|lwidth=1096|g" /etc/default/graphs1090
 fi
 
 # Defines the height of the smaller graphs.
-if [[ -n "${GRAPHS1090_SMALL_HEIGTH}" ]]; then
-    sed -i "s|lheigth=.*|sheigth=${GRAPHS1090_LARGE_HEIGTH}|g" /etc/default/graphs1090
+if [[ -n "${GRAPHS1090_SMALL_HEIGHT}" ]]; then
+    sed -i "s|lheight=.*|lheight=${GRAPHS1090_SMALL_HEIGHT}|g" /etc/default/graphs1090
 else
-    sed -i "s|lheigth=.*|sheigth=235|g" /etc/default/graphs1090
+    sed -i "s|lheight=.*|lheight=235|g" /etc/default/graphs1090
 fi
 
 # Sets disk device for graphs -- leave empty for default.

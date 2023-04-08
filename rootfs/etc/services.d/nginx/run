@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv sh
-#shellcheck shell=sh
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
 
 mkdir -p /var/log/nginx
 

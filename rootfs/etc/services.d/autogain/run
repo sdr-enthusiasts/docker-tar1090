@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash disable=SC2076
+# shellcheck shell=bash disable=SC1091,SC2076
+
+source /scripts/common 
 
 # Autogain routine
 #

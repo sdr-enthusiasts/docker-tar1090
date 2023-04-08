@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
 
 # Modify nginx.conf
 srcdir=/run/readsb
@@ -130,7 +132,7 @@ if [[ -n "$TAR1090_BINGMAPSAPIKEY" ]]; then
   echo "BingMapsAPIKey = \"$TAR1090_BINGMAPSAPIKEY\";"
 fi
 
-if [[ -n "$TAR1090_FLIGHTAWARELINKS" ]]; then
+if chk_enabled "$TAR1090_FLIGHTAWARELINKS"; then
   echo "flightawareLinks = true;"
 fi
 
