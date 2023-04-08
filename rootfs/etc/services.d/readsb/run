@@ -126,9 +126,8 @@ else
 fi
 
 # Handle "--net-beast-reduce-interval=<seconds>"
-if [[ -n "$READSB_NET_BEAST_REDUCE_INTERVAL" ]]; then
-    READSB_CMD+=("--net-beast-reduce-interval=$READSB_NET_BEAST_REDUCE_INTERVAL")
-fi
+# Set it to 1.0 second if no value is provided
+READSB_CMD+=("--net-beast-reduce-interval=${READSB_NET_BEAST_REDUCE_INTERVAL:-1.0}")
 
 # Handle "--net-beast-reduce-out-port=<ports>"
 if [[ -n "$READSB_NET_BEAST_REDUCE_OUT_PORT" ]]; then
