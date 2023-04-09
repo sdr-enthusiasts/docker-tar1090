@@ -187,8 +187,8 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HEYWHATSTHAT_ALTS` | Optional. Comma separated altitudes for multiple outlines. Use no units or `ft` for feet, `m` for meters, or `km` for kilometers. Only integer numbers are accepted, no decimals please | `12192m` (=40000 ft) |
 | `HTTP_ACCESS_LOG` | Optional. Set to `true` to display HTTP server access logs. | `false` |
 | `HTTP_ERROR_LOG` | Optional. Set to `false` to hide HTTP server error logs. | `true` |
-| `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | `300` |
-| `ENABLE_TIMELAPSE1090` | Optional / Legacy. Set to any value to enable timelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
+| `READSB_MAX_RANGE` | Optional. Maximum range (in nautical miles). | Unset |
+| `ENABLE_TIMELAPSE1090` | Optional / Legacy. Set to any value to enable btimelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>. | Unset |
 | `READSB_EXTRA_ARGS` | Optional, allows to specify extra parameters for readsb | Unset |
 | `READSB_DEBUG` | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check | Unset |
 | `S6_SERVICES_GRACETIME` | Optional, set to 30000 when saving traces / globe_history | `3000` |
