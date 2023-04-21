@@ -210,12 +210,12 @@ All of the variables below are optional.
 | `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
-| `ENABLE_978` | Change to yes to enable UAT/978 display in `tar1090`. This will also enable UAT-specific graphs in graphs1090 | `no` |
+| `ENABLE_978` | Set to `true` to enable UAT/978 display in `tar1090`. This will also enable UAT-specific graphs in graphs1090 | Unset |
 | `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
 | `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
 | `TAR1090_FLIGHTAWARELINKS` | Set to any value to enable FlightAware links in the web interface | `null` |
-| `TAR1090_ENABLE_AC_DB` | Set to `true` to enable extra information, such as aircraft type and registration, to be included in in `aircraft.json` output. Will use more memory; use caution on older Pis or similiar devices. | `false` |
+| `TAR1090_ENABLE_AC_DB` | Set to `true` to enable extra information, such as aircraft type and registration, to be included in in `aircraft.json` output. Will use more memory; use caution on older Pis or similar devices. | Unset |
 
 * For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 * TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
@@ -273,7 +273,7 @@ All of the variables below are optional.
 
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
-| `TAR1090_USEROUTEAPI` | Enable route lookup for callsigns | off |
+| `TAR1090_USEROUTEAPI` | Set to `true` to enable route lookup for callsigns | Unset |
 | `TAR1090_ROUTEAPIURL` | API URL used | `https://api.adsb.lol/api/0/routeset` |
 
 ### `timelapse1090` Configuration
