@@ -8,9 +8,6 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_SERVICES_GRACETIME=10000 \
     S6_KILL_GRACETIME=10000 \
     BEASTPORT=30005 \
-    GITPATH_TAR1090=/opt/tar1090 \
-    GITPATH_TAR1090_DB=/opt/tar1090-db \
-    GITPATH_TAR1090_AC_DB=/opt/tar1090-ac-db \
     GITPATH_TIMELAPSE1090=/opt/timelapse1090 \
     HTTP_ACCESS_LOG="false" \
     HTTP_ERROR_LOG="true" \
@@ -62,15 +59,16 @@ RUN set -x && \
         && \
     # nginx: remove default config
     rm /etc/nginx/sites-enabled/default && \
-    # tar1090-db: clone
-    git clone --depth 1 https://github.com/wiedehopf/tar1090-db "${GITPATH_TAR1090_DB}" && \
+    # tar1090: install using project copy of original script
+    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" && \
+    # change some /run/tar1090-webroot to /run/readsb to make work with existing docker scripting
+    sed -i -e 's#/run/tar1090-webroot/#/run/readsb/#' /usr/local/share/tar1090/nginx-tar1090-webroot.conf && \
     # tar1090-db: document version
-    pushd "${GITPATH_TAR1090_DB}" || exit 1 && \
+    pushd "${TAR1090_INSTALL_DIR}/git-db" || exit 1 && \
     bash -ec 'echo "tar1090-db $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
-    # tar1090: clone
-    git clone --single-branch --depth 1 "https://github.com/wiedehopf/tar1090.git" "${GITPATH_TAR1090}" && \
-    pushd "${GITPATH_TAR1090}" && \
+    # tar1090: document version
+    pushd "${TAR1090_INSTALL_DIR}/git" || exit 1 && \
     bash -ec 'echo "tar1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
     # tar1090: add nginx config
@@ -83,8 +81,8 @@ RUN set -x && \
     popd && \
     mkdir -p /var/timelapse1090 && \
     # aircraft-db
-    mkdir -p "$GITPATH_TAR1090_AC_DB" && \
-    curl -o "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
+    curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
+    git ls-remote https://github.com/wiedehopf/tar1090-db | grep refs/heads/csv > "${TAR1090_INSTALL_DIR}/aircraft.csv.gz.version" && \
     # clone graphs1090 repo
     git clone \
         -b master \
