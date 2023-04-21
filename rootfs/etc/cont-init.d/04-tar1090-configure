@@ -156,7 +156,7 @@ if [[ -n "$TAR1090_LABELZOOMGROUND" ]]; then
   echo "labelZoomGround = \"$TAR1090_LABELZOOMGROUND\";"
 fi
 
-if [[ -n "$TAR1090_USEROUTEAPI" ]]; then
+if chk_enabled "$TAR1090_USEROUTEAPI"; then
   echo "useRouteAPI = ${TAR1090_USEROUTEAPI};"
 fi
 
