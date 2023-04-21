@@ -60,6 +60,9 @@ done
 # Gzip libs
 gzip -k -9 "$TAR1090_INSTALL_DIR/html/libs/"*.js
 
+# run cacheburst script from wiedehopf/tar1090 repo
+/opt/tar1090/cachebust.sh /opt/tar1090/cachebust.list "$TAR1090_INSTALL_DIR/html"
+
 # Write version.json
 echo "{ \"tar1090Version\": \"$TAR_VERSION\", \"databaseVersion\": \"$TAR_VERSION\" }" > \
     "${TAR1090_INSTALL_DIR}/html/version.json"
