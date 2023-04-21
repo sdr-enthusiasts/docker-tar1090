@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
-# shellcheck shell=bash disable=SC1091
+# shellcheck shell=bash disable=SC1091,SC2153
 
 source /scripts/common
 
