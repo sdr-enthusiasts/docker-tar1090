@@ -44,7 +44,6 @@ RUN set -x && \
     KEPT_PACKAGES=() && \
     # Essentials (git is kept for aircraft db updates)
     KEPT_PACKAGES+=(git) && \
-    TEMP_PACKAGES+=(build-essential) && \
     # tar1090
     KEPT_PACKAGES+=(nginx-light) && \
     # graphs1090
