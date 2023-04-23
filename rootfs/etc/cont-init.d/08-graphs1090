@@ -21,8 +21,8 @@ else
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:block"/div id="panel_airspy" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
 fi
 
-# Enable UAT graphs if requested:
-if chk_enabled "${ENABLE_978}" && [[ -n "${URL_978}" ]]; then
+# Enable UAT graphs if URL_978 is set:
+if [[ -n "${URL_978}" ]]; then
     sed -i 's/div id="panel_978" class="panel panel-default" style="display:none"/div id="panel_978" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
     sed -i "s|^\(\s*\)\(URL_978.*$\)|#\1\2\n\1URL_978 \"${URL_978}\"|g" /etc/collectd/collectd.conf
 else
