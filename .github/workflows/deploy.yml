@@ -50,7 +50,7 @@ jobs:
 
   deploy_ghcr_multiarch_no_telegraf:
     name: Deploy image without Telegraf ghcr.io (Multi-Arch)
-    needs: [Deploy]
+    needs: Deploy
     runs-on: ubuntu-latest
     steps:
 
