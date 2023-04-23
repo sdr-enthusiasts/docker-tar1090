@@ -3,32 +3,19 @@
 
 source /scripts/common
 
-# Modify nginx.conf
-srcdir=/run/readsb
-service=readsb
-html_path=${TAR1090_INSTALL_DIR}/html
-sed -i.original \
-  -e "s?SOURCE_DIR?$srcdir?g" \
-  -e "s?SERVICE?$service?g" \
-  -e "s?/INSTANCE/?/?g" \
-  -e "s?/INSTANCE?/?g" \
-  -e "s?HTMLPATH?$html_path?g" \
-  "${TAR1090_INSTALL_DIR}/nginx.conf"
-sed -i '/location \/data\/ {/a \ \ access_log off;' \
-    "${TAR1090_INSTALL_DIR}/nginx.conf"
-
-# Modify tar1090 settings
-sed -i.original \
-  -e 's/skyview978/skyaware978/' \
-  "${TAR1090_INSTALL_DIR}/default"
-
 # Add in CORS header for tar1090 data/aircraft.json file
 
-sed -i 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
-"${TAR1090_INSTALL_DIR}/nginx.conf"
+sed -i \
+    -e 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
+    -e 's#/run/tar1090-webroot/#/run/readsb/#' \
+"${TAR1090_INSTALL_DIR}/nginx-tar1090-webroot.conf"
 
-# Modify tar1090 config.js. tar1090's config.js file should be reset as part of
-# /etc/cont-init.d/02-tar1090-update & /etc/cont-init.d/03-tar1090-copy
+
+# Wipe and configure tar1090 config.js.
+
+rm -f "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+cp "${TAR1090_INSTALL_DIR}/example_config.js" "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+
 {
 
 echo ""
@@ -164,4 +151,4 @@ if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
   echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
 fi
 
-} >> "${TAR1090_INSTALL_DIR}/html/config.js"
+} >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"

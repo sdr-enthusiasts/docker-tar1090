@@ -21,8 +21,8 @@ else
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:block"/div id="panel_airspy" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
 fi
 
-# Enable UAT graphs if requested:
-if chk_enabled "${ENABLE_978}" && [[ -n "${URL_978}" ]]; then
+# Enable UAT graphs if URL_978 is set:
+if [[ -n "${URL_978}" ]]; then
     sed -i 's/div id="panel_978" class="panel panel-default" style="display:none"/div id="panel_978" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
     sed -i "s|^\(\s*\)\(URL_978.*$\)|#\1\2\n\1URL_978 \"${URL_978}\"|g" /etc/collectd/collectd.conf
 else
@@ -125,4 +125,4 @@ else
 fi
 
 # Finally, add a link to graphs1090 to the tar1090 web page:
-sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' /usr/local/share/tar1090/html/index.html
+sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' /usr/local/share/tar1090/html-webroot/index.html

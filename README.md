@@ -210,8 +210,8 @@ All of the variables below are optional.
 | `UPDATE_TAR1090` | At startup update tar1090 and tar1090db to the latest versions | `true` |
 | `INTERVAL` | Interval at which the track history is saved | `8` |
 | `HISTORY_SIZE` | How many points in time are stored in the track history | `450` |
-| `ENABLE_978` | Set to `true` to enable UAT/978 display in `tar1090`. This will also enable UAT-specific graphs in graphs1090 | Unset |
-| `URL_978` | The URL needs to point at where you would normally find the skyview978 webinterface | `http://127.0.0.1/skyaware978` |
+| `URL_978` | The URL needs to point at where your skyaware978 webinterface is located, this will also enable UAT-specific graphs in graphs1090 | `http://dump978/skyaware978` |
+| `ENABLE_978` | Set to `true` to enable deprecated UAT/978 display in `tar1090` fetch data via json (not beast / raw) from `URL_978`.  | Unset |
 | `GZIP_LVL` | `1`-`9` are valid, lower lvl: less CPU usage, higher level: less network bandwidth used when loading the page | `3` |
 | `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
 | `TAR1090_FLIGHTAWARELINKS` | Set to any value to enable FlightAware links in the web interface | `null` |
