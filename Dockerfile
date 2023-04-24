@@ -16,7 +16,6 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     INTERVAL=8 \
     HISTORY_SIZE=450 \
     ENABLE_978=no \
-    URL_978="http://127.0.0.1/skyaware978" \
     GZIP_LVL=3 \
     CHUNK_SIZE=60 \
     INT_978=1 \
