@@ -4,30 +4,21 @@
 source /scripts/common
 
 if chk_enabled "${GRAPHS1090_DISABLE}"; then
-    sleep infinity
+    exec sleep infinity
 fi
 
 # wait for neccessary input file to exist before starting
 
 # shellcheck disable=SC2016
-echo "Waiting for readsb to start..." | stdbuf -o0 awk '{print "[collectd] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
+s6wrap --prepend=collectd --timestamps --args echo "Waiting for readsb to start..."
 while [[ ! -e /usr/share/graphs1090/data-symlink/data/stats.json ]]; do
-    sleep 10
+    sleep 1
 done
 
-# shellcheck disable=SC2016
-/usr/share/graphs1090/readback.sh 2>&1 | stdbuf -o0 awk '{print "[graphs1090:readback] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
+# test config?
 /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf > /dev/null 2>&1
 
-set -eo pipefail
-
 #shellcheck disable=SC2016
-/usr/sbin/collectd \
-    -C /etc/collectd/collectd.conf \
-    -f \
-    2>&1 | grep -v "successfully loaded\." \
-    | stdbuf -o0 awk '{print "[collectd] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
+exec s6wrap --prepend=collectd --timestamps --args /usr/sbin/collectd -C /etc/collectd/collectd.conf -f
 
-# shellcheck disable=SC2016
-/usr/share/graphs1090/writeback.sh 2>&1 | stdbuf -o0 awk '{print "[graphs1090:writeback] " strftime("%Y/%m/%d %H:%M:%S", systime()) " " $0}'
 

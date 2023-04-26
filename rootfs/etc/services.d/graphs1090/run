@@ -4,7 +4,7 @@
 source /scripts/common
 
 if chk_enabled "${GRAPHS1090_DISABLE}"; then
-    sleep infinity
+    exec sleep infinity
 fi
 
 LOOPTIME="30s"
@@ -12,9 +12,8 @@ WRITEAFTER="10"     # restart collectd every $WRITEAFTER loops
 
 sleep ${LOOPTIME}
 counter=0
-nice -n 19 /usr/share/graphs1090/service-graphs1090.sh \
-    2>&1 | mawk -W Interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][graphs1090] " $0}'
-if (( counter++ > WRITEAFTER )) 
+nice -n 19 s6wrap --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh
+if (( counter++ > WRITEAFTER ))
 then
     # restart collectd by killing it. This will cause the write-back script to be invoked
     pkill collectd

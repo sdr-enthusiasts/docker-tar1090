@@ -12,7 +12,7 @@ if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
     # give other services time to stabilise
     sleep 5
     # start telegraf
-    telegraf --config-directory /etc/telegraf/telegraf.d 2>&1 | mawk -W interactive '{print "[telegraf] " $0}'
+    s6wrap --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d
 else
     # if telegraf not needed, sleep forever
     exec sleep infinity

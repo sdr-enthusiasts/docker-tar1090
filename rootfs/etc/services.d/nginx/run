@@ -5,5 +5,4 @@ source /scripts/common
 
 mkdir -p /var/log/nginx
 
-exec \
-  /usr/sbin/nginx 2>&1 | mawk -W interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][nginx] " $0}'
+exec s6wrap --prepend=nginx --timestamps --args /usr/sbin/nginx

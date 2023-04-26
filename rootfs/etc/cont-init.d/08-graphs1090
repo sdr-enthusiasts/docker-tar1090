@@ -14,6 +14,11 @@ if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exit 0
 fi
 
+
+# readback rrd database from compressed archiv
+s6wrap --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/readback.sh
+
+
 # Enable AIRSPY graphs if requested:
 if chk_enabled "${ENABLE_AIRSPY}"; then
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:none"/div id="panel_airspy" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html
