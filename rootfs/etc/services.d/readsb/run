@@ -317,4 +317,4 @@ if [[ -n "$PROMETHEUS_ENABLE" ]]; then
 fi
 
 # shellcheck disable=SC2086
-s6wrap --prepend=readsb --timestamps --args "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
+exec s6wrap --prepend=readsb --timestamps --args "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS

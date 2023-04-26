@@ -7,4 +7,4 @@ if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exec sleep infinity
 fi
 
-exec nice -n 19 s6wrap --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh
+exec s6wrap --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh

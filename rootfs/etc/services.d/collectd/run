@@ -14,17 +14,18 @@ if chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
     s6wrap --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/readback.sh
 elif [[ -f "${PERMFILE}" ]]; then
     # extract rrd database from compressed archive (in case  WAS enabled)
-    if s6wrap --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/gunzip.sh /var/lib/collectd/rrd/localhost; then
-        s6wrap --prepend=graphs1090-readback --timestamps --args rm -v -rf "${PERMFILE}"
+    if s6wrap --prepend=graphs1090-extract --timestamps --args bash /usr/share/graphs1090/gunzip.sh /var/lib/collectd/rrd/localhost; then
+        rm -rf "${PERMFILE}"
     fi
 fi
 
 
 # wait for neccessary input file to exist before starting
 
+loop_count=0
 # shellcheck disable=SC2016
 while [[ ! -e /usr/share/graphs1090/data-symlink/data/stats.json ]]; do
-    #if [[ -z "$wait_printed" ]]; then echo "Waiting for readsb to start..."; wait_printed=yes; fi
+    if (( loop_count++ > 30 )); then echo "[collectd] Waiting for readsb to start..."; sleep 9; fi
     sleep 1
 done
 
@@ -37,7 +38,7 @@ trap "echo 'sending SIGTERM to collectd';pkill collectd" SIGTERM SIGINT SIGHUP S
 # background execution + wait is necessary for trap to work -.-
 #shellcheck disable=SC2016
 s6wrap --prepend=collectd --timestamps --args /usr/sbin/collectd -C /etc/collectd/collectd.conf -f &
-wait
+wait || true
 
 
 
