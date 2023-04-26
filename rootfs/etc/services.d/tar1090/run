@@ -12,7 +12,7 @@ sleep 5
 srcdir=/run/readsb
 service=readsb
 
-s6wrap --prepend=tar1090 --timestamps --args bash /usr/local/share/tar1090/tar1090.sh \
+exec s6wrap --prepend=tar1090 --timestamps --args bash /usr/local/share/tar1090/tar1090.sh \
   "/run/$service" \
   "$srcdir"
 

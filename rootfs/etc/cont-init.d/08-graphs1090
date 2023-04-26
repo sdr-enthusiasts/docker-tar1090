@@ -14,10 +14,11 @@ if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exit 0
 fi
 
-
-# readback rrd database from compressed archiv
-s6wrap --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/readback.sh
-
+# configure disk preservation
+if chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
+    sed -i -e 's?DataDir.*?DataDir "/run/collectd"?' /etc/collectd/collectd.conf
+    sed -i -e 's#^DB=.*#DB=/run/collectd#' /etc/default/graphs1090
+fi
 
 # Enable AIRSPY graphs if requested:
 if chk_enabled "${ENABLE_AIRSPY}"; then
