@@ -17,6 +17,7 @@ This image:
 * Receives Beast data from a provider such as `dump1090` or `readsb`
 * Optionally, receives MLAT data from a provider such as `mlat-client`
 * Provides the `tar1090` web interface
+* When using the `:telegraf` tag, it will be able to send data to Prometheus or InfluxDB to use in Grafana
 
 It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
 
@@ -590,7 +591,16 @@ Note that this mode will make T not work as before for displaying all tracks as 
 
 ## Metrics
 
-This image contains [Telegraf](https://docs.influxdata.com/telegraf/), which will be used to capture metrics from `readsb` if an output is enabled.
+Then using the `:telegraf` tag, the image contains [Telegraf](https://docs.influxdata.com/telegraf/), which can be used to capture metrics from `readsb` if an output is enabled.
+
+**NOTE - READ CAREFULLY**: As of 27 April 2023, the `latest` image no longer container Telegraf. If you want to send metrics to InfluxDB or Prometheus, please use this image:
+
+```yaml
+services:
+  tar1090:
+    image: ghcr.io/sdr-enthusiasts/docker-tar1090:telegraf
+  ...
+```
 
 ### Output to InfluxDBv2
 
