@@ -131,4 +131,7 @@ else
 fi
 
 # Finally, add a link to graphs1090 to the tar1090 web page:
-sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' /usr/local/share/tar1090/html-webroot/index.html
+TAR1090_INDEX_HTML="/usr/local/share/tar1090/html-webroot/index.html"
+if ! grep -qs -e 'Stats available <a href=' "$TAR1090_INDEX_HTML"; then
+    sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' "$TAR1090_INDEX_HTML"
+fi
