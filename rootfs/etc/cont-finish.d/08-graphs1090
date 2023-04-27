@@ -4,7 +4,6 @@
 source /scripts/common
 
 if chk_enabled "${GRAPHS1090_DISABLE}"; then
-    exec sleep infinity
+    exit 0
 fi
 
-exec s6wrap --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh

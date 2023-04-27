@@ -31,7 +31,7 @@ if [[ "$READSB_DEVICE_TYPE" == "rtlsdr" ]]; then
                         if [[ "$device_serial" == "$READSB_RTLSDR_DEVICE" ]]; then
                             echo "Enabling bias tee for device $device_id:  $device_manufacturer, $device_model, SN: $device_serial"
                             # shellcheck disable=SC2016
-                            rtl_biast -d "$device_id" -b 1 2>&1 | stdbuf -o0 awk '{print "[rtl_biast] " $0}'
+                            s6wrap --prepend rtl_biast --timestamps --args rtl_biast -d "$device_id" -b 1
                         fi
                     fi
                 done < "$biast_tempfile"
@@ -39,7 +39,7 @@ if [[ "$READSB_DEVICE_TYPE" == "rtlsdr" ]]; then
         else
             echo "Enabling bias tee..."
             # shellcheck disable=SC2016
-            rtl_biast -b 1 2>&1 | stdbuf -o0 awk '{print "[rtl_biast] " $0}'
+            s6wrap --prepend rtl_biast --timestamps --args rtl_biast -b 1
         fi
         rm "$biast_tempfile"
     fi

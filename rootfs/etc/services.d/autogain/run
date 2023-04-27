@@ -17,12 +17,12 @@ READSB_AUTOGAIN_INITIAL_TIMEPERIOD="${READSB_AUTOGAIN_INITIAL_TIMEPERIOD:-7200}"
 
 if [[ "${READSB_GAIN,,}" != "autogain" ]]; then
     # Autogain is not enabled, so let's do nothing forever
-    sleep infinity
+    exec sleep infinity
 fi
 
 if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]] || [[ -z "${READSB_RTLSDR_DEVICE}" ]]; then
     echo "[$(date)][autogain] ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain disabled."
-    sleep infinity
+    exec sleep infinity
 fi
 
 mkdir -p /var/globe_history/autogain
@@ -34,7 +34,7 @@ if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
     for (( i=0; i<$(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / READSB_AUTOGAIN_INITIAL_INTERVAL )); i++ ))
     do
         sleep "$READSB_AUTOGAIN_INITIAL_INTERVAL"   # sleep first to give readsb the opportunity to collect some initial data
-        /usr/local/bin/autogain1090 2>&1 | mawk -W Interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][autogain] " $0}'
+        s6wrap --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
     done
     touch /var/globe_history/autogain/autogain_initialized
 fi
@@ -43,5 +43,5 @@ echo "[$(date)][autogain] Autogain long-term maintenance started. We'll collect 
 while true
 do
     sleep "$READSB_AUTOGAIN_SUBSEQUENT_INTERVAL"
-    /usr/local/bin/autogain1090 2>&1 | mawk -W Interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][autogain] " $0}'
+    s6wrap --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
 done

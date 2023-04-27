@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
+
+if chk_enabled "${GRAPHS1090_DISABLE}" || ! chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
+    exec sleep infinity
+fi
+
+if [[ -z "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL}" ]]; then
+    GRAPHS1090_REDUCE_IO_FLUSH_IVAL=3600
+fi
+sleep "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL}"
+
+s6wrap --prepend=graphs1090-writeback --timestamps --args pkill collectd

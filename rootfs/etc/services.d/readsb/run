@@ -317,4 +317,4 @@ if [[ -n "$PROMETHEUS_ENABLE" ]]; then
 fi
 
 # shellcheck disable=SC2086
-"${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS 2>&1 | mawk -W Interactive '{print "[" strftime("%Y-%m-%d %H:%M:%S", systime()) "][readsb] " $0}'
+exec s6wrap --prepend=readsb --timestamps --args "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
