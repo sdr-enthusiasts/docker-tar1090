@@ -591,7 +591,7 @@ Note that this mode will make T not work as before for displaying all tracks as 
 
 ## Metrics
 
-Then using the `:telegraf` tag, the image contains [Telegraf](https://docs.influxdata.com/telegraf/), which can be used to capture metrics from `readsb` if an output is enabled.
+When using the `:telegraf` tag, the image contains [Telegraf](https://docs.influxdata.com/telegraf/), which can be used to capture metrics from `readsb` if an output is enabled.
 
 **NOTE - READ CAREFULLY**: As of 27 April 2023, the `latest` image no longer container Telegraf. If you want to send metrics to InfluxDB or Prometheus, please use this image:
 
