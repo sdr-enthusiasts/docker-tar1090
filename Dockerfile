@@ -1,7 +1,7 @@
 # Note - do not remove the ##telegraf## tags from this file - they are used to build a tag that includes the telegraf binary
 ##telegraf##FROM telegraf:1.26 AS telegraf
 
-RUN touch /tmp/emptyfile
+##telegraf##RUN touch /tmp/emptyfile
 
 FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb
 
