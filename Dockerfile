@@ -1,4 +1,5 @@
-FROM telegraf:1.26 AS telegraf
+# Note - do not remove the ##telegraf## tags from this file - they are used to build a tag that includes the telegraf binary
+##telegraf##FROM telegraf:1.26 AS telegraf
 
 RUN touch /tmp/emptyfile
 
@@ -33,7 +34,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY rootfs/ /
 
 # add telegraf binary
-COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
+##telegraf##COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
 
 RUN set -x && \
     TEMP_PACKAGES=() && \
@@ -152,9 +153,9 @@ RUN set -x && \
     sed -i '$a\\n' /etc/collectd/collectd.conf && \
     sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
     # set up base telegraf config directories
-    mkdir -p /etc/telegraf/telegraf.d && \
+    ##telegraf##mkdir -p /etc/telegraf/telegraf.d && \
     # document telegraf version
-    bash -ec "telegraf --version >> /VERSIONS" && \
+    ##telegraf##bash -ec "telegraf --version >> /VERSIONS" && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \

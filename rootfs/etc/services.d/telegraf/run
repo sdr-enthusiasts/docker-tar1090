@@ -5,11 +5,15 @@ source /scripts/common
 
 # Start telegraf if required
 if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
+    if [[ ! -f /usr/bin/telegraf ]]; then
+        echo "[$(date)][telegraf] WARNING: InfluxDB/Prometheus parameters are set but Telegraf not included in this container"
+        exec sleep infinity
+    fi
     # give other services time to stabilise
     sleep 5
     # start telegraf
     telegraf --config-directory /etc/telegraf/telegraf.d 2>&1 | mawk -W interactive '{print "[telegraf] " $0}'
 else
     # if telegraf not needed, sleep forever
-    sleep infinity
+    exec sleep infinity
 fi
