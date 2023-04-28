@@ -113,7 +113,7 @@ jobs:
           tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
 
-deploy_with_telegraf_and_nohealthcheck:
+  deploy_with_telegraf_and_nohealthcheck:
     name: Deploy with telegraf and nohealthcheck
     runs-on: ubuntu-latest
     permissions:
