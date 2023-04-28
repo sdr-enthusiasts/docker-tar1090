@@ -101,8 +101,8 @@ jobs:
         run: |
           sed -i "s/##telegraf##//g" ./Dockerfile
 
-      # Build "latest"
-      - name: Build & Push - latest
+      # Build "telegraf"
+      - name: Build & Push - telegraf
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -111,6 +111,23 @@ jobs:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
           tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # comment out HEALTHCHECK from dockerfile to build a telegraf_nohealthcheck label
+      - name: comment out HEALTHCHECK in Dockerfile
+        run: |
+          sed -i "s/\(^\s*HEALTHCHECK.*\)/#\1/g" ./Dockerfile
+
+      # Build "telegraf_nohealthcheck"
+      - name: Build & Push - latest
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+          no-cache: true
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          push: true
+          tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}_noheathcheck
           labels: ${{ steps.meta.outputs.labels }}
 
   trigger_build_sdr-enthusiasts_ultrafeeder:
