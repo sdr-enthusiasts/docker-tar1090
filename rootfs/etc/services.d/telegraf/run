@@ -6,11 +6,15 @@ source /scripts/common
 # Start telegraf if required
 if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
     if [[ ! -f /usr/bin/telegraf ]]; then
-        echo "[$(date)][telegraf] WARNING: InfluxDB/Prometheus parameters are set but Telegraf not included in this container"
+        s6wrap --prepend=telegraf --timestamps --args echo "WARNING: InfluxDB/Prometheus parameters are set but Telegraf not included in this container"
         exec sleep infinity
     fi
     # give other services time to stabilise
     sleep 5
+    # make sure that at least /run/readsb/stats.json is available before we start:
+    while [[ ! -f /run/readsb/stats.json ]]; do
+        sleep 5
+    done
     # start telegraf
     s6wrap --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d
 else
