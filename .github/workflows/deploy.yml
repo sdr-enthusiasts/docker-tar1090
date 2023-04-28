@@ -57,8 +57,8 @@ jobs:
 
   # unfortunately we can't use build_and_push_image.yml to build the telegraf label because
   # that GH Action doesn't have the capability to build specific custom-named labels
-  deploy_with_telegraf:
-    name: Deploy with telegraf
+  deploy_with_telegraf_and_healthcheck:
+    name: Deploy with telegraf and healthcheck
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -101,7 +101,7 @@ jobs:
         run: |
           sed -i "s/##telegraf##//g" ./Dockerfile
 
-      # Build "telegraf"
+      # Build "telegraf" (with healthcheck)
       - name: Build & Push - telegraf
         uses: docker/build-push-action@v3
         with:
@@ -113,13 +113,54 @@ jobs:
           tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
 
+deploy_with_telegraf_and_nohealthcheck:
+    name: Deploy with telegraf and nohealthcheck
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      # Check out our code
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_LABEL }}
+
+      # Log into ghcr (so we can push images)
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Get metadata from repo
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Set up QEMU for multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      # Set up buildx for multi platform builds
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: image=moby/buildkit:v0.10.6
+      
+      # ensure that the Dockerfile include telegraf
       # comment out HEALTHCHECK from dockerfile to build a telegraf_nohealthcheck label
-      - name: comment out HEALTHCHECK in Dockerfile
+      - name: Enable telegraf in Dockerfile
         run: |
+          sed -i "s/##telegraf##//g" ./Dockerfile
           sed -i "s/\(^\s*HEALTHCHECK.*\)/#\1/g" ./Dockerfile
 
       # Build "telegraf_nohealthcheck"
-      - name: Build & Push - latest
+      - name: Build & Push - telegraf_nohealthcheck
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -132,7 +173,7 @@ jobs:
 
   trigger_build_sdr-enthusiasts_ultrafeeder:
     name: Trigger deploy of sdr-enthusiasts/docker-adsb-ultrafeeder
-    needs: ['deploy', 'deploy_with_telegraf']
+    needs: ['deploy', 'deploy_with_telegraf_and_healthcheck', 'deploy_with_telegraf_and_nohealthcheck']
     runs-on: ubuntu-latest
     env:
       WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
