@@ -1,23 +1,67 @@
 # sdr-enthusiasts/docker-tar1090
 
+- [sdr-enthusiasts/docker-tar1090](#sdr-enthusiastsdocker-tar1090)
+  - [Introduction](#introduction)
+  - [Note for Users running 32-bit Debian Buster-based OSes on ARM](#note-for-users-running-32-bit-debian-buster-based-oses-on-arm)
+  - [Supported tags and respective Dockerfiles](#supported-tags-and-respective-dockerfiles)
+  - [Multi Architecture Support](#multi-architecture-support)
+  - [Prerequisites](#prerequisites)
+  - [Up-and-Running with `docker run`](#up-and-running-with-docker-run)
+  - [Up-and-Running with `docker-compose`](#up-and-running-with-docker-compose)
+  - [Ports](#ports)
+    - [Outgoing](#outgoing)
+    - [Incoming](#incoming)
+  - [Runtime Environment Variables](#runtime-environment-variables)
+    - [Container Configuration](#container-configuration)
+    - [`tar1090` Configuration](#tar1090-configuration)
+      - [`tar1090` Core Configuration](#tar1090-core-configuration)
+      - [`tar1090` `config.js` Configuration - Title](#tar1090-configjs-configuration---title)
+      - [`tar1090` `config.js` Configuration - Output](#tar1090-configjs-configuration---output)
+      - [`tar1090` `config.js` Configuration - Map Settings](#tar1090-configjs-configuration---map-settings)
+      - [`tar1090` `config.js` Configuration - Range Rings](#tar1090-configjs-configuration---range-rings)
+    - [`tar1090` Route Display Configuration](#tar1090-route-display-configuration)
+    - [`timelapse1090` Configuration](#timelapse1090-configuration)
+  - [Paths](#paths)
+    - [`readsb` Network Options](#readsb-network-options)
+      - [`READSB_NET_CONNECTOR` syntax](#readsb_net_connector-syntax)
+    - [`readsb` General Options](#readsb-general-options)
+    - [AutoGain for RTLSDR Devices](#autogain-for-rtlsdr-devices)
+  - [Message decoding introspection](#message-decoding-introspection)
+  - [Configuring `graphs1090`](#configuring-graphs1090)
+    - [`graphs1090` Environment Parameters](#graphs1090-environment-parameters)
+    - [Enabling UAT data](#enabling-uat-data)
+    - [Enabling AirSpy graphs](#enabling-airspy-graphs)
+    - [Enabling Disk IO and IOPS data](#enabling-disk-io-and-iops-data)
+    - [Configuring the Core Temperature graphs](#configuring-the-core-temperature-graphs)
+    - [Reducing Disk IO for Graphs1090](#reducing-disk-io-for-graphs1090)
+  - [Logging](#logging)
+  - [Getting help](#getting-help)
+  - [Using tar1090 with an SDR](#using-tar1090-with-an-sdr)
+  - [globe-history or sometimes ironically called destroy-sd-card](#globe-history-or-sometimes-ironically-called-destroy-sd-card)
+  - [Metrics](#metrics)
+    - [Output to InfluxDBv2](#output-to-influxdbv2)
+    - [Output to Prometheus](#output-to-prometheus)
+
+## Introduction
+
 This container [`tar1090`](https://github.com/wiedehopf/tar1090) runs [`@wiedehopf's readsb fork`](https://github.com/wiedehopf/readsb)  ADS-B decoding engine in to feed the graphic tar1090 viewing webinterface, also by [wiedehopf](https://github.com/wiedehopf) (as is the viewadsb text-based output) to provide digital representations of the readsb output.
 
 At the time of writing this README, it provides:
 
-* Improved adjustable history
-* Show All Tracks much faster than original with many planes
-* Multiple Maps available
-* Map can be dimmed/darkened
-* Multiple aircraft can be selected
-* Labels with the callsign can be switched on and off
-* Heatmap of aircraft positions
+- Improved adjustable history
+- Show All Tracks much faster than original with many planes
+- Multiple Maps available
+- Map can be dimmed/darkened
+- Multiple aircraft can be selected
+- Labels with the callsign can be switched on and off
+- Heatmap of aircraft positions
 
 This image:
 
-* Receives Beast data from a provider such as `dump1090` or `readsb`
-* Optionally, receives MLAT data from a provider such as `mlat-client`
-* Provides the `tar1090` web interface
-* When using the `:telegraf` tag, it will be able to send data to Prometheus or InfluxDB to use in Grafana
+- Receives Beast data from a provider such as `dump1090` or `readsb`
+- Optionally, receives MLAT data from a provider such as `mlat-client`
+- Provides the `tar1090` web interface
+- When using the `:telegraf` tag, it will be able to send data to Prometheus or InfluxDB to use in Grafana
 
 It builds and runs on `linux/amd64`, `linux/arm/v7` and `linux/arm64` (see below).
 
@@ -27,16 +71,16 @@ Please see: [Buster-Docker-Fixes](https://github.com/sdr-enthusiasts/Buster-Dock
 
 ## Supported tags and respective Dockerfiles
 
-* `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`.
-* `latest_nohealthcheck` is the same as the `latest` version above. However, this version has the docker healthcheck removed. This is done for people running platforms (such as [Nomad](https://www.nomadproject.io)) that don't support manually disabling healthchecks, where healthchecks are not wanted.
-* Specific version tags are available if required, however these are not regularly updated. It is generally recommended to run latest.
+- `latest` should always contain the latest released versions of `readsb`, `tar1090` and `tar1090-db`.
+- `latest_nohealthcheck` is the same as the `latest` version above. However, this version has the docker healthcheck removed. This is done for people running platforms (such as [Nomad](https://www.nomadproject.io)) that don't support manually disabling healthchecks, where healthchecks are not wanted.
+- Specific version tags are available if required, however these are not regularly updated. It is generally recommended to run latest.
 
 ## Multi Architecture Support
 
-* `linux/amd64`: Built on Linux x86-64
-* `linux/arm/v6`: Built on Odroid HC2 running ARMv7 32-bit
-* `linux/arm/v7`: Built on Odroid HC2 running ARMv7 32-bit
-* `linux/arm64`: Built on a Raspberry Pi 4 Model B running ARMv8 64-bit
+- `linux/amd64`: Built on Linux x86-64
+- `linux/arm/v6`: Built on Odroid HC2 running ARMv7 32-bit
+- `linux/arm/v7`: Built on Odroid HC2 running ARMv7 32-bit
+- `linux/arm64`: Built on a Raspberry Pi 4 Model B running ARMv8 64-bit
 
 ## Prerequisites
 
@@ -44,9 +88,9 @@ You will need a source of Beast data. Examples are an RPi running PiAware or [`s
 
 Optionally, you will need a source of MLAT data. This could be:
 
-* [`sdr-enthusiasts/docker-adsbexchange`](https://github.com/sdr-enthusiasts/docker-adsbexchange) image
-* [`sdr-enthusiasts/docker-piaware`](https://github.com/sdr-enthusiasts/docker-piaware) image
-* Basically anything running `mlat-client` listening for beast connections (ie: `--results beast,listen,30105`)
+- [`sdr-enthusiasts/docker-adsbexchange`](https://github.com/sdr-enthusiasts/docker-adsbexchange) image
+- [`sdr-enthusiasts/docker-piaware`](https://github.com/sdr-enthusiasts/docker-piaware) image
+- Basically anything running `mlat-client` listening for beast connections (ie: `--results beast,listen,30105`)
 
 ## Up-and-Running with `docker run`
 
@@ -86,11 +130,11 @@ docker run -d \
 
 You should now be able to browse to:
 
-* <http://dockerhost:8078/> to access the tar1090 web interface
-* <http://dockerhost:8078/?replay> to see a replay of past data
-* <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
-* <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
-* <http://dockerhost:8078/graphs1090/> to see performance graphs
+- <http://dockerhost:8078/> to access the tar1090 web interface
+- <http://dockerhost:8078/?replay> to see a replay of past data
+- <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
+- <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+- <http://dockerhost:8078/graphs1090/> to see performance graphs
 
 ## Up-and-Running with `docker-compose`
 
@@ -126,11 +170,11 @@ services:
 
 You should now be able to browse to:
 
-* <http://dockerhost:8078/> to access the tar1090 web interface.
-* <http://dockerhost:8078/?replay> to see a replay of past data
-* <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
-* <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
-* <http://dockerhost:8078/graphs1090/> to see performance graphs
+- <http://dockerhost:8078/> to access the tar1090 web interface.
+- <http://dockerhost:8078/?replay> to see a replay of past data
+- <http://dockerhost:8078/?heatmap> to see the heatmap for the past 24 hours.
+- <http://dockerhost:8078/?heatmap&realHeat> to see a different heatmap for the past 24 hours.
+- <http://dockerhost:8078/graphs1090/> to see performance graphs
 
 *Note*: the example above excludes `MLATHOST` as `readsb` alone cannot provide MLAT data. You'll need a feeder container for this.
 
@@ -151,15 +195,15 @@ Some common ports are as follows (which may or may not be in use depending on yo
 
 Json position output:
 
-* outputs an aircraft object for every new position received for an aircraft if the --json-trace-interval has elapsed for that aircraft
-* to make it output every received position, set READSB_JSON_TRACE_INTERVAL to 0.1
-* each json object will be on a new line
-* <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+- outputs an aircraft object for every new position received for an aircraft if the --json-trace-interval has elapsed for that aircraft
+- to make it output every received position, set READSB_JSON_TRACE_INTERVAL to 0.1
+- each json object will be on a new line
+- <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 
 Aircraft.json:
 
-* <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
-* available on the same port as the web interface, example: `http://192.168.x.yy:8087/data/aircraft.json`
+- <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+- available on the same port as the web interface, example: `http://192.168.x.yy:8087/data/aircraft.json`
 
 ### Outgoing
 
@@ -218,8 +262,8 @@ All of the variables below are optional.
 | `TAR1090_FLIGHTAWARELINKS` | Set to any value to enable FlightAware links in the web interface | `null` |
 | `TAR1090_ENABLE_AC_DB` | Set to `true` to enable extra information, such as aircraft type and registration, to be included in in `aircraft.json` output. Will use more memory; use caution on older Pis or similar devices. | Unset |
 
-* For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
-* TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
+- For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
+- TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
 
 #### `tar1090` `config.js` Configuration - Title
 
@@ -333,18 +377,18 @@ Where the default value is "Unset", `readsb`'s default will be used.
 
 Instead of (or in addition to) using `BEASTHOST`, you can also define ADSB data ingests using the `READSB_NET_CONNECTOR` parameter. This is the preferred way if you have multiple sources or destinations for your ADSB data. This variable allows you to configure incoming and outgoing connections. The variable takes a semicolon (`;`) separated list of `host,port,protocol[,uuid=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX]`, where:
 
-* `host` is an IP address. Specify an IP/hostname/containername for incoming or outgoing connections.
-* `port` is a TCP port number
-* `protocol` can be one of the following:
-  * `beast_reduce_out`: Beast-format output with lower data throughput (saves bandwidth and CPU)
-  * `beast_reduce_plus_out`: Beast-format output with extra data (UUID). This is the preferred format when feeding the "new" aggregator services
-  * `beast_out`: Beast-format output
-  * `beast_in`: Beast-format input
-  * `raw_out`: Raw output
-  * `raw_in`: Raw input
-  * `sbs_out`: SBS-format output
-  * `vrs_out`: SBS-format output
-* `uuid=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX` is an optional parameter that sets the UUID for this specific instance. It will override the global `UUID` parameter. This is only needed when you want to send different UUIDs to different aggregators.
+- `host` is an IP address. Specify an IP/hostname/containername for incoming or outgoing connections.
+- `port` is a TCP port number
+- `protocol` can be one of the following:
+  - `beast_reduce_out`: Beast-format output with lower data throughput (saves bandwidth and CPU)
+  - `beast_reduce_plus_out`: Beast-format output with extra data (UUID). This is the preferred format when feeding the "new" aggregator services
+  - `beast_out`: Beast-format output
+  - `beast_in`: Beast-format input
+  - `raw_out`: Raw output
+  - `raw_in`: Raw input
+  - `sbs_out`: SBS-format output
+  - `vrs_out`: SBS-format output
+- `uuid=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX` is an optional parameter that sets the UUID for this specific instance. It will override the global `UUID` parameter. This is only needed when you want to send different UUIDs to different aggregators.
 
 NOTE: If you have a UAT dongle and use `dump978` to decode this, you should use `READSB_NET_CONNECTOR` to ingest UAT data from `dump978`. See example below
 
@@ -378,8 +422,8 @@ If you have set `READSB_GAIN=autogain`, then the system will take signal strengt
 
 There are 2 distinct periods in which the container will attempt to figure out the gain:
 
-* The initial period of 2 hours, in which an adjustment is done every 5 minutes
-* The subsequent period, in which an adjustment is done once every day
+- The initial period of 2 hours, in which an adjustment is done every 5 minutes
+- The subsequent period, in which an adjustment is done once every day
 
 Please note that in order for the initial period to complete, the container must run for 90 minutes without restarting.
 
@@ -452,19 +496,19 @@ ADS-B over UAT data is transmitted in the 978 MHz band, and this is used in the 
 
 2. Install the [`docker-dump978` container](https://github.com/sdr-enthusiasts/docker-dump978). Note - only containers downloaded/deployed on/after Feb 8, 2023 will work.
 
-Note that you **must** configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
+Note that you **must*- configure `URL_978` to point at a working skyaware978 website with `aircraft.json` data feed. This means that the URL `http://dump978/skyaware978/data/aircraft.json` must return valid JSON data to this `tar1090` container.
 
 ### Enabling AirSpy graphs
 
 Users of AirSpy devices can enable extra `graphs1090` graphs by configuring the following:
 
-* Set the following environment parameter:
+- Set the following environment parameter:
 
 ```yaml
       - ENABLE_AIRSPY=yes
 ```
 
-* To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
+- To provide the container access to the AirSpy statistics, map a volume in your `docker-compose.yml` file as follows:
 
 ```yaml
     volumes:
