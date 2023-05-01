@@ -591,7 +591,7 @@ The feature assumes that you have mapped `/var/lib/collectd` to a volume (to ens
 | Environment Variable | Purpose | Default |
 |----------------------|---------|---------|
 | `GRAPHS1090_REDUCE_IO=` | Optional Set to `true` to reduce the write cycles for `graphs1090`| Unset |
-| `GRAPHS1090_REDUCE_IO_FLUSH_IVAL` | Interval (in secs) over which the `graphs1090` data is written back to non-volatile storage | `3600` |
+| `GRAPHS1090_REDUCE_IO_FLUSH_IVAL` | Interval (in secs) over which the `graphs1090` data is written back to non-volatile storage | 1 day |
 
 ## Logging
 

@@ -7,9 +7,6 @@ if chk_enabled "${GRAPHS1090_DISABLE}" || ! chk_enabled "${GRAPHS1090_REDUCE_IO}
     exec sleep infinity
 fi
 
-if [[ -z "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL}" ]]; then
-    GRAPHS1090_REDUCE_IO_FLUSH_IVAL=3600
-fi
-sleep "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL}"
+sleep "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL:-1d}"
 
 s6wrap --prepend=graphs1090-writeback --timestamps --args pkill collectd
