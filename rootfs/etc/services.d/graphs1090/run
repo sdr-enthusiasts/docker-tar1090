@@ -2,10 +2,10 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exec sleep infinity
 fi
 
-exec s6wrap --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh
+exec s6wrap --quiet --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh

@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC1091,SC2076
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 mkdir -p /run/readsb
 
@@ -318,4 +318,4 @@ if [[ -n "$PROMETHEUS_ENABLE" ]]; then
 fi
 
 # shellcheck disable=SC2086
-exec s6wrap --prepend=readsb --timestamps --args "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
+exec s6wrap --quiet --prepend=readsb --timestamps --args "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS

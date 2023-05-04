@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 if chk_enabled "$ENABLE_TIMELAPSE1090"; then
 
@@ -23,7 +23,7 @@ if chk_enabled "$ENABLE_TIMELAPSE1090"; then
     sleep 10
   done
 
-  s6wrap --prepend=timelapse1090 --timestamps --args /opt/timelapse1090/timelapse1090.sh
+  s6wrap --quiet --prepend=timelapse1090 --timestamps --args /opt/timelapse1090/timelapse1090.sh
 
   popd || exit 1
 

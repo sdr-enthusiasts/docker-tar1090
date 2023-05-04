@@ -2,12 +2,12 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 # Start telegraf if required
 if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
     if [[ ! -f /usr/bin/telegraf ]]; then
-        s6wrap --prepend=telegraf --timestamps --args echo "WARNING: InfluxDB/Prometheus parameters are set but Telegraf not included in this container"
+        s6wrap --quiet --prepend=telegraf --timestamps --args echo "WARNING: InfluxDB/Prometheus parameters are set but Telegraf not included in this container"
         exec sleep infinity
     fi
     # give other services time to stabilise
@@ -17,7 +17,7 @@ if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
         sleep 5
     done
     # start telegraf
-    s6wrap --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d
+    s6wrap --quiet --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d
 else
     # if telegraf not needed, sleep forever
     exec sleep infinity

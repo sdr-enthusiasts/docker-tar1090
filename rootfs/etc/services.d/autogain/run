@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC1091,SC2076
 
 source /scripts/common 
-alias s6wrap='s6wrap --quiet'
+
 
 # Autogain routine
 #
@@ -22,7 +22,7 @@ if [[ "${READSB_GAIN,,}" != "autogain" ]]; then
 fi
 
 if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]] || [[ -z "${READSB_RTLSDR_DEVICE}" ]]; then
-    s6wrap --prepend=autogain --timestamps --args echo "ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain disabled."
+    s6wrap --quiet --prepend=autogain --timestamps --args echo "ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain disabled."
     exec sleep infinity
 fi
 
@@ -30,19 +30,19 @@ mkdir -p /var/globe_history/autogain
 
 # Do special things if it's the first time AUTOGAIN is running
 if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
-    s6wrap --prepend=autogain --timestamps --args echo "Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / 60 )) minutes to do an initial gain assessment."
+    s6wrap --quiet --prepend=autogain --timestamps --args echo "Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / 60 )) minutes to do an initial gain assessment."
     # run autogain every $READSB_AUTOGAIN_INITIAL_INTERVAL secs (default 5 mins) for $READSB_AUTOGAIN_INITIAL_TIMEPERIOD secs (default 2 hours)
     for (( i=0; i<$(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / READSB_AUTOGAIN_INITIAL_INTERVAL )); i++ ))
     do
         sleep "$READSB_AUTOGAIN_INITIAL_INTERVAL"   # sleep first to give readsb the opportunity to collect some initial data
-        s6wrap --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
+        s6wrap --quiet --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
     done
     touch /var/globe_history/autogain/autogain_initialized
 fi
 
-s6wrap --prepend=autogain --timestamps --args echo "Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_SUBSEQUENT_INTERVAL / 60 )) minutes if gain needs to be adjusted."
+s6wrap --quiet --prepend=autogain --timestamps --args echo "Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_SUBSEQUENT_INTERVAL / 60 )) minutes if gain needs to be adjusted."
 while true
 do
     sleep "$READSB_AUTOGAIN_SUBSEQUENT_INTERVAL"
-    s6wrap --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
+    s6wrap --quiet --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
 done

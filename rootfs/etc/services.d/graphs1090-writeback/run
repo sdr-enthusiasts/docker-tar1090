@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 if chk_enabled "${GRAPHS1090_DISABLE}" || ! chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
     exec sleep infinity
@@ -10,4 +10,4 @@ fi
 
 sleep "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL:-1d}"
 
-s6wrap --prepend=graphs1090-writeback --timestamps --args pkill collectd
+s6wrap --quiet --prepend=graphs1090-writeback --timestamps --args pkill collectd

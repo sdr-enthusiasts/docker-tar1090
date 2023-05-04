@@ -2,8 +2,8 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 mkdir -p /var/log/nginx
 
-exec s6wrap --prepend=nginx --timestamps --args /usr/sbin/nginx
+exec s6wrap --quiet --prepend=nginx --timestamps --args /usr/sbin/nginx

@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
-alias s6wrap='s6wrap --quiet'
+
 
 mkdir -p /run/tar1090
 sleep 5
@@ -13,7 +13,7 @@ sleep 5
 srcdir=/run/readsb
 service=readsb
 
-exec s6wrap --prepend=tar1090 --timestamps --args bash /usr/local/share/tar1090/tar1090.sh \
+exec s6wrap --quiet --prepend=tar1090 --timestamps --args bash /usr/local/share/tar1090/tar1090.sh \
   "/run/$service" \
   "$srcdir"
 
