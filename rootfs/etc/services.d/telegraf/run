@@ -2,6 +2,7 @@
 # shellcheck shell=bash disable=SC1091
 
 source /scripts/common
+alias s6wrap='s6wrap --quiet'
 
 # Start telegraf if required
 if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then

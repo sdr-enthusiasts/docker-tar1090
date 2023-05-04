@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bash
 #shellcheck shell=bash
 
+alias s6wrap='s6wrap --quiet'
+
 # If troubleshooting:
 if [[ -n "$DEBUG_LOGGING" ]]; then
     set -x

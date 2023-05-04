@@ -37,9 +37,9 @@ if [[ "$READSB_DEVICE_TYPE" == "rtlsdr" ]]; then
                 done < "$biast_tempfile"
             fi
         else
-            echo "Enabling bias tee..."
+            s6wrap --prepend=09-rtlsdr-biastee --timestamps --args echo "Enabling bias tee..."
             # shellcheck disable=SC2016
-            s6wrap --prepend=rtl_biast --timestamps --args rtl_biast -b 1
+            s6wrap --prepend=09-rtlsdr-biastee --timestamps --args rtl_biast -b 1
         fi
         rm "$biast_tempfile"
     fi
