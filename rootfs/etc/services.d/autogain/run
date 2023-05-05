@@ -1,8 +1,9 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash disable=SC1091,SC2076
 
-source /scripts/common 
+source /scripts/common
 
+trap 'pkill -P $$ || true; exit 0' SIGTERM SIGINT SIGHUP SIGQUIT
 
 # Autogain routine
 #
@@ -34,7 +35,7 @@ if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
     # run autogain every $READSB_AUTOGAIN_INITIAL_INTERVAL secs (default 5 mins) for $READSB_AUTOGAIN_INITIAL_TIMEPERIOD secs (default 2 hours)
     for (( i=0; i<$(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / READSB_AUTOGAIN_INITIAL_INTERVAL )); i++ ))
     do
-        sleep "$READSB_AUTOGAIN_INITIAL_INTERVAL"   # sleep first to give readsb the opportunity to collect some initial data
+        sleep "$READSB_AUTOGAIN_INITIAL_INTERVAL" & wait $!  # sleep first to give readsb the opportunity to collect some initial data
         s6wrap --quiet --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
     done
     touch /var/globe_history/autogain/autogain_initialized
@@ -43,6 +44,6 @@ fi
 s6wrap --quiet --prepend=autogain --timestamps --args echo "Autogain long-term maintenance started. We'll collect data and assess every $(( READSB_AUTOGAIN_SUBSEQUENT_INTERVAL / 60 )) minutes if gain needs to be adjusted."
 while true
 do
-    sleep "$READSB_AUTOGAIN_SUBSEQUENT_INTERVAL"
+    sleep "$READSB_AUTOGAIN_SUBSEQUENT_INTERVAL" & wait $!
     s6wrap --quiet --prepend=autogain --timestamps --args /usr/local/bin/autogain1090
 done

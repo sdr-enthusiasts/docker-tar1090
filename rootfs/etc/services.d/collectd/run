@@ -35,7 +35,7 @@ done
 /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf > /dev/null 2>&1
 
 
-trap "echo 'sending SIGTERM to collectd';pkill collectd" SIGTERM SIGINT SIGHUP SIGQUIT
+trap 'echo "sending SIGTERM to collectd";pkill collectd' SIGTERM SIGINT SIGHUP SIGQUIT
 
 # background execution + wait is necessary for trap to work -.-
 #shellcheck disable=SC2016
