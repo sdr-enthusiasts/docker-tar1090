@@ -41,6 +41,7 @@
   - [Metrics](#metrics)
     - [Output to InfluxDBv2](#output-to-influxdbv2)
     - [Output to Prometheus](#output-to-prometheus)
+  - [Minimalist setup](#minimalist-setup)
 
 ## Introduction
 
@@ -261,6 +262,7 @@ All of the variables below are optional.
 | `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
 | `TAR1090_FLIGHTAWARELINKS` | Set to any value to enable FlightAware links in the web interface | `null` |
 | `TAR1090_ENABLE_AC_DB` | Set to `true` to enable extra information, such as aircraft type and registration, to be included in in `aircraft.json` output. Will use more memory; use caution on older Pis or similar devices. | Unset |
+| `TAR1090_DISABLE` | Set to `true` to disable the web server and all websites (including the map, `graphs1090`, `heatmap`, `pTracks`, etc.) | Unset |
 
 - For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 - TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
@@ -440,6 +442,7 @@ Although not recommended, you can change the measurement intervals and low/high 
 | `READSB_AUTOGAIN_SUBSEQUENT_INTERVAL` | The measurement interval to optimize gain during the subsequent period (in seconds) | `86400` |
 | `READSB_AUTOGAIN_LOW_PCT` | If the percentage of "strong signals" (stronger than 3dBFS RSSI) is below this number, gain will be increased | `2.5` |
 | `READSB_AUTOGAIN_HIGH_PCT` | If the percentage of "strong signals" (stronger than 3dBFS RSSI) is above this number, gain will be decreased | `6.0` |
+| `READSB_AUTOGAIN_INITIAL_GAIN` | The start gain value for the initial period. If not defined, it will use the highest gain available for the SDR. | Unset |
 
 If you need to reset AutoGain and start over determining the gain, you can do so with this command:
 
@@ -692,3 +695,10 @@ In order for Telegraf to serve a [Prometheus](https://prometheus.io) endpoint, t
 | Variable | Description |
 | ---- | ---- |
 | `PROMETHEUS_ENABLE` | Set to `true` for a Prometheus endpoint on `http://0.0.0.0:9273/metrics` |
+
+## Minimalist setup
+
+If you want to configure to run with a minimal CPU and RAM profile, and use it *only* as a SDR decoder but without any mapping or stats/graph websites, then do the following:
+
+- Set the parameter `TAR1090_DISABLE=true`. This will prevent the `nginx` webserver and any websites or associated data collection (collectd, graphs1090, rrd, etc.) to be launched
+- Make sure not to use the `dhcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf` label as Telegraf adds a LOT of resource use to the container

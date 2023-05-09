@@ -3,6 +3,9 @@
 
 source /scripts/common
 
+if  chk_enabled "${TAR1090_DISABLE}"; then
+    exec sleep infinity
+fi
 
 mkdir -p /var/log/nginx
 

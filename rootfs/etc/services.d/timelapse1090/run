@@ -5,34 +5,28 @@ source /scripts/common
 
 trap 'pkill -P $$ || true; exit 0' SIGTERM SIGINT SIGHUP SIGQUIT
 
-if chk_enabled "$ENABLE_TIMELAPSE1090"; then
-
+if chk_enabled "$ENABLE_TIMELAPSE1090" && ! chk_enabled "${TAR1090_DISABLE}"; then
   # Move timelapse1090 out of /run, and symlink back to /run
   mkdir -p /var/timelapse1090
-  ln -s /var/timelapse1090 /run/timelapse1090 || true
+  ln -s /var/timelapse1090 /run/timelapse1090 >/dev/null 2>&1 || true
 
   {
-    echo "SOURCE=$TIMELAPSE1090_SOURCE"
-    echo "INTERVAL=$TIMELAPSE1090_INTERVAL"
-    echo "HISTORY=$TIMELAPSE1090_HISTORY"
-    echo "CHUNK_SIZE=$TIMELAPSE1090_CHUNK_SIZE"
+    echo "SOURCE=${TIMELAPSE1090_SOURCE}"
+    echo "INTERVAL=${TIMELAPSE1090_INTERVAL}"
+    echo "HISTORY=${TIMELAPSE1090_HISTORY}"
+    echo "CHUNK_SIZE=${TIMELAPSE1090_CHUNK_SIZE}"
   } > /etc/default/timelapse1090
 
   pushd /opt/timelapse1090 >/dev/null || exit 1
+    while [[ ! -e /run/readsb/receiver.json ]]; do
+      sleep 10 & wait $!
+    done
 
-  while [[ ! -e /run/readsb/receiver.json ]]; do
-    sleep 10 & wait $!
-  done
-
-  s6wrap --quiet --prepend=timelapse1090 --timestamps --args /opt/timelapse1090/timelapse1090.sh &
-  wait $!
-
+    s6wrap --quiet --prepend=timelapse1090 --timestamps --args /opt/timelapse1090/timelapse1090.sh &
+    wait $!
   popd || exit 1
-
+  
   sleep 30 & wait $!
-
 else
-
   exec sleep infinity
-
 fi

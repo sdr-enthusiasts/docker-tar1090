@@ -5,7 +5,7 @@ source /scripts/common
 
 trap 'pkill -P $$ || true; exit 0' SIGTERM SIGINT SIGHUP SIGQUIT
 
-if chk_enabled "${GRAPHS1090_DISABLE}" || ! chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
+if chk_enabled "${GRAPHS1090_DISABLE}" || ! chk_enabled "${GRAPHS1090_REDUCE_IO}" || chk_enabled "${TAR1090_DISABLE}"; then
     exec sleep infinity
 fi
 
