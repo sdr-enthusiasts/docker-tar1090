@@ -3,11 +3,12 @@
 
 source /scripts/common
 
+trap 'pkill -P $$ || true; exit 0' SIGTERM SIGINT SIGHUP SIGQUIT
 
 if chk_enabled "${GRAPHS1090_DISABLE}" || ! chk_enabled "${GRAPHS1090_REDUCE_IO}" || chk_enabled "${TAR1090_DISABLE}"; then
     exec sleep infinity
 fi
 
-sleep "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL:-1d}"
+sleep "${GRAPHS1090_REDUCE_IO_FLUSH_IVAL:-1d}" & wait $!
 
 s6wrap --quiet --prepend=graphs1090-writeback --timestamps --args pkill collectd
