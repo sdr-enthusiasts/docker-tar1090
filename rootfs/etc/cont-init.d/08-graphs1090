@@ -14,6 +14,29 @@ if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exit 0
 fi
 
+# Disable a few graphs based on parameter settings:
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_CPU}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-cpu-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_TEMP}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-temperature-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi 
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_MEMORY}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-memory-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_NETWORK_BANDWIDTH}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-network_bandwidth-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_DISK_USAGE}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-df_root-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_DISK_IOPS}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-disk_io_iops-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi
+if chk_enabled "${GRAPHS1090_DISABLE_CHART_DISK_BANDWIDTH}"; then
+    sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-disk_io_octets-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
+fi
+
 # configure disk preservation
 if chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
     sed -i -e 's?DataDir.*?DataDir "/run/collectd"?' /etc/collectd/collectd.conf
