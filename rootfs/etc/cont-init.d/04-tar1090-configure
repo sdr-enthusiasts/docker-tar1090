@@ -152,3 +152,7 @@ if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
 fi
 
 } >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+
+if chk_enabled "$TAR1090_LABEL_GROUND_SHOWALL"; then
+  sed -i 's/this.speed > 5/this.speed >= 0/' "${TAR1090_INSTALL_DIR}/html-webroot/planeObject_*.js" >/dev/null 2>&1
+fi
