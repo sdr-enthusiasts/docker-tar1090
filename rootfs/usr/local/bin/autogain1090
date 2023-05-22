@@ -9,6 +9,8 @@ ga=(0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.
 tmp=/var/globe_history/autogain
 mkdir -p $tmp
 mkdir -p /var/globe_history/autogain
+touch $tmp/strong $tmp/total
+
 
 #work around stupid locale stuff
 export LC_ALL=C
