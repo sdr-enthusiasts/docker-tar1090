@@ -267,6 +267,13 @@ All of the variables below are optional.
 - For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 - TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
 
+#### Using a locally modified tar1090 version
+
+- `git clone https://github.com/wiedehopf/tar1090 /local/my_special_version`
+- Apply your modifications
+- Make that directory available as /var/tar1090_git_source in the container (`volumes: - /local/my_special_version:/var/tar1090_git_source`)
+- `UPDATE_TAR1090=true`
+
 #### `tar1090` `config.js` Configuration - Title
 
 | Environment Variable | Purpose | Default |
@@ -583,7 +590,7 @@ If you are using a Raspberry Pi or another type of computer with an SD card, you
 
 By the nature of having to log lots of data the `graphs1090` functionality writes a lot to the SD card. To reduce the number of write cycles, there are a few parameters you can set.
 
-Enabling this functionality will cause `graphs1090` to temporarily write all data to volatile memory (`/run`) instead of persistent disk space (`/var/lib/collectd`). This data is backed up to persistent disk space in regular intervals and upon (graceful) shutdown of the container. 
+Enabling this functionality will cause `graphs1090` to temporarily write all data to volatile memory (`/run`) instead of persistent disk space (`/var/lib/collectd`). This data is backed up to persistent disk space in regular intervals and upon (graceful) shutdown of the container.
 
 Note -- there is a chance that the data isn't written back in time (due to power failures, non-graceful container shutdowns, etc), in which case you may lose statistics data that has been generated since the last write-back.
 
