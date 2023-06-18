@@ -7,7 +7,15 @@ if ! chk_enabled "${UPDATE_TAR1090}"; then
     exit 0
 fi
 
-bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
+OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
+
+if [[ -d "${OVERRIDE_GIT_SOURCE}/html" ]]; then
+    echo "USING LOCALLY MODIFIED TAR1090 from ${OVERRIDE_GIT_SOURCE}"
+    TAR1090_VERSION="LOCALLY MODIFIED"
+    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" "${OVERRIDE_GIT_SOURCE}"
+else
+    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
+fi
 
 # aircraft-db
 if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
@@ -20,7 +28,9 @@ fi
 
 # Print tar1090 version
 pushd "${TAR1090_INSTALL_DIR}/git" || exit 1
-TAR1090_VERSION=$(git rev-parse --short HEAD)
+if [[ -z "$TAR1090_VERSION" ]]; then
+    TAR1090_VERSION=$(git rev-parse --short HEAD)
+fi
 echo "tar1090 version: ${TAR1090_VERSION}"
 export TAR1090_VERSION
 popd || exit 1

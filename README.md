@@ -267,6 +267,13 @@ All of the variables below are optional.
 - For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 - TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
 
+#### Using a locally modified tar1090 version
+
+- `git clone https://github.com/wiedehopf/tar1090 /local/my_special_version`
+- Apply your modifications
+- Make that directory available as /var/tar1090_git_source in the container (`volumes: - /local/my_special_version:/var/tar1090_git_source`)
+- `UPDATE_TAR1090=true`
+
 #### `tar1090` `config.js` Configuration - Title
 
 | Environment Variable | Purpose | Default |
