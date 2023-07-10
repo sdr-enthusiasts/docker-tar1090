@@ -123,6 +123,14 @@ if chk_enabled "$TAR1090_FLIGHTAWARELINKS"; then
   echo "flightawareLinks = true;"
 fi
 
+if [[ -n "$TAR1090_IMAGE_CONFIG_LINK" ]]; then
+  echo "imageConfigLink = ${TAR1090_IMAGE_CONFIG_LINK};"
+fi
+
+if [[ -n "$TAR1090_IMAGE_CONFIG_TEXT" ]]; then
+  echo "imageConfigText = ${TAR1090_IMAGE_CONFIG_TEXT};"
+fi
+
 if [[ -n "$TAR1090_RANGERINGSCOLORS" ]]; then
   echo "SiteCirclesColors = new Array($TAR1090_RANGERINGSCOLORS);"
 fi

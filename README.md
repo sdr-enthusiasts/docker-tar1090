@@ -262,6 +262,8 @@ All of the variables below are optional.
 | `PTRACKS` | Shows the last `$PTRACKS` hours of traces you have seen at the `?pTracks` URL | `8` |
 | `TAR1090_FLIGHTAWARELINKS` | Set to any value to enable FlightAware links in the web interface | `null` |
 | `TAR1090_ENABLE_AC_DB` | Set to `true` to enable extra information, such as aircraft type and registration, to be included in in `aircraft.json` output. Will use more memory; use caution on older Pis or similar devices. | Unset |
+| `TAR1090_IMAGE_CONFIG_LINK` | An optional URL shown at the top of page, designed to be used for a link back to a configuration page. The token `HOSTNAME` in the link is replaced with the current host that tar1090 is accessed on. | `null` |
+| `TAR1090_IMAGE_CONFIG_TEXT` | Text to display for the config link | `null` |
 | `TAR1090_DISABLE` | Set to `true` to disable the web server and all websites (including the map, `graphs1090`, `heatmap`, `pTracks`, etc.) | Unset |
 
 - For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
