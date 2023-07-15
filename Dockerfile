@@ -74,7 +74,6 @@ RUN set -x && \
     popd && \
     # tar1090: add nginx config
     cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
-    rm -rvf /etc/nginx.tar1090 && \
     # timelapse1090
     git clone --single-branch --depth 1 "https://github.com/wiedehopf/timelapse1090.git" "${GITPATH_TIMELAPSE1090}" && \
     pushd "${GITPATH_TIMELAPSE1090}" && \

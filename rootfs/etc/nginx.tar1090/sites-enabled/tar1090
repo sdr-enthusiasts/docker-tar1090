@@ -35,4 +35,7 @@ server {
     alias /run/readsb/stats.prom;
   }
 
+  # placeholder API proxy
+  #sed_placeholder_API_proxy
+
 }
