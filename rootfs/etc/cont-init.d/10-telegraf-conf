@@ -23,6 +23,18 @@ if [[ -n "$INFLUXDBV2_URL" ]]; then
     } >> "$TELEGRAF_OUTPUT_FILE"
 fi
 
+# configure InfluxDB if a URL is given
+if [[ -n "$INFLUXDB_URL" ]]; then
+    {
+        echo "[[outputs.influxdb]]"
+        echo "  urls = [\"$INFLUXDB_URL\"]"
+        echo "  database = \"$INFLUXDB_DATABASE\""
+        echo "  username = \"$INFLUXDB_USERNAME\""
+        echo "  password = \"$INFLUXDB_PASSWORD\""
+        echo ""
+    } >> "$TELEGRAF_OUTPUT_FILE"
+fi
+
 # configure Prometheus if required
 if [[ ${PROMETHEUS_ENABLE^^} == "TRUE" ]]; then
     {
