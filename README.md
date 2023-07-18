@@ -705,6 +705,17 @@ In order for Telegraf to output metrics to an [InfluxDBv2](https://docs.influxda
 | `INFLUXDBV2_ORG` | InfluxDB Organization to write into |
 | `INFLUXDBV2_BUCKET` | Destination bucket to write into |
 
+### Output to InfluxDBv1.8
+
+In order for Telegraf to output metrics to a legacy[InfluxDBv1](https://docs.influxdata.com/influxdb/v1.8/) time-series database, the following environment variables can be used:
+
+| Variable | Description |
+| ---- | ---- |
+| `INFLUXDB_URL` | The URL of the InfluxDB instance |
+| `INFLUXDB_DATABASE` | database in InfluxDB to store data in |
+| `INFLUXDB_USERNAME` | username to authenticate to InfluxDB as |
+| `INFLUXDB_PASSWORD` | password for InfluxDB User |
+
 ### Output to Prometheus
 
 In order for Telegraf to serve a [Prometheus](https://prometheus.io) endpoint, the following environment variables can be used:
