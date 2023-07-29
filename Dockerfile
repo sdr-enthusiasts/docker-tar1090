@@ -49,15 +49,15 @@ RUN set -x && \
     KEPT_PACKAGES+=(rrdtool) && \
     KEPT_PACKAGES+=(unzip) && \
     KEPT_PACKAGES+=(bash-builtins) && \
-    KEPT_PACKAGES+=(libpython3.9) && \
+    KEPT_PACKAGES+=(libpython3.11) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
     # install packages
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        ${KEPT_PACKAGES[@]} \
-        ${TEMP_PACKAGES[@]} \
-        && \
+    ${KEPT_PACKAGES[@]} \
+    ${TEMP_PACKAGES[@]} \
+    && \
     # nginx: remove default config
     rm /etc/nginx/sites-enabled/default && \
     # tar1090: install using project copy of original script
@@ -85,53 +85,53 @@ RUN set -x && \
     git ls-remote https://github.com/wiedehopf/tar1090-db | grep refs/heads/csv > "${TAR1090_INSTALL_DIR}/aircraft.csv.gz.version" && \
     # clone graphs1090 repo
     git clone \
-        -b master \
-        --depth 1 \
-        https://github.com/wiedehopf/graphs1090.git \
-        /usr/share/graphs1090/git \
-        && \
+    -b master \
+    --depth 1 \
+    https://github.com/wiedehopf/graphs1090.git \
+    /usr/share/graphs1090/git \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L145
-    cp -v \  
-        /usr/share/graphs1090/git/dump1090.db \
-        /usr/share/graphs1090/git/dump1090.py \
-        /usr/share/graphs1090/git/system_stats.py \
-        /usr/share/graphs1090/git/LICENSE \
-        /usr/share/graphs1090/ \
-        && \
+    cp -v \
+    /usr/share/graphs1090/git/dump1090.db \
+    /usr/share/graphs1090/git/dump1090.py \
+    /usr/share/graphs1090/git/system_stats.py \
+    /usr/share/graphs1090/git/LICENSE \
+    /usr/share/graphs1090/ \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L146
     cp -v \
-        /usr/share/graphs1090/git/*.sh \
-        /usr/share/graphs1090/ \
-        && \
+    /usr/share/graphs1090/git/*.sh \
+    /usr/share/graphs1090/ \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L147
     cp -v \
-        /usr/share/graphs1090/git/malarky.conf \
-        /usr/share/graphs1090/ \
-        && \
+    /usr/share/graphs1090/git/malarky.conf \
+    /usr/share/graphs1090/ \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L148
     chmod -v a+x /usr/share/graphs1090/*.sh && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L151
     cp -v \
-        /usr/share/graphs1090/git/collectd.conf \
-        /etc/collectd/collectd.conf \
-        && \
+    /usr/share/graphs1090/git/collectd.conf \
+    /etc/collectd/collectd.conf \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
     sed -i '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L179
     cp -rv \
-        /usr/share/graphs1090/git/html \
-        /usr/share/graphs1090/ \
-        && \
+    /usr/share/graphs1090/git/html \
+    /usr/share/graphs1090/ \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L180
     cp -v \
-        /usr/share/graphs1090/git/default \
-        /etc/default/graphs1090 \
-        && \
+    /usr/share/graphs1090/git/default \
+    /etc/default/graphs1090 \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L302
     cp -v \
-        /usr/share/graphs1090/git/nginx-graphs1090.conf \
-        /usr/share/graphs1090/ \
-        && \
+    /usr/share/graphs1090/git/nginx-graphs1090.conf \
+    /usr/share/graphs1090/ \
+    && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L212
     mkdir -p /usr/share/graphs1090/data-symlink && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L217
