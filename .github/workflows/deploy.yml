@@ -84,6 +84,7 @@ jobs:
       get_version_method: git_commit_hash_short
       # set build_latest to true if github.event.inputs.use_test_image is false
       build_latest: ${{ github.event.inputs.use_test_image == 'false' }}
+      build_baseimage_test: ${{ github.event.inputs.use_test_image == 'true' }}
       build_baseimage_url: wreadsb/wreadsb-test-pr
       # only build the entire stack if we are not using the test image
       build_version_specific: false
