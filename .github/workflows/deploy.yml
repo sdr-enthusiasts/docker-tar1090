@@ -91,7 +91,8 @@ jobs:
       build_platform_specific: false
       build_nohealthcheck: ${{ github.event.inputs.use_test_image == 'false' }}
       docker_latest_tag: telegraf
-      dockerfile_changes: \#\#telegraf\#\#/
+      dockerfile_changes: |
+        ##telegraf##//
     secrets:
       ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
