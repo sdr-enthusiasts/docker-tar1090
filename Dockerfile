@@ -50,6 +50,7 @@ RUN set -x && \
     KEPT_PACKAGES+=(unzip) && \
     KEPT_PACKAGES+=(bash-builtins) && \
     KEPT_PACKAGES+=(libpython3.11) && \
+    KEPT_PACKAGES+=(libncurses6) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
     # install packages
