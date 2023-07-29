@@ -73,7 +73,6 @@ jobs:
 
   deploy_with_telegraf_and_healthcheck:
     name: Deploy with telegraf and healthcheck
-    if: github.event.inputs.use_test_image == 'false'
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       push_enabled: true
@@ -85,6 +84,7 @@ jobs:
       get_version_method: git_commit_hash_short
       # set build_latest to true if github.event.inputs.use_test_image is false
       build_latest: ${{ github.event.inputs.use_test_image == 'false' }}
+      build_baseimage_url: wreadsb/wreadsb-test-pr
       # only build the entire stack if we are not using the test image
       build_version_specific: false
       build_platform_specific: false
