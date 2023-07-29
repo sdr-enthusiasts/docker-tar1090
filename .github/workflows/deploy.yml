@@ -89,7 +89,7 @@ jobs:
       # only build the entire stack if we are not using the test image
       build_version_specific: false
       build_platform_specific: false
-      build_nohealthcheck: true
+      build_nohealthcheck: ${{ github.event.inputs.use_test_image == 'false' }}
       docker_latest_tag: telegraf
       dockerfile_changes: \#\#telegraf\#\#/
     secrets:
