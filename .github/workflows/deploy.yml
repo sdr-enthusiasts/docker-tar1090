@@ -5,7 +5,12 @@ on:
     inputs:
       reason:
         required: true
-        description: 'Reason for running this workflow'
+        description: "Reason for running this workflow"
+      use_test_image:
+        required: false
+        type: boolean
+        description: "Use base image testpr"
+        default: false
 
   push:
     branches:
@@ -23,7 +28,6 @@ env:
   GHCR_TAG: telegraf
 
 jobs:
-
   workflow-dispatch:
     name: Triggered via Workflow Dispatch?
     # only run this step if workflow dispatch triggered
@@ -36,8 +40,10 @@ jobs:
       - name: Log dispatch reason
         env:
           INPUTS_REASON: ${{ github.event.inputs.reason }}
+          INPUTS_USE_TEST_IMAGE: ${{ github.event.inputs.use_test_image }}
         run: |
           echo "Workflow dispatch reason: $INPUTS_REASON"
+          echo "Use test image: $INPUTS_USE_TEST_IMAGE"
 
   deploy:
     name: Deploy without telegraf
@@ -50,138 +56,172 @@ jobs:
       dockerhub_profile: mikenye
       dockerhub_repo: tar1090
       get_version_method: git_commit_hash_short
+      # set build_latest to true if github.event.inputs.use_test_image is false
+      build_latest: ${{ github.event.inputs.use_test_image == 'false' }}
+      build_baseimage_test: ${{ github.event.inputs.use_test_image == 'true' }}
+      # only build the entire stack if we are not using the test image
+      build_version_specific: ${{ github.event.inputs.use_test_image == 'false' }}
+      build_platform_specific: ${{ github.event.inputs.use_test_image == 'false' }}
+      build_nohealthcheck: ${{ github.event.inputs.use_test_image == 'false' }}
+      build_baseimage_url: wreadsb/wreadsb-test-pr
     secrets:
       ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
 
-
   # unfortunately we can't use build_and_push_image.yml to build the telegraf label because
   # that GH Action doesn't have the capability to build specific custom-named labels
+
   deploy_with_telegraf_and_healthcheck:
     name: Deploy with telegraf and healthcheck
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    steps:
-      # Check out our code
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ env.GH_LABEL }}
+    if: github.event.inputs.use_test_image == 'false'
+    uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
+    with:
+      push_enabled: true
+      push_destinations: ghcr.io;dockerhub
+      ghcr_repo_owner: ${{ github.repository_owner }}
+      ghcr_repo: ${{ github.repository }}
+      dockerhub_profile: mikenye
+      dockerhub_repo: tar1090
+      get_version_method: git_commit_hash_short
+      # set build_latest to true if github.event.inputs.use_test_image is false
+      build_latest: ${{ github.event.inputs.use_test_image == 'false' }}
+      # only build the entire stack if we are not using the test image
+      build_version_specific: false
+      build_platform_specific: false
+      build_nohealthcheck: true
+      docker_latest_tag: telegraf
+      dockerfile_changes: \#\#telegraf\#\#/
+    secrets:
+      ghcr_token: ${{ secrets.GITHUB_TOKEN }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+    # runs-on: ubuntu-latest
+    # permissions:
+    #   packages: write
+    # steps:
+    #   # Check out our code
+    #   - name: Checkout
+    #     uses: actions/checkout@v3
+    #     with:
+    #       fetch-depth: 0
+    #       ref: ${{ env.GH_LABEL }}
 
-      # Log into ghcr (so we can push images)
-      - name: Login to ghcr.io
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.GHCR_REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    #   # Log into ghcr (so we can push images)
+    #   - name: Login to ghcr.io
+    #     uses: docker/login-action@v2
+    #     with:
+    #       registry: ${{ env.GHCR_REGISTRY }}
+    #       username: ${{ github.repository_owner }}
+    #       password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Get metadata from repo
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
+    #   # Get metadata from repo
+    #   - name: Extract metadata (tags, labels) for Docker
+    #     id: meta
+    #     uses: docker/metadata-action@v4
+    #     with:
+    #       images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Set up QEMU for multi-arch builds
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+    #   # Set up QEMU for multi-arch builds
+    #   - name: Set up QEMU
+    #     uses: docker/setup-qemu-action@v2
 
-      # Set up buildx for multi platform builds
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          driver-opts: image=moby/buildkit:v0.10.6
-      
-      # ensure that the Dockerfile include telegraf
-      - name: Enable telegraf in Dockerfile
-        run: |
-          sed -i "s/##telegraf##//g" ./Dockerfile
+    #   # Set up buildx for multi platform builds
+    #   - name: Set up Docker Buildx
+    #     id: buildx
+    #     uses: docker/setup-buildx-action@v2
+    #     with:
+    #       driver-opts: image=moby/buildkit:v0.10.6
 
-      # Build "telegraf" (with healthcheck)
-      - name: Build & Push - telegraf
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          no-cache: true
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
-          push: true
-          tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}
-          labels: ${{ steps.meta.outputs.labels }}
+    #   # ensure that the Dockerfile include telegraf
+    #   - name: Enable telegraf in Dockerfile
+    #     run: |
+    #       sed -i "s/##telegraf##//g" ./Dockerfile
 
-  deploy_with_telegraf_and_nohealthcheck:
-    name: Deploy with telegraf and nohealthcheck
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    steps:
-      # Check out our code
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ env.GH_LABEL }}
+    #   # Build "telegraf" (with healthcheck)
+    #   - name: Build & Push - telegraf
+    #     uses: docker/build-push-action@v3
+    #     with:
+    #       context: .
+    #       file: ./Dockerfile
+    #       no-cache: true
+    #       platforms: linux/amd64,linux/arm/v7,linux/arm64
+    #       push: true
+    #       tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}
+    #       labels: ${{ steps.meta.outputs.labels }}
 
-      # Log into ghcr (so we can push images)
-      - name: Login to ghcr.io
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.GHCR_REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  # deploy_with_telegraf_and_nohealthcheck:
+  #   name: Deploy with telegraf and nohealthcheck
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     packages: write
+  #   steps:
+  #     # Check out our code
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         ref: ${{ env.GH_LABEL }}
 
-      # Get metadata from repo
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
+  #     # Log into ghcr (so we can push images)
+  #     - name: Login to ghcr.io
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ${{ env.GHCR_REGISTRY }}
+  #         username: ${{ github.repository_owner }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Set up QEMU for multi-arch builds
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+  #     # Get metadata from repo
+  #     - name: Extract metadata (tags, labels) for Docker
+  #       id: meta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Set up buildx for multi platform builds
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          driver-opts: image=moby/buildkit:v0.10.6
-      
-      # ensure that the Dockerfile include telegraf
-      # comment out HEALTHCHECK from dockerfile to build a telegraf_nohealthcheck label
-      - name: Enable telegraf in Dockerfile
-        run: |
-          sed -i "s/##telegraf##//g" ./Dockerfile
-          sed -i "s/\(^\s*HEALTHCHECK.*\)/#\1/g" ./Dockerfile
+  #     # Set up QEMU for multi-arch builds
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v2
 
-      # Build "telegraf_nohealthcheck"
-      - name: Build & Push - telegraf_nohealthcheck
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          no-cache: true
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
-          push: true
-          tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}_nohealthcheck
-          labels: ${{ steps.meta.outputs.labels }}
+  #     # Set up buildx for multi platform builds
+  #     - name: Set up Docker Buildx
+  #       id: buildx
+  #       uses: docker/setup-buildx-action@v2
+  #       with:
+  #         driver-opts: image=moby/buildkit:v0.10.6
 
-  trigger_build_sdr-enthusiasts_ultrafeeder:
-    name: Trigger deploy of sdr-enthusiasts/docker-adsb-ultrafeeder
-    needs: ['deploy', 'deploy_with_telegraf_and_healthcheck', 'deploy_with_telegraf_and_nohealthcheck']
-    runs-on: ubuntu-latest
-    env:
-      WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
-      WORKFLOW_REPO: sdr-enthusiasts/docker-adsb-ultrafeeder
-      WORKFLOW_FILE: deploy.yml
-      WORKFLOW_REASON: "triggered via deploy.yml in sdr-enthusiasts/docker-tar1090"
-    steps:
-      - name: Trigger ${{ env.WORKFLOW_FILE }} in ${{ env.WORKFLOW_REPO }}
-        run: |
-          echo "$WORKFLOW_AUTH_TOKEN" | gh auth login --with-token
-          gh workflow run --ref main --repo "$WORKFLOW_REPO" "$WORKFLOW_FILE" -f reason="$WORKFLOW_REASON"
+  #     # ensure that the Dockerfile include telegraf
+  #     # comment out HEALTHCHECK from dockerfile to build a telegraf_nohealthcheck label
+  #     - name: Enable telegraf in Dockerfile
+  #       run: |
+  #         sed -i "s/##telegraf##//g" ./Dockerfile
+  #         sed -i "s/\(^\s*HEALTHCHECK.*\)/#\1/g" ./Dockerfile
+
+  #     # Build "telegraf_nohealthcheck"
+  #     - name: Build & Push - telegraf_nohealthcheck
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile
+  #         no-cache: true
+  #         platforms: linux/amd64,linux/arm/v7,linux/arm64
+  #         push: true
+  #         tags: ghcr.io/${{ env.GHCR_IMAGE }}:${{ env.GHCR_TAG }}_nohealthcheck
+  #         labels: ${{ steps.meta.outputs.labels }}
+
+  # trigger_build_sdr-enthusiasts_ultrafeeder:
+  #   name: Trigger deploy of sdr-enthusiasts/docker-adsb-ultrafeeder
+  #   needs:
+  #     [
+  #       "deploy",
+  #       "deploy_with_telegraf_and_healthcheck",
+  #       "deploy_with_telegraf_and_nohealthcheck",
+  #     ]
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
+  #     WORKFLOW_REPO: sdr-enthusiasts/docker-adsb-ultrafeeder
+  #     WORKFLOW_FILE: deploy.yml
+  #     WORKFLOW_REASON: "triggered via deploy.yml in sdr-enthusiasts/docker-tar1090"
+  #   steps:
+  #     - name: Trigger ${{ env.WORKFLOW_FILE }} in ${{ env.WORKFLOW_REPO }}
+  #       run: |
+  #         echo "$WORKFLOW_AUTH_TOKEN" | gh auth login --with-token
+  #         gh workflow run --ref main --repo "$WORKFLOW_REPO" "$WORKFLOW_FILE" -f reason="$WORKFLOW_REASON"
