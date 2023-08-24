@@ -74,6 +74,7 @@ else
 fi
 
 # Set range units, possible values: `nautical`, `statute`, `metric`
+# shellcheck disable=SC2076
 if [[ -n "${GRAPHS1090_RANGEUNITS}" ]] && [[ " nautical statute metric " =~ " ${GRAPHS1090_RANGEUNITS} " ]]; then
     sed -i "s|range=.*|range=${GRAPHS1090_RANGEUNITS}|g" /etc/default/graphs1090
 elif [[ -n "${GRAPHS1090_RANGEUNITS}" ]] && [[ ! " nautical statute metric " =~ " ${GRAPHS1090_RANGEUNITS} " ]]; then
