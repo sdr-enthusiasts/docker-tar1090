@@ -73,6 +73,16 @@ else
     sed -i "s|DRAW_INTERVAL=.*|DRAW_INTERVAL=60|g" /etc/default/graphs1090
 fi
 
+# Set range units, possible values: `nautical`, `statute`, `metric`
+# shellcheck disable=SC2076
+if [[ -n "${GRAPHS1090_RANGEUNITS}" ]] && [[ " nautical statute metric " =~ " ${GRAPHS1090_RANGEUNITS} " ]]; then
+    sed -i "s|range=.*|range=${GRAPHS1090_RANGEUNITS}|g" /etc/default/graphs1090
+elif [[ -n "${GRAPHS1090_RANGEUNITS}" ]] && [[ ! " nautical statute metric " =~ " ${GRAPHS1090_RANGEUNITS} " ]]; then
+    echo "[$(date)][08-graphs1090] WARNING: GRAPHS1090_RANGEUNITS set to \"${GRAPHS1090_RANGEUNITS}\", which an invalid value!"
+else
+    sed -i "s|range=.*|range=nautical|g" /etc/default/graphs1090
+fi
+
 # Set graph size, possible values: `small`, `default`, `large`, `huge`, `custom`
 # shellcheck disable=SC2076
 if [[ -n "${GRAPHS1090_SIZE}" ]] && [[ " small default large huge custom " =~ " ${GRAPHS1090_SIZE} " ]]; then
