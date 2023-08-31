@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /etc/s6-overlay/scripts/08-graphs1090-init

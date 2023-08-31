@@ -1,0 +1,180 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
+
+if chk_enabled "${READSB_ENABLE_API}"; then
+# shellcheck disable=SC2016
+sed -i -e 's|#sed_placeholder_API_proxy|location /re-api/ {\
+    gzip on;\
+    proxy_http_version 1.1;\
+    proxy_max_temp_file_size 0;\
+    proxy_set_header Connection $http_connection;\
+    proxy_set_header Host $http_host;\
+    proxy_pass http://unix:/run/readsb/api.sock:/$is_args$args;\
+}|' /etc/nginx/sites-enabled/tar1090
+else
+    cp -vT /etc/nginx.tar1090/sites-enabled/tar1090/ /etc/nginx/sites-enabled/tar1090
+fi
+
+# Add in CORS header for tar1090 data/aircraft.json file
+
+sed -i \
+    -e 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
+    -e 's#/run/tar1090-webroot/#/run/readsb/#' \
+"${TAR1090_INSTALL_DIR}/nginx-tar1090-webroot.conf"
+
+
+# Wipe and configure tar1090 config.js.
+
+rm -f "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+cp "${TAR1090_INSTALL_DIR}/example_config.js" "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+
+{
+
+echo ""
+echo ""
+echo "// The following configuration directives produced via '$0':"
+echo ""
+
+if [[ -n "$TAR1090_PLANECOUNTINTITLE" ]]; then
+  echo "PlaneCountInTitle = ${TAR1090_PLANECOUNTINTITLE};"
+fi
+
+if [[ -n "$TAR1090_MESSAGERATEINTITLE" ]]; then
+  echo "MessageRateInTitle = ${TAR1090_MESSAGERATEINTITLE};"
+fi
+
+if [[ -n "$TAR1090_DISPLAYUNITS" ]]; then
+  echo "DisplayUnits = \"${TAR1090_DISPLAYUNITS}\";"
+fi
+
+if [[ -n "$TAR1090_DEFAULTCENTERLAT" ]]; then
+  echo "DefaultCenterLat = ${TAR1090_DEFAULTCENTERLAT};"
+fi
+
+if [[ -n "$TAR1090_DEFAULTCENTERLON" ]]; then
+  echo "DefaultCenterLon = ${TAR1090_DEFAULTCENTERLON};"
+fi
+
+if [[ -n "$TAR1090_DEFAULTZOOMLVL" ]]; then
+  echo "DefaultZoomLvl = ${TAR1090_DEFAULTZOOMLVL};"
+fi
+
+if [[ -n "$TAR1090_SITESHOW" ]]; then
+  echo "SiteShow = ${TAR1090_SITESHOW};"
+fi
+
+if [[ -n "$TAR1090_SITELAT" ]]; then
+  echo "SiteLat = ${TAR1090_SITELAT};"
+fi
+
+if [[ -n "$TAR1090_SITELON" ]]; then
+  echo "SiteLon = ${TAR1090_SITELON};"
+fi
+
+if [[ -n "$TAR1090_SITENAME" ]]; then
+  echo "SiteName = \"${TAR1090_SITENAME}\";"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_COLOR" ]]; then
+  echo "range_outline_color = '${TAR1090_RANGE_OUTLINE_COLOR}';"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_WIDTH" ]]; then
+  echo "range_outline_width = ${TAR1090_RANGE_OUTLINE_WIDTH};"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE" ]]; then
+  echo "range_outline_colored_by_altitude = ${TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE};"
+fi
+
+if [[ -n "$TAR1090_RANGE_OUTLINE_DASH" ]]; then
+  echo "range_outline_dash = ${TAR1090_RANGE_OUTLINE_DASH};"
+fi
+
+if [[ -n "$TAR1090_ACTUAL_RANGE_OUTLINE_COLOR" ]]; then
+  echo "actual_range_outline_color = '${TAR1090_ACTUAL_RANGE_OUTLINE_COLOR}';"
+fi
+
+if [[ -n "$TAR1090_ACTUAL_RANGE_OUTLINE_WIDTH" ]]; then
+  echo "actual_range_outline_width = ${TAR1090_ACTUAL_RANGE_OUTLINE_WIDTH};"
+fi
+
+if [[ -n "$TAR1090_ACTUAL_RANGE_OUTLINE_DASH" ]]; then
+  echo "actual_range_outline_dash = ${TAR1090_ACTUAL_RANGE_OUTLINE_DASH};"
+fi
+
+if [[ -n "$TAR1090_MAPTYPE_TAR1090" ]]; then
+  echo "MapType_tar1090 = \"${TAR1090_MAPTYPE_TAR1090}\";"
+fi
+
+if [[ -n "$TAR1090_MAPDIM" ]]; then
+  echo "MapDim = ${TAR1090_MAPDIM};"
+fi
+
+if [[ -n "$TAR1090_MAPDIMPERCENTAGE" ]]; then
+  echo "mapDimPercentage = ${TAR1090_MAPDIMPERCENTAGE};"
+fi
+
+if [[ -n "$TAR1090_MAPCONTRASTPERCENTAGE" ]]; then
+  echo "mapContrastPercentage = ${TAR1090_MAPCONTRASTPERCENTAGE};"
+fi
+
+if [[ -n "$TAR1090_RANGERINGS" ]]; then
+  echo "SiteCircles = ${TAR1090_RANGERINGS};"
+fi
+
+if [[ -n "$TAR1090_RANGERINGSDISTANCES" ]]; then
+  echo "SiteCirclesDistances = new Array($TAR1090_RANGERINGSDISTANCES);"
+fi
+
+if [[ -n "$TAR1090_BINGMAPSAPIKEY" ]]; then
+  echo "BingMapsAPIKey = \"$TAR1090_BINGMAPSAPIKEY\";"
+fi
+
+if chk_enabled "$TAR1090_FLIGHTAWARELINKS"; then
+  echo "flightawareLinks = true;"
+fi
+
+if [[ -n "$TAR1090_IMAGE_CONFIG_LINK" ]]; then
+  echo "imageConfigLink = ${TAR1090_IMAGE_CONFIG_LINK};"
+fi
+
+if [[ -n "$TAR1090_IMAGE_CONFIG_TEXT" ]]; then
+  echo "imageConfigText = ${TAR1090_IMAGE_CONFIG_TEXT};"
+fi
+
+if [[ -n "$TAR1090_RANGERINGSCOLORS" ]]; then
+  echo "SiteCirclesColors = new Array($TAR1090_RANGERINGSCOLORS);"
+fi
+
+if [[ -n "$TAR1090_PAGETITLE" ]]; then
+  echo "PageName = \"$TAR1090_PAGETITLE\";"
+fi
+
+if [[ -n "$TAR1090_DWDLAYERS" ]]; then
+  echo "dwdLayers = \"$TAR1090_DWDLAYERS\";"
+fi
+
+if [[ -n "$TAR1090_LABELZOOM" ]]; then
+  echo "labelZoom = \"$TAR1090_LABELZOOM\";"
+fi
+
+if [[ -n "$TAR1090_LABELZOOMGROUND" ]]; then
+  echo "labelZoomGround = \"$TAR1090_LABELZOOMGROUND\";"
+fi
+
+if chk_enabled "$TAR1090_USEROUTEAPI"; then
+  echo "useRouteAPI = ${TAR1090_USEROUTEAPI};"
+fi
+
+if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
+  echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
+fi
+
+} >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+
+if chk_enabled "$TAR1090_LABEL_GROUND_SHOWALL"; then
+  sed -i 's/this.speed > 5/this.speed >= 0/' "${TAR1090_INSTALL_DIR}/html-webroot/planeObject_*.js" >/dev/null 2>&1 || true
+fi

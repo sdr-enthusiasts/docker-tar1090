@@ -1,0 +1,36 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash disable=SC1091
+
+source /scripts/common
+
+if ! chk_enabled "${UPDATE_TAR1090}"; then
+    exit 0
+fi
+
+OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
+
+if [[ -d "${OVERRIDE_GIT_SOURCE}/html" ]]; then
+    echo "USING LOCALLY MODIFIED TAR1090 from ${OVERRIDE_GIT_SOURCE}"
+    TAR1090_VERSION="LOCALLY MODIFIED"
+    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" "${OVERRIDE_GIT_SOURCE}"
+else
+    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
+fi
+
+# aircraft-db
+if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
+    git ls-remote https://github.com/wiedehopf/tar1090-db | grep refs/heads/csv > "/run/aircraft.csv.gz.version.new"
+    if ! diff "${TAR1090_INSTALL_DIR}/aircraft.csv.gz.version" "${TAR1090_INSTALL_DIR}/aircraft.csv.gz.version.new"; then
+        curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"
+        mv -f "/run/aircraft.csv.gz.version.new" "${TAR1090_INSTALL_DIR}/aircraft.csv.gz.version" || true
+    fi
+fi
+
+# Print tar1090 version
+pushd "${TAR1090_INSTALL_DIR}/git" || exit 1
+if [[ -z "$TAR1090_VERSION" ]]; then
+    TAR1090_VERSION=$(git rev-parse --short HEAD)
+fi
+echo "tar1090 version: ${TAR1090_VERSION}"
+export TAR1090_VERSION
+popd || exit 1
