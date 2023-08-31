@@ -1,9 +1,0 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash disable=SC1091
-
-source /scripts/common
-
-if chk_enabled "${GRAPHS1090_DISABLE}"; then
-    exit 0
-fi
-
