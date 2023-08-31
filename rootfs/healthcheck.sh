@@ -1,4 +1,6 @@
 #!/command/with-contenv bash
+#shellcheck shell=bash
+
 set -e
 
 EXITCODE=0
