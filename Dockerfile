@@ -59,6 +59,9 @@ RUN set -x && \
     ${KEPT_PACKAGES[@]} \
     ${TEMP_PACKAGES[@]} \
     && \
+    # grab the bias t scripts
+    curl -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-init https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-init && \
+    curl -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-down  https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-down && \
     # nginx: remove default config
     rm /etc/nginx/sites-enabled/default && \
     # tar1090: install using project copy of original script
