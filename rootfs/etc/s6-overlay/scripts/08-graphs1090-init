@@ -20,7 +20,7 @@ if chk_enabled "${GRAPHS1090_DISABLE_CHART_CPU}"; then
 fi
 if chk_enabled "${GRAPHS1090_DISABLE_CHART_TEMP}"; then
     sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-temperature-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
-fi 
+fi
 if chk_enabled "${GRAPHS1090_DISABLE_CHART_MEMORY}"; then
     sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-memory-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
 fi
@@ -76,11 +76,11 @@ fi
 # Set range units, possible values: `nautical`, `statute`, `metric`
 # shellcheck disable=SC2076
 if [[ -n "${GRAPHS1090_RANGEUNITS}" ]] && [[ " nautical statute metric " =~ " ${GRAPHS1090_RANGEUNITS} " ]]; then
-    sed -i "s|range=.*|range=${GRAPHS1090_RANGEUNITS}|g" /etc/default/graphs1090
+    sed -i "s|^range=.*|range=${GRAPHS1090_RANGEUNITS}|g" /etc/default/graphs1090
 elif [[ -n "${GRAPHS1090_RANGEUNITS}" ]] && [[ ! " nautical statute metric " =~ " ${GRAPHS1090_RANGEUNITS} " ]]; then
     echo "[$(date)][08-graphs1090] WARNING: GRAPHS1090_RANGEUNITS set to \"${GRAPHS1090_RANGEUNITS}\", which an invalid value!"
 else
-    sed -i "s|range=.*|range=nautical|g" /etc/default/graphs1090
+    sed -i "s|^range=.*|range=nautical|g" /etc/default/graphs1090
 fi
 
 # Set graph size, possible values: `small`, `default`, `large`, `huge`, `custom`
@@ -91,7 +91,7 @@ elif [[ -n "${GRAPHS1090_SIZE}" ]] && [[ ! " small default large huge custom " =
     echo "[$(date)][08-graphs1090] WARNING: GRAPHS1090_SIZE set to \"${GRAPHS1090_SIZE}\", which an invalid value!"
 else
     sed -i "s|all_large=.*|graph_size=default|g" /etc/default/graphs1090
-fi   
+fi
 
 # Make the small graphs as large as the big ones by setting to `yes`
 if chk_enabled "${GRAPHS1090_ALL_LARGE}"; then
