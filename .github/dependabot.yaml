@@ -1,13 +1,15 @@
+---
+version: 2
+
 updates:
   # Maintain dependencies for Docker
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: daily
-      time: "00:00"
-      timezone: "Etc/UTC"
     assignees:
       - "mikenye"
+      - "fredclausen"
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -16,3 +18,4 @@ updates:
       interval: "daily"
     assignees:
       - "mikenye"
+      - "fredclausen"
