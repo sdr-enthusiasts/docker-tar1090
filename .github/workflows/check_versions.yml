@@ -11,7 +11,7 @@ env:
   GHCR_IMAGE: ${{ github.repository }}:latest
   GHCR_REGISTRY: ghcr.io
   WORKFLOW_FILE_TO_TRIGGER: deploy.yml
-  WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_MIKENYE }}
+  WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
 
 jobs:
   version_in_container:
@@ -63,7 +63,7 @@ jobs:
     if: ${{ needs.version_in_container.outputs.currverhash != needs.latest_version.outputs.latestverhash }}
     runs-on: ubuntu-latest
     env:
-      WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_MIKENYE }}
+      WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
       WORKFLOW_REPO: sdr-enthusiasts/docker-tar1090
       WORKFLOW_FILE: deploy.yml
       WORKFLOW_REASON: "triggered via deploy_ghcr.yml in sdr-enthusiasts/docker-baseimage"
