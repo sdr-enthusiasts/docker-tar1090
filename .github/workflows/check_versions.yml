@@ -1,5 +1,4 @@
 ---
-
 name: Check container software versions
 
 on:
@@ -15,7 +14,6 @@ env:
   WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_MIKENYE }}
 
 jobs:
-
   version_in_container:
     name: Check versions in 'latest' image
     runs-on: ubuntu-latest
@@ -65,9 +63,12 @@ jobs:
     if: ${{ needs.version_in_container.outputs.currverhash != needs.latest_version.outputs.latestverhash }}
     runs-on: ubuntu-latest
     env:
-      WORKFLOW_REASON: "triggered via check_versions.yml in ${{ github.repository }}"
+      WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_MIKENYE }}
+      WORKFLOW_REPO: sdr-enthusiasts/docker-tar1090
+      WORKFLOW_FILE: deploy.yml
+      WORKFLOW_REASON: "triggered via deploy_ghcr.yml in sdr-enthusiasts/docker-baseimage"
     steps:
       - name: Trigger ${{ env.WORKFLOW_FILE }} in ${{ env.WORKFLOW_REPO }}
         run: |
           echo "$WORKFLOW_AUTH_TOKEN" | gh auth login --with-token
-          gh workflow run --ref main --repo "${{ github.repository }}" "${{ env.WORKFLOW_FILE_TO_TRIGGER }}" -f reason="$WORKFLOW_REASON"
+          gh workflow run --ref main --repo "$WORKFLOW_REPO" "$WORKFLOW_FILE" -f reason="$WORKFLOW_REASON"
