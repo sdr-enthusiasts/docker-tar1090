@@ -18,7 +18,10 @@ if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
         sleep 5 & wait $!
     done
     # start telegraf
-    exec s6wrap --quiet --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d
+    # ATTN: next line is temporary until @ngen15 resolves issues with the "ground" parameter in telegraf.
+    #       once resolved, we can revert to the original line, which was:
+    # s6wrap --quiet --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d
+    s6wrap --quiet --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d | grep -v "error converting to float"
 else
     # if telegraf not needed, sleep forever
     exec sleep infinity
