@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       reason:
-        required: true
+        required: false
         description: "Reason for running this workflow"
       use_test_image:
         required: false
