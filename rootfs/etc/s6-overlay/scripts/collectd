@@ -22,7 +22,7 @@ elif [[ -f "${PERMFILE}" ]] && ! [[ -d /var/lib/collectd/rrd/localhost ]]; then
 fi
 
 
-# wait for neccessary input file to exist before starting
+# wait for necessary input file to exist before starting
 
 loop_count=0
 # shellcheck disable=SC2016
@@ -48,5 +48,3 @@ if chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
     # writeback
     s6wrap --quiet --prepend=graphs1090-writeback --timestamps --args bash /usr/share/graphs1090/writeback.sh
 fi
-
-

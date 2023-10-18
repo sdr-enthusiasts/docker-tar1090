@@ -6,4 +6,3 @@ source /scripts/common
 if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exit 0
 fi
-

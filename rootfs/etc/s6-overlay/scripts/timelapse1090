@@ -25,7 +25,7 @@ if chk_enabled "$ENABLE_TIMELAPSE1090" && ! chk_enabled "${TAR1090_DISABLE}"; th
     s6wrap --quiet --prepend=timelapse1090 --timestamps --args /opt/timelapse1090/timelapse1090.sh &
     wait $!
   popd || exit 1
-  
+
   sleep 30 & wait $!
 else
   exec sleep infinity

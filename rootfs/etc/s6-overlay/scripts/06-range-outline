@@ -9,7 +9,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
 
     HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:-12192m}"
 
-    if grep -e "[^0-9kmft,]" <<< "${HEYWHATSTHAT_ALTS}" >/dev/null 2>&1; then 
+    if grep -e "[^0-9kmft,]" <<< "${HEYWHATSTHAT_ALTS}" >/dev/null 2>&1; then
         echo "[$(date)][06-range-outline] FATAL: Illegal character in HEYWHATSTHAT_ALTS=${HEYWHATSTHAT_ALTS}"
         exit 1
     fi

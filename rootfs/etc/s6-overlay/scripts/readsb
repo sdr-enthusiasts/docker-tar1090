@@ -122,7 +122,7 @@ fi
 #
 if [[ -n "$READSB_NET_API_PORT" ]]; then
     READSB_CMD+=("--net-api-port=$READSB_NET_API_PORT")
-else 
+else
     READSB_CMD+=("--net-api-port=30152")
 fi
 
@@ -250,7 +250,7 @@ fi
 if [[ -n "$READSB_GAIN" ]]; then
     if [[ "${READSB_GAIN,,}" == "autogain" ]] && [[ -f /var/globe_history/autogain/gain ]]; then
         read -r gain < /var/globe_history/autogain/gain
-        READSB_CMD+=("--gain=$gain") 
+        READSB_CMD+=("--gain=$gain")
     elif [[ -n "$READSB_GAIN" ]]; then
         [[ "${READSB_GAIN,,}" == "autogain" ]] && gain="49.6" || gain="${READSB_GAIN}"
         READSB_CMD+=("--gain=$gain")
@@ -316,9 +316,9 @@ if [[ -n "$READSB_BEAST_BAUDRATE" ]]; then
 fi
 
 #####################
-# Handle --write-prom=<filepath> 
+# Handle --write-prom=<filepath>
 
-if [[ -n "$PROMETHEUS_ENABLE" ]]; then 
+if [[ -n "$PROMETHEUS_ENABLE" ]]; then
     READSB_CMD+=("--write-prom=/run/readsb-prometheus.prom")
 fi
 

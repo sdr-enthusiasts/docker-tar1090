@@ -173,7 +173,7 @@ if [[ -n $2 ]]; then
 elif [[ -n $1 ]] && [ "$1" != "test" ] ; then
     instances="$1 tar1090"
 elif [ -f /etc/default/tar1090_instances ]; then
-    instances=$(</etc/default/tar1090_instances)	
+    instances=$(</etc/default/tar1090_instances)
 else
     instances="$srcdir tar1090"
 fi
@@ -463,4 +463,3 @@ elif [[ $nginx == yes ]]; then
 else
     echo "All done! You'll need to configure your webserver yourself, see ${ipath}/nginx-tar1090.conf for a reference nginx configuration"
 fi
-

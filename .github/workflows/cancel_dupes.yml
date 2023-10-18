@@ -2,10 +2,10 @@ name: Cancelling Duplicates
 on:
   workflow_run:
     workflows:
-      - 'Deploy'
-      - 'Check Linting'
-      - 'Tests'
-    types: ['requested']
+      - "Deploy"
+      - "Check Linting"
+      - "Tests"
+    types: ["requested"]
 
 jobs:
   cancel-duplicate-workflow-runs:

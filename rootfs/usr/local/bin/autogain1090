@@ -30,7 +30,7 @@ if [[ "$1" == "reset" ]]; then
     pkill -f "/usr/local/bin/readsb"
     exit 0
 fi
- 
+
 if ! [[ -f $stats ]]; then echo "stats.json not found, is the decoder running?"; exit 1; fi
 
 oldstrong=$(cat $autogain_dir/strong 2>/dev/null)
