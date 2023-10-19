@@ -1,0 +1,13 @@
+#!/#!/command/with-contenv bash
+# shellcheck shell=bash disable=SC1091
+
+# if there is no /sys/class/thermal/thermal_zone0/temp file, mkdir the path and create a dummy file
+
+if [[ ! -f /sys/class/thermal/thermal_zone0/temp ]]; then
+    echo "Creating dummy /sys/class/thermal/thermal_zone0/temp file. None found."
+    mkdir -p /sys/class/thermal/thermal_zone0
+    echo 24000 > /sys/class/thermal/thermal_zone0/temp
+
+    #create a sentinel file to indicate that we created the dummy file
+    touch /tempfix
+fi

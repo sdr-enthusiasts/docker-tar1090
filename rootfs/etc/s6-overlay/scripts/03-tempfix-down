@@ -1,0 +1,10 @@
+#!/#!/command/with-contenv bash
+# shellcheck shell=bash disable=SC1091
+
+# if there is /tempfix file, remove it and /sys/class/thermal/thermal_zone0/temp file
+
+if [[ -f /tempfix ]]; then
+    echo "Removing dummy /sys/class/thermal/thermal_zone0/temp file."
+    rm -f /sys/class/thermal/thermal_zone0/temp
+    rm -f /tempfix
+fi
