@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /etc/s6-overlay/scripts/03-temp-fix-down
+exec /etc/s6-overlay/s6-rc.d/scripts/03-temp-fix-down
