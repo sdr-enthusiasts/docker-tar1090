@@ -252,7 +252,7 @@ if [[ -n "$READSB_GAIN" ]]; then
         read -r gain < /var/globe_history/autogain/gain
         READSB_CMD+=("--gain=$gain")
     elif [[ -n "$READSB_GAIN" ]]; then
-        [[ "${READSB_GAIN,,}" == "autogain" ]] && gain="49.6" || gain="${READSB_GAIN}"
+        [[ "${READSB_GAIN,,}" == "autogain" ]] && gain="${READSB_AUTOGAIN_INITIAL_GAIN:-49.6}" || gain="${READSB_GAIN}"
         READSB_CMD+=("--gain=$gain")
     fi
 fi
