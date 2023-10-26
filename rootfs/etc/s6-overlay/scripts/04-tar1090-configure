@@ -77,6 +77,10 @@ if [[ -n "$TAR1090_SITENAME" ]]; then
   echo "SiteName = \"${TAR1090_SITENAME}\";"
 fi
 
+if chk_disabled "${TAR1090_ENABLE_ACTUALRANGE}"; then
+  echo "actual_range_show = false;"
+fi  
+
 if [[ -n "$TAR1090_RANGE_OUTLINE_COLOR" ]]; then
   echo "range_outline_color = '${TAR1090_RANGE_OUTLINE_COLOR}';"
 fi

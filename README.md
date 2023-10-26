@@ -268,6 +268,7 @@ All of the variables below are optional.
 | `TAR1090_IMAGE_CONFIG_TEXT` | Text to display for the config link                                                                                                                                                                    | `null`                       |
 | `TAR1090_DISABLE`           | Set to `true` to disable the web server and all websites (including the map, `graphs1090`, `heatmap`, `pTracks`, etc.)                                                                                 | Unset                        |
 | `READSB_ENABLE_HEATMAP`    | Set to `true` or leave unset to enable the HeatMap function available at `http://myip/?Heatmap`; set to `false` to disable the HeapMap function | `true` (enabled) | 
+| `TAR1090_ENABLE_ACTUALRANGE`    | Set to `true` or leave unset to enable the outline of the actual range of your station on the map; set to `false` to disable the this outline | `true` (enabled) | 
 
 - For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 - TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>
