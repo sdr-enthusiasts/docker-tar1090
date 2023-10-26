@@ -2,9 +2,9 @@
 # shellcheck shell=bash disable=SC1091,SC2076
 
 source /scripts/common
-
-
 mkdir -p /run/readsb
+
+s6wrap=(s6wrap --quiet --prepend="$(basename "$0")" --timestamps --args)
 
 # Build the readsb command line based on options
 READSB_BIN="/usr/local/bin/readsb"
@@ -41,8 +41,6 @@ if [ -n "${UUID}" ]; then
 fi
 
 READSB_CMD+=("--write-json=/run/readsb")
-READSB_CMD+=("--heatmap-dir=/var/globe_history")
-READSB_CMD+=("--heatmap=15")
 READSB_CMD+=("--write-state=/var/globe_history")
 READSB_CMD+=("--json-trace-interval=15")
 READSB_CMD+=("--json-reliable=1")
@@ -58,16 +56,21 @@ READSB_CMD+=("--net-json-port=30047")
 # READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
 
-if [[ -n "${READSB_FORWARD_MLAT}" ]]; then
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")][readsb] WARNING -- READSB_FORWARD_MLAT has been set! Do not feed the output of this container to any aggregators!"
+if chk_enabled "${READSB_ENABLE_HEATMAP:-true}"; then
+    READSB_CMD+=("--heatmap-dir=/var/globe_history")
+    READSB_CMD+=("--heatmap=${READSB_HEATMAP_INTERVAL:-15}")
+fi
+
+if chk_enabled "${READSB_FORWARD_MLAT}"; then
+    "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT has been set! Do not feed the output of this container to any aggregators!"
     READSB_CMD+=("--forward-mlat")
 fi
 
-if [[ -n "${READSB_FORWARD_MLAT_SBS}" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "false" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "off" ]]; then
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")][readsb] WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
+if chk_enabled "${READSB_FORWARD_MLAT_SBS}"; then
+    "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
     READSB_CMD+=("--forward-mlat-sbs")
-elif [[ -n "${READSB_FORWARD_MLAT}" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "false" ]] && [[ "${READSB_FORWARD_MLAT_SBS,,}" != "off" ]]; then
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")][readsb] WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
+elif chk_enabled "${READSB_FORWARD_MLAT}"; then
+    "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
     READSB_CMD+=("--forward-mlat-sbs")
 fi
 
@@ -84,7 +87,7 @@ if [ -n "${READSB_DEBUG}" ]; then
 fi
 
 # Handle --write-state-only-on-exit
-if [ -n "${READSB_WRITE_STATE_ONLY_ON_EXIT}" ]; then
+if chk_enabled "${READSB_WRITE_STATE_ONLY_ON_EXIT}"; then
     READSB_CMD+=("--write-state-only-on-exit")
 fi
 
@@ -94,12 +97,13 @@ if [[ -n "$READSB_MAX_RANGE" ]]; then
 fi
 
 # Handle "--mlat"
-if [[ -n "$READSB_MLAT" ]]; then
+#shellcheck disable=SC2153
+if chk_enabled "$READSB_MLAT"; then
     READSB_CMD+=("--mlat")
 fi
 
 # Handle "--modeac"
-if [[ -n "$READSB_MODEAC" ]]; then
+if chk_enabled "$READSB_MODEAC"; then
     READSB_CMD+=("--modeac")
 fi
 
@@ -109,7 +113,7 @@ if [[ -n "$READSB_STATS_EVERY" ]]; then
 fi
 
 # Handle "--stats-range"
-if [[ -n "$READSB_STATS_RANGE" ]]; then
+if chk_enabled "$READSB_STATS_RANGE"; then
     READSB_CMD+=("--stats-range")
 fi
 
@@ -140,7 +144,7 @@ if [[ -n "$READSB_NET_BEAST_REDUCE_OUT_PORT" ]]; then
     READSB_CMD+=("--net-beast-reduce-out-port=$READSB_NET_BEAST_REDUCE_OUT_PORT")
 fi
 
-if [[ -n "$READSB_NET_SBS_REDUCE" ]]; then
+if chk_enabled "$READSB_NET_SBS_REDUCE"; then
     READSB_CMD+=("--net-sbs-reduce")
 fi
 
@@ -150,10 +154,6 @@ fi
 
 if [[ -n "$READSB_JSON_TRACE_INTERVAL" ]]; then
     READSB_CMD+=("--json-trace-interval=$READSB_JSON_TRACE_INTERVAL")
-fi
-
-if [[ -n "$READSB_HEATMAP_INTERVAL" ]]; then
-    READSB_CMD+=("--heatmap=$READSB_HEATMAP_INTERVAL")
 fi
 
 if [[ -n "$READSB_NET_BEAST_REDUCE_FILTER_ALT" ]]; then
@@ -225,7 +225,7 @@ if [[ -n "$READSB_NET_SBS_OUTPUT_PORT" ]]; then
 fi
 
 # Handle "--net-verbatim"
-if [[ -n "$REASSB_NET_VERBATIM" ]]; then
+if chk_enabled "$READSB_NET_VERBATIM"; then
     READSB_CMD+=("--net-verbatim")
 fi
 
@@ -265,7 +265,7 @@ if [[ -n "$READSB_RTLSDR_DEVICE" ]]; then
 fi
 
 # Handle "--enable-agc"
-if [[ -n "$READSB_RTLSDR_ENABLE_AGC" ]]; then
+if chk_enabled "$READSB_RTLSDR_ENABLE_AGC"; then
     READSB_CMD+=("--enable-agc")
 fi
 
@@ -277,32 +277,32 @@ fi
 ##### MODE-S BEAST OPTIONS #####
 
 # Handle "--beast-crc-off"
-if [[ -n "$READSB_BEAST_CRC_OFF" ]]; then
+if chk_enabled "$READSB_BEAST_CRC_OFF"; then
     READSB_CMD+=("--beast-crc-off")
 fi
 
 # Handle "--beast-df045-on"
-if [[ -n "$READSB_BEAST_DF045_ON" ]]; then
+if chk_enabled "$READSB_BEAST_DF045_ON"; then
     READSB_CMD+=("--beast-df045-on")
 fi
 
 # Handle "--beast-df1117-on"
-if [[ -n "$READSB_BEAST_DF1117_ON" ]]; then
+if chk_enabled "$READSB_BEAST_DF1117_ON"; then
     READSB_CMD+=("--beast-df1117-on")
 fi
 
 # Handle "--beast-fec-off"
-if [[ -n "$READSB_BEAST_FEC_OFF" ]]; then
+if chk_enabled "$READSB_BEAST_FEC_OFF"; then
     READSB_CMD+=("--beast-fec-off")
 fi
 
 # Handle "--beast-mlat-off"
-if [[ -n "$READSB_BEAST_MLAT_OFF" ]]; then
+if chk_enabled "$READSB_BEAST_MLAT_OFF"; then
     READSB_CMD+=("--beast-mlat-off")
 fi
 
 # Handle "--beast-modeac"
-if [[ -n "$READSB_BEAST_MODEAC" ]]; then
+if chk_enabled "$READSB_BEAST_MODEAC"; then
     READSB_CMD+=("--beast-modeac")
 fi
 
@@ -318,9 +318,9 @@ fi
 #####################
 # Handle --write-prom=<filepath>
 
-if [[ -n "$PROMETHEUS_ENABLE" ]]; then
+if chk_enabled "$PROMETHEUS_ENABLE"; then
     READSB_CMD+=("--write-prom=/run/readsb-prometheus.prom")
 fi
 
 # shellcheck disable=SC2086
-exec s6wrap --quiet --prepend=readsb --timestamps --args "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
+"${s6wrap[@]}" "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
