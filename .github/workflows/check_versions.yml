@@ -66,7 +66,7 @@ jobs:
       WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
       WORKFLOW_REPO: sdr-enthusiasts/docker-tar1090
       WORKFLOW_FILE: deploy.yml
-      WORKFLOW_REASON: "triggered via deploy_ghcr.yml in sdr-enthusiasts/docker-baseimage"
+      WORKFLOW_REASON: "triggered via check_versions.yaml. New tar1090 found"
     steps:
       - name: Trigger ${{ env.WORKFLOW_FILE }} in ${{ env.WORKFLOW_REPO }}
         run: |
