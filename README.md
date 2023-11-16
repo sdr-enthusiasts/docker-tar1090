@@ -386,8 +386,8 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `REASSB_NET_VERBATIM` | Set this to any value to forward messages unchanged. | `--net-verbatim` | Unset |
 | `READSB_NET_VRS_PORT` | TCP VRS JSON output listen ports. | `--net-vrs-port=<ports>` | Unset |
 | `READSB_WRITE_STATE_ONLY_ON_EXIT` | if set to anything, it will only write the status range outlines, etc. upon termination of `readsb` | `--write-state-only-on-exit` | Unset |
-| `READSB_FORWARD_MLAT_SBS` | If set to anthing, it will include MLAT results in the SBS/BaseStation output. This may be desirable if you feed SBS data to applications like [VRS](https://github.com/sdr-enthusiasts/docker-virtualradarserver) or [PlaneFence](https://github.com/kx1t/docker-planefence) | Unset |
-| `READSB_FORWARD_MLAT` | If set to anthing, it will include MLAT results in the Beast and SBS/BaseStation output. This may be desirable if you feed SBS data to applications like [VRS](https://github.com/sdr-enthusiasts/docker-virtualradarserver) or [PlaneFence](https://github.com/kx1t/docker-planefence) | Unset |
+| `READSB_FORWARD_MLAT_SBS` | If set to anthing, it will include MLAT results in the SBS/BaseStation output. This may be desirable if you feed SBS data to applications like [VRS](https://github.com/sdr-enthusiasts/docker-virtualradarserver) or [PlaneFence](https://github.com/kx1t/docker-planefence) | | Unset |
+| `READSB_FORWARD_MLAT` | If set to anthing, it will include MLAT results in the Beast and SBS/BaseStation output. This may be desirable if you feed SBS data to applications like [VRS](https://github.com/sdr-enthusiasts/docker-virtualradarserver) or [PlaneFence](https://github.com/kx1t/docker-planefence) | `--forward-mlat` | Unset |
 
 #### `READSB_NET_CONNECTOR` syntax
 
