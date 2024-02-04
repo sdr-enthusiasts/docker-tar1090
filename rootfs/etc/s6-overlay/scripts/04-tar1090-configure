@@ -3,6 +3,13 @@
 
 source /scripts/common
 
+# create symlink so /var/cache/fontconfig is in tmpfs
+# as per Wiedehopf - https://discord.com/channels/734090820684349521/1102603003376177172/1203826726023729162
+# shellcheck disable=SC2174
+mkdir -p -m 777 /run/cache/fontconfig
+rm -rf /var/cache/fontconfig
+ln -sf /run/cache/fontconfig /var/cache/fontconfig
+
 if chk_enabled "${READSB_ENABLE_API}"; then
 # shellcheck disable=SC2016
 sed -i -e 's|#sed_placeholder_API_proxy|location /re-api/ {\
