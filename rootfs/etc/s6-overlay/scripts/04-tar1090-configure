@@ -21,7 +21,7 @@ sed -i -e 's|#sed_placeholder_API_proxy|location /re-api/ {\
     proxy_pass http://unix:/run/readsb/api.sock:/$is_args$args;\
 }|' /etc/nginx/sites-enabled/tar1090
 else
-    cp -vT /etc/nginx.tar1090/sites-enabled/tar1090 /etc/nginx/sites-enabled/tar1090
+    cp -Tf /etc/nginx.tar1090/sites-enabled/tar1090 /etc/nginx/sites-enabled/tar1090
 fi
 
 # Add in CORS header for tar1090 data/aircraft.json file
