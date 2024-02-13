@@ -22,8 +22,8 @@ if [[ "${READSB_GAIN,,}" != "autogain" ]]; then
     exec sleep infinity
 fi
 
-if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]] || [[ -z "${READSB_RTLSDR_DEVICE}" ]]; then
-    s6wrap --quiet --prepend=autogain --timestamps --args echo "ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\" or READSB_RTLSDR_DEVICE serial number not defined. Autogain disabled."
+if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]]; then
+    s6wrap --quiet --prepend=autogain --timestamps --args echo "ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\". Autogain disabled."
     exec sleep infinity
 fi
 
