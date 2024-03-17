@@ -323,4 +323,4 @@ if chk_enabled "$PROMETHEUS_ENABLE"; then
 fi
 
 # shellcheck disable=SC2086
-"${s6wrap[@]}" "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
+exec "${s6wrap[@]}" "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
