@@ -32,7 +32,10 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-COPY rootfs/ /
+# only copy files necessary for the build, copy whole rootfs later
+# this improves build caching when changing service and startup scripting
+COPY rootfs/tar1090-install.sh /
+COPY rootfs/etc/nginx.tar1090 /etc/nginx.tar1090
 
 # add telegraf binary
 ##telegraf##COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
@@ -177,6 +180,8 @@ RUN set -x && \
     bash -ec 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
     rm -rf /tmp/*
+
+COPY rootfs/ /
 
 EXPOSE 80/tcp
 
