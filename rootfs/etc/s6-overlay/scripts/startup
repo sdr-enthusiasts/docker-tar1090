@@ -10,9 +10,11 @@ if ! [[ -d "$SDIR" ]] || [[ -z "$(ls "$SDIR")" ]]; then
     exit 0
 fi
 
-for NAME in "$SDIR"/*; do
-    if ! s6wrap --quiet --prepend="$NAME" --timestamps --args "$NAME"; then
-        s6wrap --quiet --prepend=startup --timestamps --args echo Error running "$NAME"
+cd "$SDIR"
+
+for NAME in *; do
+    if ! s6wrap --quiet --prepend="$NAME" --timestamps --args "$SDIR/$NAME"; then
+        s6wrap --quiet --prepend=startup --timestamps --args echo Error running "$SDIR/$NAME"
         exit 1
     fi
 done
