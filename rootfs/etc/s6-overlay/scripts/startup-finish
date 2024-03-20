@@ -1,0 +1,20 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash disable=SC1091,SC2076
+
+source /scripts/common
+
+SDIR=/etc/s6-overlay/finish.d
+
+# exit 0 for nonexistent or empty directory
+if ! [[ -d "$SDIR" ]] || [[ -z "$(ls "$SDIR")" ]]; then
+    exit 0
+fi
+
+cd "$SDIR" || exit 1
+
+for NAME in *; do
+    if ! s6wrap --quiet --prepend="$NAME" --timestamps --args "$SDIR/$NAME"; then
+        s6wrap --quiet --prepend=startup --timestamps --args echo Error running "$SDIR/$NAME"
+        exit 1
+    fi
+done
