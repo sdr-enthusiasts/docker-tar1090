@@ -3,7 +3,7 @@
 
 source /scripts/common
 
-SDIR=/etc/s6-overlay/startup.d
+SDIR=/etc/s6-overlay/finish.d
 
 # exit 0 for nonexistent or empty directory
 if ! [[ -d "$SDIR" ]] || [[ -z "$(ls "$SDIR")" ]]; then

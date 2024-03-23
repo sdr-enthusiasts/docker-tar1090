@@ -5,10 +5,7 @@
 
 FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb
 
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
-    S6_SERVICES_GRACETIME=20000 \
-    S6_KILL_GRACETIME=20000 \
-    BEASTPORT=30005 \
+ENV BEASTPORT=30005 \
     GITPATH_TIMELAPSE1090=/opt/timelapse1090 \
     HTTP_ACCESS_LOG="false" \
     HTTP_ERROR_LOG="true" \

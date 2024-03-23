@@ -25,7 +25,7 @@ fi
 
 # Set up timezone
 if [ -z "${TZ}" ]; then
-  echo "${YELLOW}WARNING: TZ environment variable not set${NOCOLOR}"
+  echo -e "${YELLOW}WARNING: TZ environment variable not set${NOCOLOR}"
 else
   ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" >/etc/timezone
 fi
