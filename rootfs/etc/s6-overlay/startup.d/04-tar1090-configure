@@ -184,6 +184,10 @@ if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
   echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
 fi
 
+if [[ -n "$TAR1090_CONFIGJS_APPEND" ]]; then
+  echo "$TAR1090_CONFIGJS_APPEND"
+fi
+
 } >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
 
 if chk_enabled "$TAR1090_LABEL_GROUND_SHOWALL"; then
