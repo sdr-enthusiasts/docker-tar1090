@@ -330,6 +330,27 @@ All of the variables below are optional.
 | `TAR1090_RANGERINGSDISTANCES` | Distances to display range rings, in miles, nautical miles, or km (depending settings value '`TAR1090_DISPLAYUNITS`'). Accepts a comma separated list of numbers (no spaces, no quotes).                                          | `100,150,200,250` |
 | `TAR1090_RANGERINGSCOLORS`    | Colours for each of the range rings specified in `TAR1090_RANGERINGSDISTANCES`. Accepts a comma separated list of hex colour values, each enclosed in single quotes (eg `TAR1090_RANGERINGSCOLORS='#FFFFF','#00000'`). No spaces. | Blank             |
 
+#### `tar1090` `config.js` Configuration - Expert
+
+| Environment Variable         | Purpose                                              | Default   |
+| ---------------------------- | ---------------------------------------------------- | --------- |
+| `TAR1090_CONFIGJS_APPEND`   | Append arbitrary javascript code to config.js        | Unset     |
+
+- In case a setting is available in tar1090 but not exposed via environment variable for this container
+- For a list of possible settings, see <https://github.com/wiedehopf/tar1090/blob/master/html/config.js>
+- Incorrect syntax or any capitalization errors will cause the map to not load, you have been warned!
+- Example: `TAR1090_CONFIGJS_APPEND= MapDim=false; nexradOpacity=0.2;`
+- In the environment section of a compose file you can generally use multiple lines like this:
+
+```yaml
+    environment:
+    ...
+      - TAR1090_CONFIGJS_APPEND=
+        MapDim=false;
+        nexradOpacity=0.2;
+    ...
+```
+
 ### `tar1090` Route Display Configuration
 
 | Environment Variable  | Purpose                                            | Default                               |
@@ -726,7 +747,7 @@ In order for Telegraf to serve a [Prometheus](https://prometheus.io) endpoint, t
 | Variable            | Description                                                              |
 | ------------------- | ------------------------------------------------------------------------ |
 | `PROMETHEUS_ENABLE` | Set to `true` for a Prometheus endpoint on `http://0.0.0.0:9273/metrics` |
-| `PROMETHEUSPORT`    |	TCP port for the Prometheus endpoint. Default value is 9273              |
+| `PROMETHEUSPORT`    | TCP port for the Prometheus endpoint. Default value is 9273              |
 
 ## Minimalist setup
 
