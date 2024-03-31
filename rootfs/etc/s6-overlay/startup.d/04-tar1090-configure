@@ -177,7 +177,7 @@ if [[ -n "$TAR1090_LABELZOOMGROUND" ]]; then
 fi
 
 if chk_enabled "$TAR1090_USEROUTEAPI"; then
-  echo "useRouteAPI = ${TAR1090_USEROUTEAPI};"
+  echo "useRouteAPI = true;"
 fi
 
 if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
