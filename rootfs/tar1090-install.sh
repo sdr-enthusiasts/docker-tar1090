@@ -4,7 +4,6 @@
 
 set -e
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
-renice 10 $$
 
 srcdir=/run/readsb
 repo="https://github.com/wiedehopf/tar1090"
@@ -433,33 +432,3 @@ if [[ $lighttpd == yes ]]; then
     fi
 fi
 
-if useSystemd && systemctl show lighttpd 2>/dev/null | grep -qs -F -e 'UnitFileState=enabled' -e 'ActiveState=active'; then
-    echo "Restarting lighttpd ..."
-    systemctl restart lighttpd || ! pgrep systemd
-fi
-
-echo --------------
-
-
-if [[ $nginx == yes ]]; then
-    echo
-    echo "To configure nginx for tar1090, please add the following line(s) in the server {} section:"
-    echo
-    for service in "${services[@]}"; do
-        echo "include ${ipath}/nginx-${service}.conf;"
-    done
-fi
-
-echo --------------
-
-if [[ $lighttpd == yes ]]; then
-    for name in $names; do
-        echo "All done! Webinterface available at http://$(ip route get 1.2.3.4 | grep -m1 -o -P 'src \K[0-9,.]*')/$name"
-    done
-elif [[ $nginx == yes ]]; then
-    for name in $names; do
-        echo "All done! Webinterface once nginx is configured will be available at http://$(ip route get 1.2.3.4 | grep -m1 -o -P 'src \K[0-9,.]*')/$name"
-    done
-else
-    echo "All done! You'll need to configure your webserver yourself, see ${ipath}/nginx-tar1090.conf for a reference nginx configuration"
-fi

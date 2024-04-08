@@ -190,6 +190,20 @@ fi
 
 } >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
 
+# https://github.com/wiedehopf/adsb-wiki/wiki/offline-map-tiles-tar1090
+# volumes:
+# - /usr/local/share/osm_tiles_offline:/usr/local/share/osm_tiles_offline
+# in case offlinemaps is used, configure via config.js
+MAX_OFFLINE=""
+for i in {0..15}; do
+    if [[ -d /usr/local/share/osm_tiles_offline/$i ]]; then
+        MAX_OFFLINE=$i
+    fi
+done
+if [[ -n "$MAX_OFFLINE" ]]; then
+    echo "offlineMapDetail=$MAX_OFFLINE;" >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+fi
+
 if chk_enabled "$TAR1090_LABEL_GROUND_SHOWALL"; then
   sed -i 's/this.speed > 5/this.speed >= 0/' "${TAR1090_INSTALL_DIR}/html-webroot/planeObject_*.js" >/dev/null 2>&1 || true
 fi
