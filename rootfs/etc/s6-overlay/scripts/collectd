@@ -35,12 +35,15 @@ done
 /usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf > /dev/null 2>&1
 
 
-trap 'echo "sending SIGTERM to collectd";pkill collectd' SIGTERM SIGINT SIGHUP SIGQUIT
+# pkill -P $$ will only kill children of the script, not the script itself
+trap 'pkill -P $$' SIGTERM SIGINT SIGHUP SIGQUIT
+# for this scheme to work, the program is started in the background
 
-# background execution + wait is necessary for trap to work -.-
 #shellcheck disable=SC2016
 s6wrap --quiet --prepend=collectd --timestamps --args /usr/sbin/collectd -C /etc/collectd/collectd.conf -f &
-wait || true
+
+# the first wait exits due to the signal which is trapped, the 2nd wait actually waits for collectd to exit
+wait || wait || true
 
 
 
