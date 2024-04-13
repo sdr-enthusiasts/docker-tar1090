@@ -87,6 +87,8 @@ RUN set -x && \
     git clone --single-branch --depth 1 "https://github.com/wiedehopf/timelapse1090.git" "${GITPATH_TIMELAPSE1090}" && \
     pushd "${GITPATH_TIMELAPSE1090}" && \
     bash -ec 'echo "timelapse1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
+    # remove unused .git dir to slightly reduce image size
+    rm -rf "${GITPATH_TIMELAPSE1090}/.git" && \
     popd && \
     mkdir -p /var/timelapse1090 && \
     # aircraft-db, file in TAR1090_UPDATE_DIR will be preferred when starting readsb if tar1090-update enabled
@@ -167,6 +169,7 @@ RUN set -x && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
+    apt-get clean -q -y && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* && \
     # document versions
     bash -ec 'grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION' && \
