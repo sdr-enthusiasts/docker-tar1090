@@ -10,6 +10,7 @@ ENV BEASTPORT=30005 \
     HTTP_ACCESS_LOG="false" \
     HTTP_ERROR_LOG="true" \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
+    TAR1090_UPDATE_DIR=/var/globe_history/tar1090-update \
     MLATPORT=30105 \
     INTERVAL=8 \
     HISTORY_SIZE=450 \
@@ -71,13 +72,15 @@ RUN set -x && \
     # change some /run/tar1090-webroot to /run/readsb to make work with existing docker scripting
     sed -i -e 's#/run/tar1090-webroot/#/run/readsb/#' /usr/local/share/tar1090/nginx-tar1090-webroot.conf && \
     # tar1090-db: document version
-    pushd "${TAR1090_INSTALL_DIR}/git-db" || exit 1 && \
+    pushd "${TAR1090_UPDATE_DIR}/git-db" || exit 1 && \
     bash -ec 'echo "tar1090-db $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
     # tar1090: document version
-    pushd "${TAR1090_INSTALL_DIR}/git" || exit 1 && \
+    pushd "${TAR1090_UPDATE_DIR}/git" || exit 1 && \
     bash -ec 'echo "tar1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
+    # tar1090: remove tar1090-update files as they're not needed unless tar1090-update is active
+    rm -rf "${TAR1090_UPDATE_DIR}" && \
     # tar1090: add nginx config
     cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
     # timelapse1090
@@ -86,9 +89,8 @@ RUN set -x && \
     bash -ec 'echo "timelapse1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
     popd && \
     mkdir -p /var/timelapse1090 && \
-    # aircraft-db
+    # aircraft-db, file in TAR1090_UPDATE_DIR will be preferred when starting readsb if tar1090-update enabled
     curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
-    git ls-remote https://github.com/wiedehopf/tar1090-db | grep refs/heads/csv > "${TAR1090_INSTALL_DIR}/aircraft.csv.gz.version" && \
     # clone graphs1090 repo
     git clone \
     -b master \
