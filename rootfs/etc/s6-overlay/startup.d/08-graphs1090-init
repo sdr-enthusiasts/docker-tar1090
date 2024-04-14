@@ -90,7 +90,7 @@ if [[ -n "${GRAPHS1090_SIZE}" ]] && [[ " small default large huge custom " =~ " 
 elif [[ -n "${GRAPHS1090_SIZE}" ]] && [[ ! " small default large huge custom " =~ " ${GRAPHS1090_SIZE} " ]]; then
     echo "[$(date)][08-graphs1090] WARNING: GRAPHS1090_SIZE set to \"${GRAPHS1090_SIZE}\", which an invalid value!"
 else
-    sed -i "s|all_large=.*|graph_size=default|g" /etc/default/graphs1090
+    sed -i "s|graph_size=.*|graph_size=default|g" /etc/default/graphs1090
 fi
 
 # Make the small graphs as large as the big ones by setting to `yes`
