@@ -19,7 +19,7 @@ fi
 
 # aircraft-db
 if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
-    git ls-remote https://github.com/wiedehopf/tar1090-db | grep refs/heads/csv > "/run/aircraft.csv.gz.version.new"
+    curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/version" > "/run/aircraft.csv.gz.version.new"
     if ! diff -q "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.version" "/run/aircraft.csv.gz.version.new" &>/dev/null; then
         echo "Downloading https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"
         if curl --silent --show-error -o "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"; then
