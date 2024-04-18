@@ -10,7 +10,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:-12192m}"
 
     if grep -e "[^0-9kmft,]" <<< "${HEYWHATSTHAT_ALTS}" >/dev/null 2>&1; then
-        echo "[$(date)][06-range-outline] FATAL: Illegal character in HEYWHATSTHAT_ALTS=${HEYWHATSTHAT_ALTS}"
+        echo "FATAL: Illegal character in HEYWHATSTHAT_ALTS=${HEYWHATSTHAT_ALTS}"
         exit 1
     fi
 
@@ -34,7 +34,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     printf -v HEYWHATSTHAT_ALTS -- "%s," "${alts_array[@]}"
     HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:0:-1}"
 
-    echo "[$(date)][06-range-outline] Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
+    echo "Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
 
     HEY_URL="http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=${HEYWHATSTHAT_ALTS:-12192}"
     OFILE="${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
