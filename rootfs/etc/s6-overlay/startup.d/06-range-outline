@@ -43,7 +43,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     URL_FILE="${TAR1090_UPDATE_DIR}/upintheair.json.url"
     PFILE="${TAR1090_UPDATE_DIR}/upintheair.json"
 
-    if [[ -f "${PFILE}" ]] && diff -q "$URL_FILE" <(cat <<<"${HEY_URL}"); then
+    if [[ -f "${PFILE}" ]] && diff -q "$URL_FILE" <(cat <<<"${HEY_URL}") &>/dev/null; then
         # url identical, use old file
         cp -f "${PFILE}" "${OFILE}"
     else
