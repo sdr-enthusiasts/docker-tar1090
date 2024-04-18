@@ -34,8 +34,6 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     printf -v HEYWHATSTHAT_ALTS -- "%s," "${alts_array[@]}"
     HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:0:-1}"
 
-    echo "Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
-
     HEY_URL="http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=${HEYWHATSTHAT_ALTS:-12192}"
     OFILE="${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
 
@@ -45,8 +43,10 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
 
     if [[ -f "${PFILE}" ]] && diff -q "$URL_FILE" <(cat <<<"${HEY_URL}") &>/dev/null; then
         # url identical, use old file
+        echo "Using cached HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
         cp -f "${PFILE}" "${OFILE}"
     else
+        echo "Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
         if curl --silent --show-error --output "${OFILE}" "${HEY_URL}"; then
             cp -f "${OFILE}" "${PFILE}"
             cat <<<"${HEY_URL}" >"${URL_FILE}"
