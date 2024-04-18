@@ -36,11 +36,25 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
 
     echo "[$(date)][06-range-outline] Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
 
-    curl \
-        --silent \
-        --output /usr/local/share/tar1090/html-webroot/upintheair.json \
-        "http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=${HEYWHATSTHAT_ALTS:-12192}" || \
-        echo "WARNING: Unable to download panorama. Outline will not be available."; exit 0
+    HEY_URL="http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=${HEYWHATSTHAT_ALTS:-12192}"
+    OFILE="${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
+
+    # in many configurations TAR1090_UPDATE_DIR will persist compose down / up
+    URL_FILE="${TAR1090_UPDATE_DIR}/upintheair.json.url"
+    PFILE="${TAR1090_UPDATE_DIR}/upintheair.json"
+
+    if [[ -f "${PFILE}" ]] && diff -q "$URL_FILE" <(cat <<<"${HEY_URL}"); then
+        # url identical, use old file
+        cp -f "${PFILE}" "${OFILE}"
+    else
+        if curl --silent --show-error --output "${OFILE}" "${HEY_URL}"; then
+            cp -f "${OFILE}" "${PFILE}"
+            cat <<<"${HEY_URL}" >"${URL_FILE}"
+        else
+            echo "WARNING: Unable to download panorama. Outline will not be available."
+            exit 0
+        fi
+    fi
 fi
 
 exit 0
