@@ -38,6 +38,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     OFILE="${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
 
     # in many configurations TAR1090_UPDATE_DIR will persist compose down / up
+    mkdir -p "${TAR1090_UPDATE_DIR}"
     URL_FILE="${TAR1090_UPDATE_DIR}/upintheair.json.url"
     PFILE="${TAR1090_UPDATE_DIR}/upintheair.json"
 
