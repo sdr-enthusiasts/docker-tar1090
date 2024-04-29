@@ -29,6 +29,9 @@ fi
 
 mkdir -p /var/globe_history/autogain
 
+# wait a bit so stats.json is present
+sleep 5
+
 # Do special things if it's the first time AUTOGAIN is running
 if [[ ! -f /var/globe_history/autogain/autogain_initialized ]]; then
     s6wrap --quiet --prepend=autogain --timestamps --args echo "Autogain initialization started. We'll collect data every $READSB_AUTOGAIN_INITIAL_INTERVAL secs for $(( READSB_AUTOGAIN_INITIAL_TIMEPERIOD / 60 )) minutes to do an initial gain assessment."
