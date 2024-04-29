@@ -11,6 +11,12 @@ mkdir -p $autogain_dir
 touch $autogain_dir/strong $autogain_dir/total
 
 
+# if there are no messages received and noise is lower than this, increase gain
+low_noise=-30
+# if noise is higher than this, never increase gain
+high_noise=-15
+
+
 #work around stupid locale stuff
 export LC_ALL=C
 
@@ -51,24 +57,30 @@ fi
 strong=$(jq '.total.local.strong_signals' < $stats | tee $autogain_dir/strong)
 total=$(jq '.total.local.accepted | add' < $stats | tee $autogain_dir/total)
 
+noise=$(jq '.last1min.local.noise'< $stats)
+
 if [[ -z $strong ]] || [[ -z $total ]]; then
     echo "unrecognized format: $stats"
     exit 1
 fi
 
-if ! awk "BEGIN{ exit  ($total < 1000) }"; then
-    echo "The decoder hasn't been running long enough, wait a bit!"
-    exit 0
-fi
-
-
-if (( oldtotal > total )) || (( oldstrong > strong )) || (( oldtotal == total )); then
+if (( oldtotal > total )) || (( oldstrong > strong )); then
 	oldstrong=0
 	oldtotal=0
 fi
 
 strong=$((strong - oldstrong))
 total=$((total - oldtotal))
+
+if ! awk "BEGIN{ exit  ($total < 100) }"; then
+    if ! awk "BEGIN{ exit  ($noise < $low_noise) }"; then
+        reason="Very few messages seen and noise is $noise < $low_noise"
+        action=Increasing
+    else
+        echo "The decoder hasn't been running long enough, wait a bit!"
+        exit 0
+    fi
+fi
 
 if [[ $total == 0 ]]; then
     percent=0
@@ -114,30 +126,37 @@ if ! awk "BEGIN{ exit ($strong > $low) }" && ! awk "BEGIN{ exit ($strong < $high
 
 fi
 
-if ! awk "BEGIN{ exit ($strong < $low) }" && [[ $gain_index == 28 ]]; then
-    echo "Could have used some more gain, but gain is already at maximum! Strong (>-3dB) messages ${strong}% < ${low}%"
-    exit 0
-fi
-
-if ! awk "BEGIN{ exit ($strong < $low) }"; then
-    gain_index=$((gain_index+1))
+if [[ -z "$action" ]] && ! awk "BEGIN{ exit ($strong < $low) }"; then
+    reason="${strong}% messages >-3dB exceed lower boundary of ${low}%"
     action=Increasing
 fi
 
-if ! awk "BEGIN{ exit ($strong > $high) }" && [[ $gain_index == 0 ]]; then
-    echo "Could have used some lower gain, but gain already at minimum! Strong (>-3dB) messages ${strong}% > ${high}%"
-    exit 0
+if ! awk "BEGIN{ exit ($strong > $high) }"; then
+    reason="${strong}% messages >-3dB exceed upper boundary of ${high}%"
+    action=Decreasing
 fi
 
-if ! awk "BEGIN{ exit ($strong > $high) }"; then
-    gain_index=$((gain_index-1))
+if ! awk "BEGIN{ exit  ($noise > $high_noise) }"; then
+    # if noise is higher than this, decrease gain
+    reason="Noise at ${noise} dBFS, decreasing gain!"
     action=Decreasing
+fi
+
+if [[ "$action" == "Decreasing" ]]; then
+    gain_index=$((gain_index-1))
+elif [[ "$action" == "Increasing" ]]; then
+    gain_index=$((gain_index+1))
 fi
 
 gain="${gain_array[$gain_index]}"
 
+if [[ "$action" == "Decreasing" ]] && [[ $gain_index == 0 ]]; then
+    echo "Could have used some lower gain, but gain already at minimum! ($reason)"
+    exit 0
+fi
+
 if [[ $gain == "" ]] || [[ $gain == "-10" ]]; then
-    echo "Could have used some more gain, but gain is already at maximum! Strong (>-3dB) messages ${strong}% < ${low}%"
+    echo "Could have used some more gain, but gain is already at maximum! ($reason)"
     exit 0
 fi
 
@@ -146,12 +165,4 @@ echo "$gain" > $autogain_dir/gain
 # write to special file to change gain while readsb is running instead of restarting the readsb
 echo "$gain" > /run/readsb/setGain
 
-#reset numbers
-echo 0 > $autogain_dir/strong
-echo 0 > $autogain_dir/total
-
-if [[ "$action" == "Increasing" ]]; then
-    echo "Increasing gain to $gain (${strong}% messages >-3dB exceed lower boundary of ${low}%)"
-elif [[ "$action" == "Decreasing" ]]; then
-    echo "Decreasing gain to $gain (${strong}% messages >-3dB exceed upper boundary of ${high}%)"
-fi
+echo "$action gain to $gain ($reason)"
