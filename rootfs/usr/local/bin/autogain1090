@@ -143,7 +143,8 @@ fi
 
 # Set the gain -- updated for docker-tar1090 use by kx1t
 echo "$gain" > $autogain_dir/gain
-pkill readsb
+# write to special file to change gain while readsb is running instead of restarting the readsb
+echo "$gain" > /run/readsb/setGain
 
 #reset numbers
 echo 0 > $autogain_dir/strong
