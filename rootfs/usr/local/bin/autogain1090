@@ -11,10 +11,14 @@ mkdir -p $autogain_dir
 touch $autogain_dir/strong $autogain_dir/total
 
 
-# if there are no messages received and noise is lower than this, increase gain
-low_noise=-30
-# if noise is higher than this, never increase gain
+# if noise is higher than this, reduce gain
+# this is valuable for cases of strong interference where we might not see any messages at all until the gain is lowered
 high_noise=-15
+
+
+# if noise is lower than this, increase gain
+# this is valuable for cases of unamplified SDRs combined with bad antennas and a low initial gain setting
+low_noise=-36
 
 
 #work around stupid locale stuff
@@ -54,8 +58,8 @@ fi
 # start=$(jq '.total.start' < $stats)
 # end=$(jq '.total.end' < $stats)
 
-strong=$(jq '.total.local.strong_signals' < $stats | tee $autogain_dir/strong)
-total=$(jq '.total.local.accepted | add' < $stats | tee $autogain_dir/total)
+newstrong=$(jq '.total.local.strong_signals' < $stats)
+newtotal=$(jq '.total.local.accepted | add' < $stats)
 
 noise=$(jq '.last1min.local.noise'< $stats)
 
@@ -64,23 +68,33 @@ if [[ -z $strong ]] || [[ -z $total ]]; then
     exit 1
 fi
 
-if (( oldtotal > total )) || (( oldstrong > strong )); then
+if (( oldtotal > newtotal )) || (( oldstrong > newstrong )); then
 	oldstrong=0
 	oldtotal=0
 fi
 
-strong=$((strong - oldstrong))
-total=$((total - oldtotal))
+strong=$((newstrong - oldstrong))
+total=$((newtotal - oldtotal))
 
-if ! awk "BEGIN{ exit  ($total < 100) }"; then
-    if ! awk "BEGIN{ exit  ($noise < $low_noise) }"; then
-        reason="Very few messages seen and noise is $noise < $low_noise"
-        action=Increasing
-    else
+if ! awk "BEGIN{ exit  ($noise > $high_noise) }"; then
+    reason="Noise high: $noise dBFS > $high_noise dBFS"
+    action=Decreasing
+fi
+
+if ! awk "BEGIN{ exit  ($noise < $low_noise) }"; then
+    reason="Noise low: $noise dBFS < $low_noise dBFS"
+    action=Increasing
+else
+
+
+if [[ -z "$action" ]] && ! awk "BEGIN{ exit  ($total < 500) }"; then
         echo "The decoder hasn't been running long enough, wait a bit!"
         exit 0
     fi
 fi
+
+echo "$newstrong" > $autogain_dir/strong
+echo "$newtotal" > $autogain_dir/total
 
 if [[ $total == 0 ]]; then
     percent=0
@@ -131,14 +145,8 @@ if [[ -z "$action" ]] && ! awk "BEGIN{ exit ($strong < $low) }"; then
     action=Increasing
 fi
 
-if ! awk "BEGIN{ exit ($strong > $high) }"; then
+if [[ -z "$action" ]] && ! awk "BEGIN{ exit ($strong > $high) }"; then
     reason="${strong}% messages >-3dB exceed upper boundary of ${high}%"
-    action=Decreasing
-fi
-
-if ! awk "BEGIN{ exit  ($noise > $high_noise) }"; then
-    # if noise is higher than this, decrease gain
-    reason="Noise at ${noise} dBFS, decreasing gain!"
     action=Decreasing
 fi
 
