@@ -149,7 +149,7 @@ fi
 
 gain="${gain_array[$gain_index]}"
 
-if (( $gain_index < 0 )); then
+if (( gain_index < 0 )); then
     echo "Could have used some lower gain, but gain already at minimum! ($reason)"
     exit 0
 fi
