@@ -3,6 +3,10 @@
 
 source /scripts/common
 
+if chk_enabled "${TAR1090_DISABLE}"; then
+    exit 0
+fi
+
 # https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline
 
 if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then

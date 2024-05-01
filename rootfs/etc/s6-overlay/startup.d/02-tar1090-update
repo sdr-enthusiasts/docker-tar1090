@@ -3,7 +3,7 @@
 
 source /scripts/common
 
-if ! chk_enabled "${UPDATE_TAR1090}"; then
+if ! chk_enabled "${UPDATE_TAR1090}" || chk_enabled "${TAR1090_DISABLE}"; then
     exit 0
 fi
 
