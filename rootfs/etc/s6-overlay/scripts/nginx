@@ -3,7 +3,7 @@
 
 source /scripts/common
 
-if [[ "$(ls /etc/nginx/sites-enabled | wc -l)" == "0" ]]; then
+if [[ "$(find /etc/nginx/sites-enabled/ -type f | wc -l)" == "0" ]]; then
     exec sleep infinity
 fi
 
