@@ -3,6 +3,13 @@
 
 source /scripts/common
 
+
+if chk_enabled "${TAR1090_DISABLE}"; then
+    rm -f /etc/nginx/sites-enabled/tar1090
+    exit 0
+fi
+
+
 # create symlink so /var/cache/fontconfig is in tmpfs
 # as per Wiedehopf - https://discord.com/channels/734090820684349521/1102603003376177172/1203826726023729162
 # shellcheck disable=SC2174
