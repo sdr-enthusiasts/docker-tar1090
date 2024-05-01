@@ -3,9 +3,10 @@
 
 source /scripts/common
 
-if  chk_enabled "${TAR1090_DISABLE}"; then
+if [[ "$(find /etc/nginx/sites-enabled/ -type f | wc -l)" == "0" ]]; then
     exec sleep infinity
 fi
+
 
 mkdir -p /var/log/nginx
 
