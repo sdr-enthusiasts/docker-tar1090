@@ -36,7 +36,7 @@ if [[ -n "$INFLUXDB_URL" ]]; then
 fi
 
 # configure Prometheus if required
-if [[ ${PROMETHEUS_ENABLE^^} == "TRUE" ]]; then
+if chk_enabled "$PROMETHEUS_ENABLE"; then
     {
         echo "[[outputs.prometheus_client]]"
         echo "  listen = \":9273\""
