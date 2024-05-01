@@ -11,6 +11,12 @@ gain_array=(0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 
 
 autogain_dir="/var/globe_history/autogain"
 mkdir -p $autogain_dir
+
+if [[ -f "${autogain_dir}/suspend" ]]; then
+    # allow temporary suspending of autogain by touching this file
+    exit 0
+fi
+
 touch $autogain_dir/strong $autogain_dir/total
 
 
