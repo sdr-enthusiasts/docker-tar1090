@@ -193,7 +193,7 @@ fi
 
 if [[ -n "$TAR1090_AISCATCHER_SERVER" ]]; then
   echo "aiscatcher_server = \"$TAR1090_AISCATCHER_SERVER\";"
-  echo "aiscatcher_refresh = ${TAR1090_AISCATCHER_REFRESH:-15}"
+  echo "aiscatcher_refresh = ${TAR1090_AISCATCHER_REFRESH:-15};"
 fi
 
 if [[ -n "$TAR1090_CONFIGJS_APPEND" ]]; then
