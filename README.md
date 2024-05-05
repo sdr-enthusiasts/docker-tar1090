@@ -20,6 +20,7 @@
       - [`tar1090` `config.js` Configuration - Output](#tar1090-configjs-configuration---output)
       - [`tar1090` `config.js` Configuration - Map Settings](#tar1090-configjs-configuration---map-settings)
       - [`tar1090` `config.js` Configuration - Range Rings](#tar1090-configjs-configuration---range-rings)
+      - [`tar1090` `config.js` Configuration - Expert](#tar1090-configjs-configuration---expert)
     - [`tar1090` Route Display Configuration](#tar1090-route-display-configuration)
     - [`timelapse1090` Configuration](#timelapse1090-configuration)
   - [Paths](#paths)
@@ -270,6 +271,8 @@ All of the variables below are optional.
 | `TAR1090_DISABLE`           | Set to `true` to disable the web server and all websites (including the map, `graphs1090`, `heatmap`, `pTracks`, etc.)                                                                                 | Unset                        |
 | `READSB_ENABLE_HEATMAP`    | Set to `true` or leave unset to enable the HeatMap function available at `http://myip/?Heatmap`; set to `false` to disable the HeapMap function | `true` (enabled) |
 | `TAR1090_ENABLE_ACTUALRANGE`    | Set to `true` or leave unset to enable the outline of the actual range of your station on the map; set to `false` to disable the this outline | `true` (enabled) |
+| `TAR1090_AISCATCHER_SERVER` | If you want to show vessels from your AIS-Catcher instance on the map, put the URL of your AIS-Catcher or ShipFinder website in this parameter (incl. `https://`). Note - if you are using "barebones" AIS-Catcher you should add `GEOJSON on` after the `-N` parameter on the `AIS-Catcher` command line. If you use [docker-shipfinder](https://github.com/sdr-enthusiasts/docker-shipfinder), no change is needed for that container | Empty |
+| `TAR1090_AISCATCHER_REFRESH` | Refresh rate (in seconds) of reading vessels from your AIS-Catcher instance. Defaults to 15 (secs) if omitted | `15` |
 
 - For documentation on the aircraft.json format see this page: <https://github.com/wiedehopf/readsb/blob/dev/README-json.md>
 - TAR1090_ENABLE_AC_DB causes readsb to load the tar1090 database as a csv file from this repository: <https://github.com/wiedehopf/tar1090-db/tree/csv>

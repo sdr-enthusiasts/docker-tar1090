@@ -191,6 +191,11 @@ if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
   echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
 fi
 
+if [[ -n "$TAR1090_AISCATCHER_SERVER" ]]; then
+  echo "aiscatcher_server = \"$TAR1090_AISCATCHER_SERVER\";"
+  echo "aiscatcher_refresh = ${TAR1090_AISCATCHER_REFRESH:-15}"
+fi
+
 if [[ -n "$TAR1090_CONFIGJS_APPEND" ]]; then
   echo "$TAR1090_CONFIGJS_APPEND"
 fi
