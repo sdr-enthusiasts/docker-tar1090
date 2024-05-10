@@ -192,7 +192,8 @@ if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
 fi
 
 if [[ -n "$TAR1090_AISCATCHER_SERVER" ]]; then
-  echo "aiscatcher_server = \"$TAR1090_AISCATCHER_SERVER\";"
+  # remove /geojson suffix if present
+  echo "aiscatcher_server = \" ${TAR1090_AISCATCHER_SERVER//\/geojson/}\";"
   echo "aiscatcher_refresh = ${TAR1090_AISCATCHER_REFRESH:-15};"
 fi
 
