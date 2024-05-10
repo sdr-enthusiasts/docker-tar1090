@@ -50,6 +50,19 @@ else
     sed -i 's/div id="panel_airspy" class="panel panel-default" style="display:block"/div id="panel_airspy" class="panel panel-default" style="display:none"/g' /usr/share/graphs1090/html/index.html
 fi
 
+# allow for changing the data source for various stats graphs1090 collects
+if [[ -n "${URL_AIRSPY}" ]]; then
+    sed -i -e "s|^\s*#*\s*URL_AIRSPY.*|            URL_AIRSPY \"${URL_AIRSPY}\"|g" /etc/collectd/collectd.conf
+fi
+
+if [[ -n "${URL_1090_SIGNAL}" ]]; then
+    sed -i -e "s|^\s*#*\s*URL_1090_SIGNAL.*|            URL_1090_SIGNAL \"${URL_1090_SIGNAL}\"|g" /etc/collectd/collectd.conf
+fi
+
+if [[ -n "${URL_1090}" ]]; then
+    sed -i -e "s|^\s*URL .*|            URL \"${URL_1090}\"|g" /etc/collectd/collectd.conf
+fi
+
 # Enable UAT graphs if URL_978 is set:
 if [[ -n "${URL_978}" ]]; then
     sed -i 's/div id="panel_978" class="panel panel-default" style="display:none"/div id="panel_978" class="panel panel-default" style="display:block"/g' /usr/share/graphs1090/html/index.html

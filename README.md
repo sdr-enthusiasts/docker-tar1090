@@ -243,6 +243,8 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `READSB_DEBUG`             | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check                                                                                                              | Unset                |
 | `S6_SERVICES_GRACETIME`    | Optional, set to 30000 when saving traces / globe_history                                                                                                                               | `3000`               |
 | `ENABLE_AIRSPY`            | Optional, set to any non-empty value if you want to enable the special AirSpy graphs. See below for additional configuration requirements                                               | Unset                |
+| `URL_AIRSPY`               | Optional, set to the URL where the airspy stats are available, for example `http://airspy_adsb`                                                                                         | Unset                |
+| `URL_1090_SIGNAL`          | Optional. Retrieve gain, % of strong signals and signal graph data from a remote source. Set to an URL where the readsb stats are available, i.e. `http://192.168.2.34/tar1090`         | Unset                |
 
 READSB_EXTRA_ARGS just passes arguments to the commandline, you can check this file for more options for wiedehofps readsb fork: <https://github.com/wiedehopf/readsb/blob/dev/help.h>
 
