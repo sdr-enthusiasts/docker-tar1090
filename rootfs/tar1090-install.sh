@@ -93,6 +93,12 @@ if (( $( { du -s "$gpath/git-db" 2>/dev/null || echo 0; } | cut -f1) > 150000 ))
     rm -rf "$gpath/git-db"
 fi
 
+function copyNoClobber() {
+    if ! [[ -f "$2" ]]; then
+        cp "$1" "$2"
+    fi
+}
+
 function getGIT() {
     # getGIT $REPO $BRANCH $TARGET (directory)
     if [[ -z "$1" ]] || [[ -z "$2" ]] || [[ -z "$3" ]]; then echo "getGIT wrong usage, check your script or tell the author!" 1>&2; return 1; fi
@@ -136,7 +142,7 @@ if [[ "$1" == "test" ]] || [[ -n "$git_source" ]]; then
         cp -r ./* "$gpath/git"
     fi
     cd "$gpath/git"
-    TAR_VERSION="$(date +%s)_${RANDOM}${RANDOM}"
+    TAR_VERSION="$(cat version)_dirty"
 else
     VERSION_NEW=$(curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090/master/version")
     if  [[ "$(cat "$gpath/git/version" 2>/dev/null)" != "$VERSION_NEW" ]]; then
@@ -149,7 +155,7 @@ else
         echo "Unable to download files, exiting! (Maybe try again?)"
         exit 1
     fi
-    TAR_VERSION="$(revision)"
+    TAR_VERSION="$(cat version)"
 fi
 
 
@@ -256,7 +262,7 @@ do
     names+="$instance "
 
     # don't overwrite existing configuration
-    useSystemd && cp -n default /etc/default/"$service"
+    useSystemd && copyNoClobber default /etc/default/"$service"
 
     sed -i.orig -e "s?SOURCE_DIR?$srcdir?g" -e "s?SERVICE?${service}?g" \
         -e "s?/INSTANCE??g" -e "s?HTMLPATH?$html_path?g" 95-tar1090-otherport.conf
@@ -317,7 +323,7 @@ do
     dir=$(pwd)
     cd "$TMP"
 
-    sed -i -e "s/tar1090 on github/tar1090 on github ($(date +%y%m%d))/" index.html
+    sed -i -e "s/tar1090 on github/tar1090 on github (${TAR_VERSION})/" index.html
 
     "$gpath/git/cachebust.sh" "$gpath/git/cachebust.list" "$TMP"
 
