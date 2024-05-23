@@ -4,7 +4,6 @@
 source /scripts/common
 
 mkdir -p /run/graphs1090
-mkdir -p /run/collectd/localhost
 
 # If ${GRAPHS1090_DISABLE} is set, remove access to the graphs1090 website. We don't need to worry about putting this file back
 # after graphs1090 is re-enabled, because when changing env params, the container MUST be recreated.

@@ -3,6 +3,9 @@
 
 source /scripts/common
 
+# make sure /run/collectd exists
+mkdir -p /run/collectd
+
 
 if chk_enabled "${GRAPHS1090_DISABLE}" || chk_enabled "${TAR1090_DISABLE}"; then
     exec sleep infinity
