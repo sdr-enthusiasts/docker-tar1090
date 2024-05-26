@@ -78,6 +78,12 @@ else
     sed -i 's|colorscheme=dark|colorscheme=default|g' /etc/default/graphs1090
 fi
 
+# use site name if provided:
+if [[ -n "${GRAPHS1090_SITENAME}" ]]; then
+    sed -i "s/<title>graphs1090: Performance Graphs<\/title>/<title>$GRAPHS1090_SITENAME: Performance Graphs<\/title>/" /usr/share/graphs1090/html/index.html
+    sed -i "s/<h1>Performance Graphs<\/h1>/<h1>Performance Graphs ($GRAPHS1090_SITENAME)<\/h1>/" /usr/share/graphs1090/html/index.html
+fi
+
 #  Set Interval in seconds to feed data into RRD files.
 if [[ -n "${GRAPHS1090_RRD_STEP}" ]]; then
     sed -i "s|DRAW_INTERVAL=.*|DRAW_INTERVAL=${GRAPHS1090_RRD_STEP}|g" /etc/default/graphs1090
