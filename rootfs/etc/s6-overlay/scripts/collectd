@@ -15,7 +15,10 @@ fi
 PERMFILE=/var/lib/collectd/rrd/localhost.tar.gz
 if chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
     # readback rrd database from compressed archive
-    s6wrap --quiet --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/readback.sh
+    if ! s6wrap --quiet --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/readback.sh; then
+        s6wrap --quiet --prepend=graphs1090-readback --timestamps --args echo "FATAL: readback returned an error"
+        exec sleep infinity
+    fi
 elif [[ -f "${PERMFILE}" ]] && ! [[ -d /var/lib/collectd/rrd/localhost ]]; then
     # extract rrd database from compressed archive (in case  WAS enabled)
     if s6wrap --quiet --prepend=graphs1090-extract --timestamps --args bash /usr/share/graphs1090/gunzip.sh /var/lib/collectd/rrd/localhost; then

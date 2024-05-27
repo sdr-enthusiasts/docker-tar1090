@@ -30,10 +30,11 @@ ENV BEASTPORT=30005 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# only copy files necessary for the build, copy whole rootfs later
-# this improves build caching when changing service and startup scripting
-COPY rootfs/tar1090-install.sh /
-COPY rootfs/etc/nginx.tar1090 /etc/nginx.tar1090
+#COPY rootfs/tar1090-install.sh /
+#COPY rootfs/etc/nginx.tar1090 /etc/nginx.tar1090
+# for dev testing, rootfs copy can be moved after run, then these two lines above are needed
+
+COPY rootfs/ /
 
 # add telegraf binary
 ##telegraf##COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
@@ -182,8 +183,6 @@ RUN set -x && \
     bash -ec 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
     rm -rf /tmp/*
-
-COPY rootfs/ /
 
 EXPOSE 80/tcp
 
