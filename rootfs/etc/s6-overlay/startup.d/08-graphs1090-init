@@ -177,10 +177,10 @@ fi
 
 
 if [[ -n "${GRAPHS1090_WWW_TITLE}" ]]; then
-    sed -i "s|WWW_TITLE=.*|WWW_TITLE=${GRAPHS1090_WWW_TITLE}|g" /etc/default/graphs1090
+    sed -i "s|WWW_TITLE=.*|WWW_TITLE=\"${GRAPHS1090_WWW_TITLE}\"|g" /etc/default/graphs1090
 fi
 if [[ -n "${GRAPHS1090_WWW_HEADER}" ]]; then
-    sed -i "s|WWW_HEADER=.*|WWW_HEADER=${GRAPHS1090_WWW_HEADER}|g" /etc/default/graphs1090
+    sed -i "s|WWW_HEADER=.*|WWW_HEADER=\"${GRAPHS1090_WWW_HEADER}\"|g" /etc/default/graphs1090
 fi
 if chk_enabled "${GRAPHS1090_HIDE_SYSTEM}" ; then
     sed -i "s|HIDE_SYSTEM=.*|HIDE_SYSTEM=yes|g" /etc/default/graphs1090
