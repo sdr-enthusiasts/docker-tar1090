@@ -533,9 +533,9 @@ docker exec -it tar1090 /usr/local/bin/viewadsb --cpr-focus 3D3ED0
 | `GRAPHS1090_DISABLE_CHART_DISK_USAGE`        | Set to `true` to disable the GRAPHS1090 Disk Usage chart                                               | Unset          |
 | `GRAPHS1090_DISABLE_CHART_DISK_IOPS`         | Set to `true` to disable the GRAPHS1090 Disk IOPS chart                                                | Unset          |
 | `GRAPHS1090_DISABLE_CHART_DISK_BANDWIDTH`    | Set to `true` to disable the GRAPHS1090 Disk Bandwidth chart                                           | Unset          |
-| `GRAPHS1090_WWW_TITLE`                       | Set title for the web page (displayed in the browser title or tab bar).                                | `graphs1090`   |
-| `GRAPHS1090_WWW_HEADER`                      | Set header text for the web page. Default: `Performance Graphs`                                        | `Perf. Graphs` |
-| `GRAPHS1090_HIDE_SYSTEM`                     | Hide the system graphs and don't render them (data is still collected)                                 | `no`           |
+| `GRAPHS1090_WWW_TITLE`                       | Set title for the web page (displayed in the browser title or tab bar)                                 | `graphs1090`   |
+| `GRAPHS1090_WWW_HEADER`                      | Set header text for the web page                                                                       | `Perf. Graphs` |
+| `GRAPHS1090_HIDE_SYSTEM`                     | Hide the system graphs and don't render them (system data is still collected, this might be changed)   | `no`           |
 
 ### Enabling UAT data
 
