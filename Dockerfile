@@ -171,7 +171,7 @@ RUN set -x && \
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
     apt-get clean -q -y && \
-    rm -rf /src/* /tmp/* /var/lib/apt/lists/* && \
+    rm -rf /src/* /tmp/* /var/lib/apt/lists/* /var/cache/* && \
     # document versions
     bash -ec 'grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION' && \
     cat /VERSIONS && \
