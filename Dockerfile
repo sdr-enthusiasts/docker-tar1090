@@ -84,14 +84,6 @@ RUN set -x && \
     rm -rf "${TAR1090_UPDATE_DIR}" && \
     # tar1090: add nginx config
     cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
-    # timelapse1090
-    git clone --single-branch --depth 1 "https://github.com/wiedehopf/timelapse1090.git" "${GITPATH_TIMELAPSE1090}" && \
-    pushd "${GITPATH_TIMELAPSE1090}" && \
-    bash -ec 'echo "timelapse1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
-    # remove unused .git dir to slightly reduce image size
-    rm -rf "${GITPATH_TIMELAPSE1090}/.git" && \
-    popd && \
-    mkdir -p /var/timelapse1090 && \
     # aircraft-db, file in TAR1090_UPDATE_DIR will be preferred when starting readsb if tar1090-update enabled
     curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
     # clone graphs1090 repo
