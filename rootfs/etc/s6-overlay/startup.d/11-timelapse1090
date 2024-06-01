@@ -1,0 +1,16 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash disable=SC1091,SC2015,SC2153
+
+source /scripts/common
+
+if ! chk_enabled "${ENABLE_TIMELAPSE1090}" || chk_enabled "${TAR1090_DISABLE}"; then
+    exit 0
+fi
+
+if [[ -d "${GITPATH_TIMELAPSE1090}" ]]; then
+    exit 0
+fi
+
+# timelapse1090
+git clone --single-branch --depth 1 "https://github.com/wiedehopf/timelapse1090.git" "${GITPATH_TIMELAPSE1090}"
+mkdir -p /var/timelapse1090
