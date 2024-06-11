@@ -30,47 +30,6 @@ if [[ -z "$gpath" ]]; then gpath="$ipath"; fi
 mkdir -p "$ipath"
 mkdir -p "$gpath"
 
-if useSystemd && ! id -u tar1090 &>/dev/null
-then
-    adduser --system --home "$ipath" --no-create-home --quiet tar1090 || adduser --system --home-dir "$ipath" --no-create-home tar1090
-fi
-
-# terminate with /
-command_package="git git/jq jq/"
-packages=()
-
-while read -r -d '/' CMD PKG
-do
-    if ! command -v "$CMD" &>/dev/null
-    then
-        #echo "command $CMD not found, will try to install package $PKG"
-        packages+=("$PKG")
-    fi
-done < <(echo "$command_package")
-
-if [[ -n "${packages[*]}" ]]; then
-    if ! command -v "apt-get" &>/dev/null; then
-        echo "Please install the following packages and rerun the install:"
-        echo "${packages[*]}"
-        exit 1
-    fi
-    echo "Installing required packages: ${packages[*]}"
-    if ! apt-get install -y --no-install-suggests --no-install-recommends "${packages[@]}"; then
-        apt-get update || true
-        apt-get install -y --no-install-suggests --no-install-recommends "${packages[@]}" || true
-    fi
-    hash -r || true
-    while read -r -d '/' CMD PKG
-    do
-        if ! command -v "$CMD" &>/dev/null
-        then
-            echo "command $CMD not found, seems we failed to install package $PKG"
-            echo "FATAL: Exiting!"
-            exit 1
-        fi
-    done < <(echo "$command_package")
-fi
-
 if [ -d /etc/lighttpd/conf.d/ ] && ! [ -d /etc/lighttpd/conf-enabled/ ] && ! [ -d /etc/lighttpd/conf-available ] && command -v lighttpd &>/dev/null
 then
     ln -s /etc/lighttpd/conf.d /etc/lighttpd/conf-enabled
@@ -102,25 +61,17 @@ function copyNoClobber() {
 function getGIT() {
     # getGIT $REPO $BRANCH $TARGET (directory)
     if [[ -z "$1" ]] || [[ -z "$2" ]] || [[ -z "$3" ]]; then echo "getGIT wrong usage, check your script or tell the author!" 1>&2; return 1; fi
-    REPO="$1"; BRANCH="$2"; TARGET="$3"; pushd . >/dev/null
-    if cd "$TARGET" &>/dev/null && git fetch --depth 1 origin "$BRANCH" 2>/dev/null && git reset --hard FETCH_HEAD; then popd >/dev/null && return 0; fi
-    if ! cd /tmp || ! rm -rf "$TARGET"; then popd > /dev/null; return 1; fi
-    if git clone --depth 1 --single-branch --branch "$BRANCH" "$REPO" "$TARGET"; then popd > /dev/null; return 0; fi
-    rm -rf "$TARGET"; tmp=/tmp/getGIT-tmp-tar1090
-    if wget -O "$tmp" "$REPO/archive/refs/heads/$BRANCH.zip" && unzip "$tmp" -d "$tmp.folder" >/dev/null; then
+    REPO="$1"; BRANCH="$2"; TARGET="$3"; pushd /tmp >/dev/null
+    rm -rf "$TARGET"; tmp=$(mktemp)
+    if wget --no-verbose -O "$tmp" "$REPO/archive/refs/heads/$BRANCH.tar.gz" && mkdir -p "$tmp.folder" && tar xf "$tmp" -C "$tmp.folder" >/dev/null; then
         if mv -fT "$tmp.folder/$(ls "$tmp.folder")" "$TARGET"; then rm -rf "$tmp" "$tmp.folder"; popd > /dev/null; return 0; fi
     fi
     rm -rf "$tmp" "$tmp.folder"; popd > /dev/null; return 1;
 }
-function revision() {
-    git rev-parse --short HEAD 2>/dev/null || echo "$RANDOM-$RANDOM"
-}
 
-if ! { [[ "$1" == "test" ]] && cd "$gpath/git-db"; }; then
-    DB_VERSION_NEW=$(curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/master/version")
-    if  [[ "$(cat "$gpath/git-db/version" 2>/dev/null)" != "$DB_VERSION_NEW" ]]; then
-        getGIT "$db_repo" "master" "$gpath/git-db" || true
-    fi
+DB_VERSION_NEW=$(curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/master/version")
+if  [[ "$(cat "$gpath/git-db/version" 2>/dev/null)" != "$DB_VERSION_NEW" ]]; then
+    getGIT "$db_repo" "master" "$gpath/git-db" || true
 fi
 
 if ! cd "$gpath/git-db"
@@ -129,7 +80,7 @@ then
     exit 1
 fi
 
-DB_VERSION=$(revision)
+DB_VERSION=$(cat "$gpath/git-db/version")
 
 cd "$dir"
 
@@ -296,6 +247,7 @@ do
     cp -r -T "$gpath/git-db/db" "$TMP/db-$DB_VERSION"
     sed -i -e "s/let databaseFolder = .*;/let databaseFolder = \"db-$DB_VERSION\";/" "$TMP/index.html"
     echo "{ \"tar1090Version\": \"$TAR_VERSION\", \"databaseVersion\": \"$DB_VERSION\" }" > "$TMP/version.json"
+    echo "$TAR_VERSION" > "$TMP/version"
 
     # keep some stuff around
     mv "$html_path/config.js" "$TMP/config.js" 2>/dev/null || true

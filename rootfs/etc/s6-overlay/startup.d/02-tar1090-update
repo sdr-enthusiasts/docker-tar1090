@@ -11,9 +11,10 @@ OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
 
 if [[ -d "${OVERRIDE_GIT_SOURCE}/html" ]]; then
     echo "USING LOCALLY MODIFIED TAR1090 from ${OVERRIDE_GIT_SOURCE}"
-    TAR1090_VERSION="LOCALLY MODIFIED"
+    TAR1090_VERSION="$(cat "${OVERRIDE_GIT_SOURCE}/version") LOCALLY MODIFIED"
     bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" "${OVERRIDE_GIT_SOURCE}"
 else
+    TAR1090_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git/version")
     bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
 fi
 
@@ -30,10 +31,6 @@ if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
 fi
 
 # Print tar1090 version
-pushd "${TAR1090_UPDATE_DIR}/git" >/dev/null || exit 1
-if [[ -z "$TAR1090_VERSION" ]]; then
-    TAR1090_VERSION=$(git rev-parse --short HEAD)
-fi
-echo "tar1090 version: ${TAR1090_VERSION}"
+TAR1090_DB_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git-db/version")
+echo "tar1090 version: ${TAR1090_VERSION} tar1090-db version: ${TAR1090_DB_VERSION}"
 export TAR1090_VERSION
-popd >/dev/null || exit 1

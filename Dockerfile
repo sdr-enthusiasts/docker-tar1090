@@ -30,26 +30,20 @@ ENV BEASTPORT=30005 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-#COPY rootfs/tar1090-install.sh /
-#COPY rootfs/etc/nginx.tar1090 /etc/nginx.tar1090
-# for dev testing, rootfs copy can be moved after run, then these two lines above are needed
-
-COPY rootfs/ /
-
 # add telegraf binary
 ##telegraf##COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
 
-RUN set -x && \
+RUN \
+    --mount=type=bind,source=./,target=/app/ \
+    set -x && \
     TEMP_PACKAGES=() && \
     KEPT_PACKAGES=() && \
-    # Essentials (git is kept for aircraft db updates)
-    KEPT_PACKAGES+=(git) && \
+    TEMP_PACKAGES+=(git) && \
     # tar1090
     KEPT_PACKAGES+=(nginx-light) && \
     # graphs1090
     KEPT_PACKAGES+=(collectd-core) && \
     KEPT_PACKAGES+=(rrdtool) && \
-    KEPT_PACKAGES+=(unzip) && \
     KEPT_PACKAGES+=(bash-builtins) && \
     KEPT_PACKAGES+=(libpython3.11) && \
     KEPT_PACKAGES+=(libncurses6) && \
@@ -57,7 +51,7 @@ RUN set -x && \
     KEPT_PACKAGES+=(jq) && \
     # install packages
     apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-suggests --no-install-recommends \
     ${KEPT_PACKAGES[@]} \
     ${TEMP_PACKAGES[@]} \
     && \
@@ -69,21 +63,17 @@ RUN set -x && \
     # nginx: remove default config
     rm /etc/nginx/sites-enabled/default && \
     # tar1090: install using project copy of original script
-    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" && \
+    bash /app/rootfs/tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" && \
     # change some /run/tar1090-webroot to /run/readsb to make work with existing docker scripting
     sed -i -e 's#/run/tar1090-webroot/#/run/readsb/#' /usr/local/share/tar1090/nginx-tar1090-webroot.conf && \
     # tar1090-db: document version
-    pushd "${TAR1090_UPDATE_DIR}/git-db" || exit 1 && \
-    bash -ec 'echo "tar1090-db $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
-    popd && \
+    echo "tar1090-db $(cat ${TAR1090_UPDATE_DIR}/git-db/version)" >> VERSIONS && \
     # tar1090: document version
-    pushd "${TAR1090_UPDATE_DIR}/git" || exit 1 && \
-    bash -ec 'echo "tar1090 $(git log | head -1 | tr -s " " "_")" >> /VERSIONS' && \
-    popd && \
+    echo "tar1090 $(cat ${TAR1090_UPDATE_DIR}/git/version)" >> VERSIONS && \
     # tar1090: remove tar1090-update files as they're not needed unless tar1090-update is active
     rm -rf "${TAR1090_UPDATE_DIR}" && \
     # tar1090: add nginx config
-    cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
+    cp -Rv /app/rootfs/etc/nginx.tar1090/* /etc/nginx/ && \
     # aircraft-db, file in TAR1090_UPDATE_DIR will be preferred when starting readsb if tar1090-update enabled
     curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
     # clone graphs1090 repo
@@ -159,14 +149,6 @@ RUN set -x && \
     ##telegraf##mkdir -p /etc/telegraf/telegraf.d && \
     # document telegraf version
     ##telegraf##bash -ec "telegraf --version >> /VERSIONS" && \
-    # Clean-up.
-    apt-get remove -y ${TEMP_PACKAGES[@]} && \
-    apt-get autoremove -y && \
-    apt-get clean -q -y && \
-    rm -rf /src/* /tmp/* /var/lib/apt/lists/* /var/cache/* && \
-    # document versions
-    bash -ec 'grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION' && \
-    cat /VERSIONS && \
     # Add Container Version
     branch="##BRANCH##" && \
     [[ "${branch:0:1}" == "#" ]] && branch="main" || true && \
@@ -174,7 +156,15 @@ RUN set -x && \
     pushd /tmp/clone && \
     bash -ec 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
-    rm -rf /tmp/*
+    # Clean-up.
+    apt-get remove -y ${TEMP_PACKAGES[@]} && \
+    apt-get autoremove -q -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y && \
+    apt-get clean -q -y && \
+    rm -rf /src/* /tmp/* /var/lib/apt/lists/* /var/cache/* && \
+    # document versions
+    cat /VERSIONS
+
+COPY rootfs/ /
 
 EXPOSE 80/tcp
 
