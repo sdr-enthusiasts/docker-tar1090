@@ -11,6 +11,19 @@ if [[ -d "${GITPATH_TIMELAPSE1090}" ]]; then
     exit 0
 fi
 
+set -e
+
+function getGIT() {
+    # getGIT $REPO $BRANCH $TARGET (directory)
+    if [[ -z "$1" ]] || [[ -z "$2" ]] || [[ -z "$3" ]]; then echo "getGIT wrong usage, check your script or tell the author!" 1>&2; return 1; fi
+    REPO="$1"; BRANCH="$2"; TARGET="$3"; pushd /tmp >/dev/null
+    rm -rf "$TARGET"; tmp=$(mktemp)
+    if wget --no-verbose -O "$tmp" "$REPO/archive/refs/heads/$BRANCH.tar.gz" && mkdir -p "$tmp.folder" && tar xf "$tmp" -C "$tmp.folder" >/dev/null; then
+        if mv -fT "$tmp.folder/$(ls "$tmp.folder")" "$TARGET"; then rm -rf "$tmp" "$tmp.folder"; popd > /dev/null; return 0; fi
+    fi
+    rm -rf "$tmp" "$tmp.folder"; popd > /dev/null; return 1;
+}
+
 # timelapse1090
-git clone --single-branch --depth 1 "https://github.com/wiedehopf/timelapse1090.git" "${GITPATH_TIMELAPSE1090}"
+getGIT https://github.com/wiedehopf/timelapse1090 master "${GITPATH_TIMELAPSE1090}"
 mkdir -p /var/timelapse1090
