@@ -30,16 +30,12 @@ ENV BEASTPORT=30005 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-#COPY rootfs/tar1090-install.sh /
-#COPY rootfs/etc/nginx.tar1090 /etc/nginx.tar1090
-# for dev testing, rootfs copy can be moved after run, then these two lines above are needed
-
-COPY rootfs/ /
-
 # add telegraf binary
 ##telegraf##COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
 
-RUN set -x && \
+RUN \
+    --mount=type=bind,source=./,target=/app/ \
+    set -x && \
     TEMP_PACKAGES=() && \
     KEPT_PACKAGES=() && \
     # Essentials (git is kept for aircraft db updates)
@@ -69,7 +65,7 @@ RUN set -x && \
     # nginx: remove default config
     rm /etc/nginx/sites-enabled/default && \
     # tar1090: install using project copy of original script
-    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" && \
+    bash /app/rootfs/tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" && \
     # change some /run/tar1090-webroot to /run/readsb to make work with existing docker scripting
     sed -i -e 's#/run/tar1090-webroot/#/run/readsb/#' /usr/local/share/tar1090/nginx-tar1090-webroot.conf && \
     # tar1090-db: document version
@@ -83,7 +79,7 @@ RUN set -x && \
     # tar1090: remove tar1090-update files as they're not needed unless tar1090-update is active
     rm -rf "${TAR1090_UPDATE_DIR}" && \
     # tar1090: add nginx config
-    cp -Rv /etc/nginx.tar1090/* /etc/nginx/ && \
+    cp -Rv /app/rootfs/etc/nginx.tar1090/* /etc/nginx/ && \
     # aircraft-db, file in TAR1090_UPDATE_DIR will be preferred when starting readsb if tar1090-update enabled
     curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
     # clone graphs1090 repo
@@ -175,6 +171,8 @@ RUN set -x && \
     bash -ec 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
     rm -rf /tmp/*
+
+COPY rootfs/ /
 
 EXPOSE 80/tcp
 
