@@ -19,11 +19,10 @@ else
 fi
 
 # aircraft-db
-if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]]; then
-    curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/version" > "/run/aircraft.csv.gz.version.new"
+if [[ "$TAR1090_ENABLE_AC_DB" == "true" ]] && curl --connect-timeout 2 --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/version" > "/run/aircraft.csv.gz.version.new"; then
     if ! diff -q "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.version" "/run/aircraft.csv.gz.version.new" &>/dev/null; then
         echo "Downloading https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"
-        if curl --silent --show-error -o "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"; then
+        if curl --connect-timeout 2 --silent --show-error -o "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"; then
             mv -f "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "${TAR1090_UPDATE_DIR}/aircraft.csv.gz"
             mv -f "/run/aircraft.csv.gz.version.new" "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.version"
         fi

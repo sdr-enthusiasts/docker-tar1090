@@ -52,7 +52,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
         cp -f "${PFILE}" "${OFILE}"
     else
         echo "Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
-        if curl --silent --show-error --output "${OFILE}" "${HEY_URL}"; then
+        if curl --connect-timeout 2 --silent --show-error --output "${OFILE}" "${HEY_URL}"; then
             cp -f "${OFILE}" "${PFILE}"
             cat <<<"${HEY_URL}" >"${URL_FILE}"
         else
