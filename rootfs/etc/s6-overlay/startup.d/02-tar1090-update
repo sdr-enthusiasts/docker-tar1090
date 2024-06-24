@@ -11,11 +11,11 @@ OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
 
 if [[ -d "${OVERRIDE_GIT_SOURCE}/html" ]]; then
     echo "USING LOCALLY MODIFIED TAR1090 from ${OVERRIDE_GIT_SOURCE}"
-    TAR1090_VERSION="$(cat "${OVERRIDE_GIT_SOURCE}/version") LOCALLY MODIFIED"
     bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" "${OVERRIDE_GIT_SOURCE}"
+    TAR1090_VERSION="$(cat "${OVERRIDE_GIT_SOURCE}/version") LOCALLY MODIFIED"
 else
-    TAR1090_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git/version")
     bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
+    TAR1090_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git/version")
 fi
 
 # aircraft-db
