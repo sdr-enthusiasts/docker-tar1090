@@ -69,7 +69,7 @@ function getGIT() {
     rm -rf "$tmp" "$tmp.folder"; popd > /dev/null; return 1;
 }
 
-DB_VERSION_NEW=$(curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/master/version")
+DB_VERSION_NEW=$(curl --connect-timeout 2 --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/master/version")
 if  [[ "$(cat "$gpath/git-db/version" 2>/dev/null)" != "$DB_VERSION_NEW" ]]; then
     getGIT "$db_repo" "master" "$gpath/git-db" || true
 fi
@@ -95,7 +95,7 @@ if [[ "$1" == "test" ]] || [[ -n "$git_source" ]]; then
     cd "$gpath/git"
     TAR_VERSION="$(cat version)_dirty"
 else
-    VERSION_NEW=$(curl --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090/master/version")
+    VERSION_NEW=$(curl --connect-timeout 2 --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090/master/version")
     if  [[ "$(cat "$gpath/git/version" 2>/dev/null)" != "$VERSION_NEW" ]]; then
         if ! getGIT "$repo" "master" "$gpath/git"; then
             echo "Unable to download files, exiting! (Maybe try again?)"
