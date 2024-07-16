@@ -62,4 +62,13 @@ else
 fi
 s6-svdt-clear /run/service/tar1090
 
+# check if receiver file is present
+CHECKFILE_PATH=/usr/share/graphs1090/data-symlink/data/receiver.json
+if [[ -s $CHECKFILE_PATH ]]; then
+    echo "file check: $CHECKFILE_PATH contains data. HEALTHY."
+else
+    echo "file check: $CHECKFILE_PATH doesn't contain data. UNHEALTHY."
+    EXITCODE=1
+fi
+
 exit $EXITCODE
