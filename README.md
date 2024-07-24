@@ -458,6 +458,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_EVERY`          | Number of seconds between showing and resetting stats.                                                                         | `--stats-every=<sec>`          | Unset   |
 | `READSB_STATS_RANGE`          | Set this to any value to collect range statistics for polar plot.                                                              | `--stats-range`                | Unset   |
 | `READSB_RANGE_OUTLINE_HOURS`  | Change which past timeframe the range outline is based on                                                                      | `--range-outline-hours`        | `24`    |
+| `MAX_GLOBE_HISTORY`           | Maximum number of days that `globe_history` data (used to produce heatmaps and ptracks) is retained. Note - this parameter doesn't affect the data used to produce `graphs1090` statistics | | Unset |
 
 ### AutoGain for RTLSDR Devices
 
