@@ -8,4 +8,6 @@ if chk_enabled "${GRAPHS1090_DISABLE}" || chk_enabled "${TAR1090_DISABLE}"; then
     exec sleep infinity
 fi
 
+mkdir -p /run/graphs1090
+
 exec s6wrap --quiet --prepend=graphs1090 --timestamps --args bash /usr/share/graphs1090/service-graphs1090.sh
