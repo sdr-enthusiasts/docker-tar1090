@@ -13,6 +13,13 @@ if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exit 0
 fi
 
+if chk_enabled "${GRAPHS1090_HIDE_SYSTEM}" ; then
+    sed -i "s|HIDE_SYSTEM=.*|HIDE_SYSTEM=yes|g" /etc/default/graphs1090
+    cp /usr/share/graphs1090/git/hide_system-collectd.conf /etc/collectd/collectd.conf
+else
+    cp /usr/share/graphs1090/git/collectd.conf /etc/collectd/collectd.conf
+fi
+
 # Disable a few graphs based on parameter settings:
 if chk_enabled "${GRAPHS1090_DISABLE_CHART_CPU}"; then
     sed -i '/^\s*<div class="column text-center">$/{$!{N;s/\(<div class="column text-center"\)\(>\n\s*<a id ="system-cpu-link"\)/\1 style="display:none"\2/;t;P;D}}' /usr/share/graphs1090/html/index.html
@@ -182,10 +189,6 @@ fi
 if [[ -n "${GRAPHS1090_WWW_HEADER}" ]]; then
     sed -i "s|WWW_HEADER=.*|WWW_HEADER=\"${GRAPHS1090_WWW_HEADER}\"|g" /etc/default/graphs1090
 fi
-if chk_enabled "${GRAPHS1090_HIDE_SYSTEM}" ; then
-    sed -i "s|HIDE_SYSTEM=.*|HIDE_SYSTEM=yes|g" /etc/default/graphs1090
-fi
-
 
 # Finally, add a link to graphs1090 to the tar1090 web page:
 TAR1090_INDEX_HTML="/usr/local/share/tar1090/html-webroot/index.html"
