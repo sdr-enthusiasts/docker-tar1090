@@ -96,6 +96,8 @@ RUN \
     /usr/share/graphs1090/git/*.sh \
     /usr/share/graphs1090/ \
     && \
+    # adjust scripts using systemctl for container (only affects speciality scripts)
+    bash /usr/share/graphs1090/git/adjust-scripts-s6-sh && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L147
     cp -v \
     /usr/share/graphs1090/git/malarky.conf \
