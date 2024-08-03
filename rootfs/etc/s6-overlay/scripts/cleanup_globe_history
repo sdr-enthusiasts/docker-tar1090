@@ -25,6 +25,7 @@ source /scripts/common
 
 if [[ -z "$MAX_GLOBE_HISTORY" ]]; then
     "${s6wrap[@]}" echo "MAX_GLOBE_HISTORY not set - we will not expire any globe_history files"
+    s6-svc -d /run/service/cleanup_globe_history
     exec sleep infinity
 fi
 

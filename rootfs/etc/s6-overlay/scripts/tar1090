@@ -4,6 +4,7 @@
 source /scripts/common
 
 if chk_enabled "${TAR1090_DISABLE}"; then
+    s6-svc -d /run/service/tar1090
     exec sleep infinity
 fi
 

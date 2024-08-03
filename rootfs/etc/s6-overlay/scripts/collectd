@@ -8,6 +8,7 @@ mkdir -p /run/collectd
 
 
 if chk_enabled "${GRAPHS1090_DISABLE}" || chk_enabled "${TAR1090_DISABLE}"; then
+    s6-svc -d /run/service/collectd
     exec sleep infinity
 fi
 
@@ -17,6 +18,7 @@ if chk_enabled "${GRAPHS1090_REDUCE_IO}"; then
     # readback rrd database from compressed archive
     if ! s6wrap --quiet --prepend=graphs1090-readback --timestamps --args bash /usr/share/graphs1090/readback.sh; then
         s6wrap --quiet --prepend=graphs1090-readback --timestamps --args echo "FATAL: readback returned an error"
+        s6-svc -d /run/service/collectd
         exec sleep infinity
     fi
 elif [[ -f "${PERMFILE}" ]] && ! [[ -d /var/lib/collectd/rrd/localhost ]]; then

@@ -4,6 +4,7 @@
 source /scripts/common
 
 if [[ "$(find /etc/nginx/sites-enabled/ -type f | wc -l)" == "0" ]]; then
+    s6-svc -d /run/service/nginx
     exec sleep infinity
 fi
 

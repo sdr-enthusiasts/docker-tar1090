@@ -9,6 +9,7 @@ trap 'pkill -P $$ || true; exit 0' SIGTERM SIGINT SIGHUP SIGQUIT
 if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
     if [[ ! -f /usr/bin/telegraf ]]; then
         s6wrap --quiet --prepend=telegraf --timestamps --args echo "WARNING: InfluxDB/Prometheus parameters are set but Telegraf not included in this container"
+        s6-svc -d /run/service/telegraf
         exec sleep infinity
     fi
     # give other services time to stabilise
@@ -24,5 +25,6 @@ if [[ -n "$INFLUXDBV2_URL" ]] || chk_enabled "${PROMETHEUS_ENABLE}"; then
     s6wrap --quiet --prepend=telegraf --timestamps --args telegraf --config-directory /etc/telegraf/telegraf.d | grep -v "error converting to float"
 else
     # if telegraf not needed, sleep forever
+    s6-svc -d /run/service/telegraf
     exec sleep infinity
 fi
