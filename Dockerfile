@@ -49,6 +49,8 @@ RUN \
     KEPT_PACKAGES+=(libncurses6) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
+    # add new function to /scripts/common until it's added to the baseimage
+    cat < /app/stop_parent_service.func >> /scripts/common && \
     # install packages
     apt-get update && \
     apt-get install -y --no-install-suggests --no-install-recommends \

@@ -5,7 +5,7 @@ source /scripts/common
 
 
 if chk_enabled "${GRAPHS1090_DISABLE}" || chk_enabled "${TAR1090_DISABLE}"; then
-    exec sleep infinity
+    stop_parent_service
 fi
 
 mkdir -p /run/graphs1090

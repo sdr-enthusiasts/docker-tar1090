@@ -19,12 +19,12 @@ READSB_AUTOGAIN_INITIAL_TIMEPERIOD="${READSB_AUTOGAIN_INITIAL_TIMEPERIOD:-7200}"
 
 if [[ "${READSB_GAIN,,}" != "autogain" ]]; then
     # Autogain is not enabled, so let's do nothing forever
-    exec sleep infinity
+    stop_parent_service
 fi
 
 if [[ "${READSB_DEVICE_TYPE,,}" != "rtlsdr" ]]; then
     s6wrap --quiet --prepend=autogain --timestamps --args echo "ERROR: AUTOGAIN enabled but READSB_DEVICE_TYPE is not \"rtlsdr\". Autogain disabled."
-    exec sleep infinity
+    stop_parent_service
 fi
 
 mkdir -p /var/globe_history/autogain

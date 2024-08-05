@@ -4,7 +4,7 @@
 source /scripts/common
 
 if chk_enabled "${TAR1090_DISABLE}"; then
-    exec sleep infinity
+    stop_parent_service
 fi
 
 mkdir -p /run/tar1090

@@ -1,0 +1,9 @@
+
+function stop_parent_service() {
+    _SERVICE=$(ps -q$(ps -cp $$ -o ppid="") -o args= | grep -F s6-supervise | cut -d' ' -f2)
+    s6-svc -d /run/service/"${_SERVICE}"
+    # just in case this doesn't work, exec an infinite sleep
+    # if the service stopping works, the sleep will just be terminated
+    exec sleep infinity
+}
+

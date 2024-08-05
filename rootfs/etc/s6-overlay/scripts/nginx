@@ -4,7 +4,7 @@
 source /scripts/common
 
 if [[ "$(find /etc/nginx/sites-enabled/ -type f | wc -l)" == "0" ]]; then
-    exec sleep infinity
+    stop_parent_service
 fi
 
 
