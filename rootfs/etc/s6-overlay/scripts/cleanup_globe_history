@@ -25,7 +25,7 @@ source /scripts/common
 
 if [[ -z "$MAX_GLOBE_HISTORY" ]]; then
     "${s6wrap[@]}" echo "MAX_GLOBE_HISTORY not set - we will not expire any globe_history files"
-    exec sleep infinity
+    stop_service
 fi
 
 cutoffepoch="$(date -d"-${MAX_GLOBE_HISTORY} days" +%s)"
