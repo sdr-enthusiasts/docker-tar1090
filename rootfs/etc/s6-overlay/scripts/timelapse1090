@@ -28,5 +28,5 @@ if chk_enabled "$ENABLE_TIMELAPSE1090" && ! chk_enabled "${TAR1090_DISABLE}"; th
 
   sleep 30 & wait $!
 else
-  exec sleep infinity
+  stop_service
 fi
