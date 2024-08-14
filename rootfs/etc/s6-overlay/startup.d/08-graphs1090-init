@@ -164,8 +164,10 @@ fi
 # Sets disk device for graphs -- leave empty for default.
 if [[ -n "${GRAPHS1090_DISK_DEVICE}" ]]; then
     sed -i "s|disk=.*|disk=${GRAPHS1090_DISK_DEVICE}|g" /etc/default/graphs1090
-else
-    sed -i "s|disk=.*|disk=|g" /etc/default/graphs1090
+    # if this disk isn't already in collectd.conf, replace the hda entry with the specified disk
+    if ! grep -qs "Disk \"${GRAPHS1090_DISK_DEVICE}\"" /etc/collectd/collectd.conf; then
+        sed -i "s|Disk \"hda\"|Disk \"${GRAPHS1090_DISK_DEVICE}\"|g" /etc/collectd/collectd.conf
+    fi
 fi
 
 # Sets (wired) ethernet device for graphs -- leave empty for default.
