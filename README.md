@@ -759,3 +759,15 @@ If you want to configure to run with a minimal CPU and RAM profile, and use it _
 
 - Set the parameter `TAR1090_DISABLE=true`. This will prevent the `nginx` webserver and any websites or associated data collection (collectd, graphs1090, rrd, etc.) to be launched
 - Make sure not to use the `dhcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf` label as Telegraf adds a LOT of resource use to the container
+
+## Offline maps
+
+There is the option to use some basic offline maps limited in zoom:
+
+- Download  the tiles (donn't install tar1090): <https://github.com/wiedehopf/adsb-wiki/wiki/offline-map-tiles-tar1090>
+- Add a volume mapping so the container can access the tiles:
+
+```yaml
+    volumes:
+        - /usr/local/share/osm_tiles_offline:/usr/local/share/osm_tiles_offline
+```
