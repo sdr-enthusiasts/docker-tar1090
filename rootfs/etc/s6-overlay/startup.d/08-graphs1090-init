@@ -135,30 +135,30 @@ fi
 
 # Defines the width of the larger graphs.
 if [[ -n "${GRAPHS1090_LARGE_WIDTH}" ]]; then
-    sed -i "s|lwidth=.*|lwidth=${GRAPHS1090_LARGE_WIDTH}|g" /etc/default/graphs1090
+    sed -i "s|^lwidth=.*|lwidth=${GRAPHS1090_LARGE_WIDTH}|g" /etc/default/graphs1090
 else
-    sed -i "s|lwidth=.*|lwidth=1096|g" /etc/default/graphs1090
+    sed -i "s|^lwidth=.*|lwidth=1096|g" /etc/default/graphs1090
 fi
 
 # Defines the height of the larger graphs.
 if [[ -n "${GRAPHS1090_LARGE_HEIGHT}" ]]; then
-    sed -i "s|lheight=.*|lheight=${GRAPHS1090_LARGE_HEIGHT}|g" /etc/default/graphs1090
+    sed -i "s|^lheight=.*|lheight=${GRAPHS1090_LARGE_HEIGHT}|g" /etc/default/graphs1090
 else
-    sed -i "s|lheight=.*|lheight=235|g" /etc/default/graphs1090
+    sed -i "s|^lheight=.*|lheight=235|g" /etc/default/graphs1090
 fi
 
 # Defines the width of the smaller graphs.
 if [[ -n "${GRAPHS1090_SMALL_WIDTH}" ]]; then
-    sed -i "s|lwidth=.*|lwidth=${GRAPHS1090_SMALL_WIDTH}|g" /etc/default/graphs1090
+    sed -i "s|^swidth=.*|swidth=${GRAPHS1090_SMALL_WIDTH}|g" /etc/default/graphs1090
 else
-    sed -i "s|lwidth=.*|lwidth=1096|g" /etc/default/graphs1090
+    sed -i "s|^swidth=.*|swidth=619|g" /etc/default/graphs1090
 fi
 
 # Defines the height of the smaller graphs.
 if [[ -n "${GRAPHS1090_SMALL_HEIGHT}" ]]; then
-    sed -i "s|lheight=.*|lheight=${GRAPHS1090_SMALL_HEIGHT}|g" /etc/default/graphs1090
+    sed -i "s|^sheight=.*|sheight=${GRAPHS1090_SMALL_HEIGHT}|g" /etc/default/graphs1090
 else
-    sed -i "s|lheight=.*|lheight=235|g" /etc/default/graphs1090
+    sed -i "s|^sheight=.*|sheight=324|g" /etc/default/graphs1090
 fi
 
 # Sets disk device for graphs -- leave empty for default.
