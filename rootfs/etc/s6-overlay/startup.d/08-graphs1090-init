@@ -192,6 +192,10 @@ if [[ -n "${GRAPHS1090_WWW_HEADER}" ]]; then
     sed -i "s|WWW_HEADER=.*|WWW_HEADER=\"${GRAPHS1090_WWW_HEADER}\"|g" /etc/default/graphs1090
 fi
 
+if [[ -n "$GRAPHS1090_DEFAULT_APPEND" ]]; then
+    echo "$GRAPHS1090_DEFAULT_APPEND" >> /etc/default/graphs1090
+fi
+
 # Finally, add a link to graphs1090 to the tar1090 web page:
 TAR1090_INDEX_HTML="/usr/local/share/tar1090/html-webroot/index.html"
 if ! grep -qs -e 'Stats available <a href=' "$TAR1090_INDEX_HTML"; then
