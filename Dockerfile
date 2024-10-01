@@ -18,7 +18,6 @@ ENV BEASTPORT=30005 \
     GZIP_LVL=3 \
     CHUNK_SIZE=60 \
     INT_978=1 \
-    PF_URL="http://127.0.0.1:30053/ajax/aircraft" \
     COMPRESS_978="" \
     TIMELAPSE1090_SOURCE=/run/readsb \
     TIMELAPSE1090_INTERVAL=10 \
