@@ -104,13 +104,7 @@ RUN \
     && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L148
     chmod -v a+x /usr/share/graphs1090/*.sh && \
-    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L151
-    cp -v \
-    /usr/share/graphs1090/git/collectd.conf \
-    /etc/collectd/collectd.conf \
-    && \
-    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
-    sed -i '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf && \
+    # collectd.conf customization done in graphs1090-init
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L179
     cp -rv \
     /usr/share/graphs1090/git/html \
@@ -130,22 +124,6 @@ RUN \
     mkdir -p /usr/share/graphs1090/data-symlink && \
     # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L217
     ln -vsnf /run/readsb /usr/share/graphs1090/data-symlink/data && \
-    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L218
-    sed -i -e 's?URL .*?URL "file:///usr/share/graphs1090/data-symlink"?' /etc/collectd/collectd.conf && \
-    ## Lines below merge the tar1090 collectd config with the graphs1090 collectd config
-    # remove the default syslog config in collectd.conf
-    sed -i '/<Plugin\ syslog>/,/<\/Plugin>/d' /etc/collectd/collectd.conf && \
-    # replace syslog plugin with logfile plugin in collectd.conf
-    sed -i 's/LoadPlugin\ syslog/LoadPlugin logfile/' /etc/collectd/collectd.conf && \
-    # add configuration to log to STDOUT in collectd.conf ("/a" == append lines after match)
-    sed -i '/LoadPlugin\ logfile/a\\n<Plugin\ logfile>\n<\/Plugin>' /etc/collectd/collectd.conf && \
-    sed -i '/<Plugin\ logfile>/a\ \ \ \ PrintSeverity\ true' /etc/collectd/collectd.conf && \
-    sed -i '/<Plugin\ logfile>/a\ \ \ \ Timestamp\ false' /etc/collectd/collectd.conf && \
-    sed -i '/<Plugin\ logfile>/a\ \ \ \ File\ STDOUT' /etc/collectd/collectd.conf && \
-    sed -i '/<Plugin\ logfile>/a\ \ \ \ LogLevel\ "notice"' /etc/collectd/collectd.conf && \
-    # add tar1090 specific stuff
-    sed -i '$a\\n' /etc/collectd/collectd.conf && \
-    sed -i '$aFQDNLookup\ true' /etc/collectd/collectd.conf && \
     # set up base telegraf config directories
     ##telegraf##mkdir -p /etc/telegraf/telegraf.d && \
     # document telegraf version
@@ -158,8 +136,7 @@ RUN \
     bash -ec 'echo "$(TZ=UTC date +%Y%m%d-%H%M%S)_$(git rev-parse --short HEAD)_$(git branch --show-current)" > /.CONTAINER_VERSION' && \
     popd && \
     # Clean-up.
-    apt-get remove -y ${TEMP_PACKAGES[@]} && \
-    apt-get autoremove -q -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y && \
+    apt-get autoremove -q -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y ${TEMP_PACKAGES[@]} && \
     apt-get clean -q -y && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* /var/cache/* && \
     # document versions
