@@ -663,7 +663,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 | `READSB_RTLSDR_PPM`    | Set oscillator frequency correction in PPM. See section [Estimating PPM](https://github.com/docker-readsb/README.MD#estimating-ppm) below | `--ppm=<correction>`           | Unset          |
 | `READSB_BEAST_SERIAL`  | only when type `modesbeast` or `gnshulc` is used: Path to Beast serial device.                                                            | `--beast-serial=<path>`        | `/dev/ttyUSB0` |
 
-Example (devices: section is mandatory)
+Example
 
 ```yaml
 version: "3.8"
@@ -687,9 +687,11 @@ services:
     tmpfs:
       - /run:exec,size=64M
       - /var/log
-
-    devices:
-      - /dev/bus/usb:/dev/bus/usb
+    # USB passthrough
+    device_cgroup_rules:
+      - 'c 189:* rwm'
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb:ro
 ```
 
 ## globe-history or sometimes ironically called destroy-sd-card
