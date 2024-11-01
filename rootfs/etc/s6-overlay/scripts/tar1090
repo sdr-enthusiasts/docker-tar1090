@@ -7,17 +7,17 @@ if chk_enabled "${TAR1090_DISABLE}"; then
     stop_service
 fi
 
-mkdir -p /run/tar1090
+rundir="/run/tar1090"
+mkdir -p "$rundir"
 sleep 5
 
 # shellcheck source=/dev/null
 #source "${TAR1090_INSTALL_DIR}/default"
 
 srcdir=/run/readsb
-service=readsb
 
 exec s6wrap --quiet --prepend=tar1090 --timestamps --args bash /usr/local/share/tar1090/tar1090.sh \
-  "/run/$service" \
+  "$rundir" \
   "$srcdir"
 
   # "$INTERVAL" \

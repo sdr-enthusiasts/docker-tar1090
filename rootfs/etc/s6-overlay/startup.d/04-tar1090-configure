@@ -32,10 +32,11 @@ else
 fi
 
 # Add in CORS header for tar1090 data/aircraft.json file
+# adjust the tar1090 runtime directory to /run/tar1090
 
 sed -i \
     -e 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
-    -e 's#/run/tar1090-webroot/#/run/readsb/#' \
+    -e 's#/run/tar1090-webroot/#/run/tar1090/#' \
 "${TAR1090_INSTALL_DIR}/nginx-tar1090-webroot.conf"
 
 
