@@ -63,8 +63,6 @@ RUN \
     rm /etc/nginx/sites-enabled/default && \
     # tar1090: install using project copy of original script
     bash /app/rootfs/tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" && \
-    # change some /run/tar1090-webroot to /run/readsb to make work with existing docker scripting
-    sed -i -e 's#/run/tar1090-webroot/#/run/readsb/#' /usr/local/share/tar1090/nginx-tar1090-webroot.conf && \
     # tar1090-db: document version
     echo "tar1090-db $(cat ${TAR1090_UPDATE_DIR}/git-db/version)" >> VERSIONS && \
     # tar1090: document version

@@ -61,6 +61,11 @@ if chk_enabled "${READSB_ENABLE_HEATMAP:-true}"; then
     READSB_CMD+=("--heatmap=${READSB_HEATMAP_INTERVAL:-15}")
 fi
 
+if chk_enabled "${READSB_ENABLE_TRACES}"; then
+    READSB_CMD+=("--write-globe-history=/var/globe_history")
+fi
+
+
 if chk_enabled "${READSB_FORWARD_MLAT}"; then
     "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT has been set! Do not feed the output of this container to any aggregators!"
     READSB_CMD+=("--forward-mlat")
