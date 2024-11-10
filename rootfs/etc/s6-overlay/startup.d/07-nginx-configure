@@ -18,3 +18,30 @@ else
     # shellcheck disable=SC1003
     sed -i 's\error_log .*\error_log /dev/stdout notice;\' /etc/nginx/nginx.conf
 fi
+
+
+# Add in CORS header for tar1090 data/aircraft.json file
+# adjust the tar1090 runtime directory to /run/tar1090
+
+sed -i \
+    -e 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
+    -e 's#/run/tar1090-webroot/#/run/tar1090/#' \
+"/etc/nginx/nginx-tar1090-webroot.conf"
+
+if chk_enabled "${TAR1090_DISABLE}"; then
+    rm -f /etc/nginx/sites-enabled/tar1090
+fi
+
+if chk_enabled "${READSB_ENABLE_API}"; then
+# shellcheck disable=SC2016
+sed -i -e 's|#sed_placeholder_API_proxy|location /re-api/ {\
+    gzip on;\
+    proxy_http_version 1.1;\
+    proxy_max_temp_file_size 0;\
+    proxy_set_header Connection $http_connection;\
+    proxy_set_header Host $http_host;\
+    proxy_pass http://unix:/run/readsb/api.sock:/$is_args$args;\
+}|' /etc/nginx/sites-enabled/tar1090
+else
+    cp -Tf /etc/nginx.tar1090/sites-enabled/tar1090 /etc/nginx/sites-enabled/tar1090
+fi

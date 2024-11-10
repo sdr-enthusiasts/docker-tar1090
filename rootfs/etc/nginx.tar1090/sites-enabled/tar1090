@@ -2,7 +2,7 @@ server {
   listen 80 default_server;
   root /var/www/html;
   server_name _;
-  include /usr/local/share/tar1090/nginx-tar1090-webroot.conf;
+  include /etc/nginx/nginx-tar1090-webroot.conf;
 
   location /timelapse {
     alias /opt/timelapse1090/html/;

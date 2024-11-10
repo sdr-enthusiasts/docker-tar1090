@@ -5,7 +5,6 @@ source /scripts/common
 
 
 if chk_enabled "${TAR1090_DISABLE}"; then
-    rm -f /etc/nginx/sites-enabled/tar1090
     exit 0
 fi
 
@@ -16,28 +15,6 @@ if ! chk_enabled "${GRAPHS1090_DISABLE}"; then
         sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' "$TAR1090_INDEX_HTML"
     fi
 fi
-
-if chk_enabled "${READSB_ENABLE_API}"; then
-# shellcheck disable=SC2016
-sed -i -e 's|#sed_placeholder_API_proxy|location /re-api/ {\
-    gzip on;\
-    proxy_http_version 1.1;\
-    proxy_max_temp_file_size 0;\
-    proxy_set_header Connection $http_connection;\
-    proxy_set_header Host $http_host;\
-    proxy_pass http://unix:/run/readsb/api.sock:/$is_args$args;\
-}|' /etc/nginx/sites-enabled/tar1090
-else
-    cp -Tf /etc/nginx.tar1090/sites-enabled/tar1090 /etc/nginx/sites-enabled/tar1090
-fi
-
-# Add in CORS header for tar1090 data/aircraft.json file
-# adjust the tar1090 runtime directory to /run/tar1090
-
-sed -i \
-    -e 's/location ~ aircraft\\.json$ {/location ~ aircraft\.json$ {\n    add_header Access-Control-Allow-Origin "\*";/g' \
-    -e 's#/run/tar1090-webroot/#/run/tar1090/#' \
-"${TAR1090_INSTALL_DIR}/nginx-tar1090-webroot.conf"
 
 
 # Wipe and configure tar1090 config.js.
