@@ -10,7 +10,8 @@ NOCOLOR='\033[0m'
 
 # Check to make sure the correct command line arguments have been set
 EXITCODE=0
-if [ -z "${BEASTHOST}" ] && [ -z "${MLATHOST}" ] && [ -z "${READSB_DEVICE_TYPE}" ] && [ -z "${READSB_NET_CONNECTOR}" ]; then
+if [ -z "${BEASTHOST}" ] && [ -z "${MLATHOST}" ] && [ -z "${READSB_DEVICE_TYPE}" ] && [ -z "${READSB_NET_CONNECTOR}" ] \
+       && ! grep -qs -e 'adsb[^;]*_in' <<< "${ULTRAFEEDER_CONFIG}${ULTRAFEEDER_NET_CONNECTOR}"; then
   echo -e "${YELLOW}WARNING: No obvious data input configured: BEASTHOST / MLATHOST / READSB_NET_CONNECTOR / READSB_DEVICE_TYPE environment variables not set${NOCOLOR}"
 fi
 if [ -z "${LAT}" ] && [ -z "${READSB_LAT}" ]; then
