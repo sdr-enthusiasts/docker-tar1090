@@ -13,6 +13,13 @@ if chk_enabled "${GRAPHS1090_DISABLE}"; then
     exit 0
 fi
 
+# create symlink so /var/cache/fontconfig is in tmpfs
+# as per Wiedehopf - https://discord.com/channels/734090820684349521/1102603003376177172/1203826726023729162
+# shellcheck disable=SC2174
+mkdir -p -m 777 /run/cache/fontconfig
+rm -rf /var/cache/fontconfig
+ln -sf /run/cache/fontconfig /var/cache/fontconfig
+
 if chk_enabled "${GRAPHS1090_HIDE_SYSTEM}" ; then
     sed -i "s|HIDE_SYSTEM=.*|HIDE_SYSTEM=yes|g" /etc/default/graphs1090
     cp /usr/share/graphs1090/git/hide_system-collectd.conf /etc/collectd/collectd.conf
@@ -215,10 +222,4 @@ fi
 
 if [[ -n "$GRAPHS1090_DEFAULT_APPEND" ]]; then
     echo "$GRAPHS1090_DEFAULT_APPEND" >> /etc/default/graphs1090
-fi
-
-# Finally, add a link to graphs1090 to the tar1090 web page:
-TAR1090_INDEX_HTML="/usr/local/share/tar1090/html-webroot/index.html"
-if ! grep -qs -e 'Stats available <a href=' "$TAR1090_INDEX_HTML"; then
-    sed -i 's|\(\s*\)\(<td id="dump1090_total_history_td"><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>\)|\1\2\n\1</tr>\n\1<tr class="infoblock_body"><td style="width: 50%"><span class="infoBlockTitleText">Stats available <a href="graphs1090/">here</a></td>|g' "$TAR1090_INDEX_HTML"
 fi
