@@ -170,6 +170,7 @@ if ! diff tar1090.sh "$ipath"/tar1090.sh &>/dev/null; then
             systemctl stop "$service" 2>/dev/null || true
         fi
     done < <(echo "$instances")
+    rm -f "$ipath"/tar1090.sh
     cp tar1090.sh "$ipath"
 fi
 
