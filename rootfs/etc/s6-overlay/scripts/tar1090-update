@@ -10,34 +10,35 @@ fi
 OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
 
 if [[ -d "${OVERRIDE_GIT_SOURCE}/html" ]]; then
-    echo "USING LOCALLY MODIFIED TAR1090 from ${OVERRIDE_GIT_SOURCE}"
-    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" "${OVERRIDE_GIT_SOURCE}"
+    "${s6wrap[@]}" echo "USING LOCALLY MODIFIED TAR1090 from ${OVERRIDE_GIT_SOURCE}"
+    "${s6wrap[@]}" bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}" "${OVERRIDE_GIT_SOURCE}"
     TAR1090_VERSION="$(cat "${OVERRIDE_GIT_SOURCE}/version") LOCALLY MODIFIED"
 else
-    bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
+    "${s6wrap[@]}" bash /tar1090-install.sh /run/readsb webroot "${TAR1090_INSTALL_DIR}"
     TAR1090_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git/version")
 fi
 
 # aircraft-db
 if chk_enabled "$TAR1090_ENABLE_AC_DB" && curl --connect-timeout 2 --silent --show-error "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/version" > "/run/aircraft.csv.gz.version.new"; then
     if ! diff -q "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.version" "/run/aircraft.csv.gz.version.new" &>/dev/null; then
-        echo "Downloading https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"
-        if curl --connect-timeout 2 --silent --show-error -o "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"; then
-            mv -f "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "${TAR1090_UPDATE_DIR}/aircraft.csv.gz"
-            mv -f "/run/aircraft.csv.gz.version.new" "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.version"
+        "${s6wrap[@]}" echo "Downloading https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"
+        if "${s6wrap[@]}" curl --connect-timeout 2 --silent --show-error -o "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" \
+            "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz"; then
+            "${s6wrap[@]}" mv -f "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.tmp" "${TAR1090_UPDATE_DIR}/aircraft.csv.gz"
+            "${s6wrap[@]}" mv -f "/run/aircraft.csv.gz.version.new" "${TAR1090_UPDATE_DIR}/aircraft.csv.gz.version"
         fi
     fi
 fi
 
 # Print tar1090 version
 TAR1090_DB_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git-db/version")
-echo "tar1090 version: ${TAR1090_VERSION} tar1090-db version: ${TAR1090_DB_VERSION}"
+"${s6wrap[@]}" echo "tar1090 version: ${TAR1090_VERSION} tar1090-db version: ${TAR1090_DB_VERSION}"
 export TAR1090_VERSION
 
 # call the necessary scripts to configure the newly created tar1090 html folder
 # they were already run on container startup but there is no harm in running them again
-bash /etc/s6-overlay/startup.d/04-tar1090-configure
-bash /etc/s6-overlay/startup.d/06-range-outline
+"${s6wrap[@]}" bash /etc/s6-overlay/startup.d/04-tar1090-configure
+"${s6wrap[@]}" bash /etc/s6-overlay/startup.d/06-range-outline
 
 if (( UPDATE_TAR1090_DAYS == 0 )); then
     stop_service
