@@ -28,18 +28,18 @@ elif [[ -f "${PERMFILE}" ]] && ! [[ -d /var/lib/collectd/rrd/localhost ]]; then
 fi
 
 
+# test config?
+/usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf > /dev/null 2>&1
+
 # wait for necessary input file to exist before starting
 
 loop_count=0
 # shellcheck disable=SC2016
 while [[ ! -e /usr/share/graphs1090/data-symlink/data/stats.json ]]; do
-    if (( loop_count++ > 30 )); then echo "[collectd] Waiting for readsb to start..."; sleep 9; fi
+    if (( loop_count++ > 15 )); then echo "[collectd] Waiting for readsb to start..."; fi
+    if (( loop_count > 30 )); then echo "[collectd] not waiting for readsb any longer"; break; fi
     sleep 1
 done
-
-# test config?
-/usr/sbin/collectd -t -T -f -C /etc/collectd/collectd.conf > /dev/null 2>&1
-
 
 # pkill -P $$ will only kill children of the script, not the script itself
 trap 'pkill -P $$' SIGTERM SIGINT SIGHUP SIGQUIT
