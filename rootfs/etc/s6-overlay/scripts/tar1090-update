@@ -4,7 +4,7 @@
 source /scripts/common
 
 if ! chk_enabled "${UPDATE_TAR1090}" || chk_enabled "${TAR1090_DISABLE}"; then
-    exit 0
+    stop_service
 fi
 
 OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
@@ -33,3 +33,14 @@ fi
 TAR1090_DB_VERSION=$(cat "${TAR1090_UPDATE_DIR}/git-db/version")
 echo "tar1090 version: ${TAR1090_VERSION} tar1090-db version: ${TAR1090_DB_VERSION}"
 export TAR1090_VERSION
+
+# call the necessary scripts to configure the newly created tar1090 html folder
+# they were already run on container startup but there is no harm in running them again
+bash /etc/s6-overlay/startup.d/04-tar1090-configure
+bash /etc/s6-overlay/startup.d/06-range-outline
+
+if (( UPDATE_TAR1090_DAYS == 0 )); then
+    stop_service
+fi
+
+exec sleep $(( UPDATE_TAR1090_DAYS * 86400 ))
