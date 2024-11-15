@@ -15,9 +15,11 @@ server {
     root /var/www/html;
     server_name _;
     location /metrics {
+        default_type text/plain;
         alias /run/readsb/stats.prom;
     }
     location / {
+        default_type text/plain;
         alias /run/readsb/stats.prom;
         rewrite (.*) /metrics last;
     }
