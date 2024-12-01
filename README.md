@@ -150,7 +150,6 @@ version: "3.8"
 services:
   tar1090:
     image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
-    tty: true
     container_name: tar1090
     restart: always
     environment:
@@ -673,7 +672,6 @@ version: "3.8"
 services:
   tar1090:
     image: ghcr.io/sdr-enthusiasts/docker-tar1090:latest
-    tty: true
     container_name: tar1090
     hostname: tar1090
     restart: always
