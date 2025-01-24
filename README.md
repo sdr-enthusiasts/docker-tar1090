@@ -282,10 +282,26 @@ All of the variables below are optional.
 
 #### Using a locally modified tar1090 version
 
-- `git clone https://github.com/wiedehopf/tar1090 /local/my_special_version`
-- Apply your modifications
-- Make that directory available as /var/tar1090_git_source in the container (`volumes: - /local/my_special_version:/var/tar1090_git_source`)
-- `UPDATE_TAR1090=true`
+`/local/custom_version` can be any folder you prefer.
+
+Clone tar1090 to a local direcotry: `git clone https://github.com/wiedehopf/tar1090 /local/custom_version`
+
+Make `/local/custom_version` available as `/var/tar1090_git_source` in the container:
+
+```
+    volumes:
+      - /local/custom_version:/var/tar1090_git_source
+```
+
+Make sure you have UPDATE_TAR1090 env var set to true.
+
+Changes in `/local/custom_version` won't be visible with a simple page reload, you need to run:
+
+```
+docker exec -it ultrafeeder bash /etc/s6-overlay/startup.d/02-tar1090-update
+```
+
+After this has finished a simple reload in the browser should do the trick.
 
 #### `tar1090` `config.js` Configuration - Title
 
