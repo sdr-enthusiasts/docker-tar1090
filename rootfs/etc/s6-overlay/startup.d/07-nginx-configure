@@ -45,3 +45,7 @@ sed -i -e 's|#sed_placeholder_API_proxy|location /re-api/ {\
 else
     cp -Tf /etc/nginx.tar1090/sites-enabled/tar1090 /etc/nginx/sites-enabled/tar1090
 fi
+
+if chk_enabled "${CUSTOM_HTML}"; then
+    sed -i -e 's#/usr/local/share/tar1090/html-webroot/#/var/custom_html/#' /etc/nginx/nginx-tar1090-webroot.conf
+fi
