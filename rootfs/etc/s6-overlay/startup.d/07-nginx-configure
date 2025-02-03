@@ -47,5 +47,8 @@ else
 fi
 
 if chk_enabled "${CUSTOM_HTML}"; then
-    sed -i -e 's#/usr/local/share/tar1090/html-webroot/#/var/custom_html/#' /etc/nginx/nginx-tar1090-webroot.conf
+    sed -i \
+        -e 's#/usr/local/share/tar1090/html-webroot/.*#/var/custom_html/;\nadd_header Cache-Control "no-cache";#' \
+        -e 's#add_header Cache-Control.*;$#add_header Cache-Control "no-cache";#' \
+        /etc/nginx/nginx-tar1090-webroot.conf
 fi
