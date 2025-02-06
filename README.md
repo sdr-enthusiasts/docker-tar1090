@@ -240,7 +240,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `ENABLE_TIMELAPSE1090`     | Optional / Legacy. Set to any value to enable btimelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>.                                                    | Unset                |
 | `READSB_EXTRA_ARGS`        | Optional, allows to specify extra parameters for readsb                                                                                                                                 | Unset                |
 | `READSB_DEBUG`             | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check                                                                                                              | Unset                |
-| `S6_SERVICES_GRACETIME`    | Optional, set to 30000 when saving traces / globe_history                                                                                                                               | `3000`               |
+| `S6_SERVICES_GRACETIME`    | Optional, reduce for faster container stop (graceful stop should not depend on this)                                                                                                                           | `3000`               |
 | `ENABLE_AIRSPY`            | Optional, set to any non-empty value if you want to enable the special AirSpy graphs. See below for additional configuration requirements                                               | Unset                |
 | `URL_AIRSPY`               | Optional, set to the URL where the airspy stats are available, for example `http://airspy_adsb`                                                                                         | Unset                |
 | `URL_1090_SIGNAL`          | Optional. Retrieve gain, % of strong signals and signal graph data from a remote source. Set to an URL where the readsb stats are available, i.e. `http://192.168.2.34/tar1090`         | Unset                |
@@ -479,7 +479,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_STATS_EVERY`          | Number of seconds between showing and resetting stats.                                                                         | `--stats-every=<sec>`          | Unset   |
 | `READSB_STATS_RANGE`          | Set this to any value to collect range statistics for polar plot.                                                              | `--stats-range`                | Unset   |
 | `READSB_RANGE_OUTLINE_HOURS`  | Change which past timeframe the range outline is based on                                                                      | `--range-outline-hours`        | `24`    |
-| `MAX_GLOBE_HISTORY`           | Maximum number of days that `globe_history` data (used to produce heatmaps and replay) is retained. Note - this parameter doesn't affect the data used to produce `graphs1090` statistics | | Unset |
+| `MAX_GLOBE_HISTORY`           | Maximum number of days that `globe_history` data (heatmap / replay / traces) is retained. Note - this parameter doesn't affect the data used to produce `graphs1090` statistics | | Unset |
 
 ### AutoGain for RTLSDR Devices
 
