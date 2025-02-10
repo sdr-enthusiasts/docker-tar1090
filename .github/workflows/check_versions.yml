@@ -16,7 +16,7 @@ env:
 jobs:
   version_in_container:
     name: Check versions in 'latest' image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       currverhash: ${{ steps.current-version.outputs.currverhash }}
     steps:
@@ -29,7 +29,7 @@ jobs:
 
   latest_version:
     name: Check latest versions
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       latestverhash: ${{ steps.latest-version.outputs.latestverhash }}
     steps:
@@ -49,7 +49,7 @@ jobs:
   display_versions:
     name: Display versions
     needs: [version_in_container, latest_version]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Display versions
         run: |
@@ -61,7 +61,7 @@ jobs:
     name: Trigger deployment of image
     needs: [version_in_container, latest_version]
     if: ${{ needs.version_in_container.outputs.currverhash != needs.latest_version.outputs.latestverhash }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
       WORKFLOW_REPO: sdr-enthusiasts/docker-tar1090

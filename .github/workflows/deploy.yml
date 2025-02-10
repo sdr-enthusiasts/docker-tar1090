@@ -35,7 +35,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.reason != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Log dispatch reason
         env:
@@ -100,7 +100,7 @@ jobs:
   trigger_build_sdr-enthusiasts_ultrafeeder:
     name: Trigger deploy of sdr-enthusiasts/docker-adsb-ultrafeeder
     needs: ["deploy", "deploy_with_telegraf"]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       WORKFLOW_AUTH_TOKEN: ${{ secrets.GH_PAT_KX1T }}
       WORKFLOW_REPO: sdr-enthusiasts/docker-adsb-ultrafeeder
