@@ -779,8 +779,8 @@ In order for Telegraf to serve a [Prometheus](https://prometheus.io) endpoint, t
 
 If you want to configure to run with a minimal CPU and RAM profile, and use it _only_ as a SDR decoder but without any mapping or stats/graph websites, then do the following:
 
-- Set the parameter `TAR1090_DISABLE=true`. This will prevent the `nginx` webserver and any websites or associated data collection (collectd, graphs1090, rrd, etc.) to be launched
-- Make sure not to use the `dhcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf` label as Telegraf adds a LOT of resource use to the container
+- Set the parameter `TAR1090_DISABLE=true`. This will prevent the `nginx` webserver and any websites or associated data collection (graphs1090, heatmap, etc.) to be launched
+- Make sure not to use the `ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf` label as Telegraf adds a LOT of resource use to the container
 
 ## Offline maps
 
