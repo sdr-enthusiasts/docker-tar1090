@@ -60,6 +60,9 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
             exit 0
         fi
     fi
+else
+    # we need to remove the JSON file if it exists (use case: user removes previously set HEYWHATSTHAT_PANORAMA_ID)
+    rm -f "${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
 fi
 
 exit 0
