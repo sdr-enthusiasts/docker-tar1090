@@ -3,7 +3,7 @@
 
 source /scripts/common
 
-if chk_enabled "${TAR1090_DISABLE}"; then
+if chk_enabled "${TAR1090_DISABLE}" || chk_enabled "${TAR1090_HISTORY_DISABLE}"; then
     stop_service
 fi
 
