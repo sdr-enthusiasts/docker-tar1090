@@ -18,6 +18,9 @@ if chk_enabled "$TAR1090_ENABLE_AC_DB" && curl --connect-timeout 10 --silent --s
         fi
     fi
 fi
+if [[ -f "${TAR1090_UPDATE_DIR}/aircraft.csv.gz" ]]; then
+    ln -sf "${TAR1090_UPDATE_DIR}/aircraft.csv.gz" "$TAR1090_INSTALL_DIR/aircraft.csv.gz"
+fi
 
 if ! chk_enabled "${CUSTOM_HTML}"; then
     OVERRIDE_GIT_SOURCE="/var/tar1090_git_source"
