@@ -46,6 +46,11 @@
     - [Output to Prometheus](#output-to-prometheus)
   - [Minimalist setup](#minimalist-setup)
 
+## Notice about ultrafeeder
+- Please use [`ultrafeeder`](https://github.com/sdr-enthusiasts/docker-adsb-ultrafeeder)
+- ultrafeeder can do everything this image can do and more
+- the readme for ultrafeeder is often more up to date
+
 ## Introduction
 
 This container [`tar1090`](https://github.com/wiedehopf/tar1090) runs [`@wiedehopf's readsb fork`](https://github.com/wiedehopf/readsb) ADS-B decoding engine in to feed the graphic tar1090 viewing webinterface, also by [wiedehopf](https://github.com/wiedehopf) (as is the viewadsb text-based output) to provide digital representations of the readsb output.
@@ -482,7 +487,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 | `READSB_RANGE_OUTLINE_HOURS`  | Change which past timeframe the range outline is based on                                                                      | `--range-outline-hours`        | `24`    |
 | `MAX_GLOBE_HISTORY`           | Maximum number of days that `globe_history` data (heatmap / replay / traces) is retained. Note - this parameter doesn't affect the data used to produce `graphs1090` statistics | | Unset |
 
-### AutoGain for RTLSDR Devices
+### Legacy AutoGain for RTLSDR Devices
 
 If you have set `READSB_GAIN=autogain`, then the system will take signal strength measurements to determine the optimal gain. The AutoGain functionality is based on a (slightly) modified version of [Wiedehopf's AutoGain](https://github.com/wiedehopf/autogain). AutoGain will only work with `rtlsdr` style receivers.
 
@@ -679,7 +684,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 
 | Variable               | Description                                                                                                                               | Controls which `readsb` option | Default        |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | -------------- |
-| `READSB_GAIN`          | Set gain (in dB).                                                                                                                         | `--gain=<db>`                  | Max gain       |
+| `READSB_GAIN`          | Set gain (in dB). Set to `auto` to use the quickly adjusting readsb's built-in auto-gain. Use `autogain` to use the slow adjusting legacy autogain script. | `--gain=<value>`| `auto`       |
 | `READSB_DEVICE_TYPE`   | If using an SDR, set this to `rtlsdr`, `modesbeast`, `gnshulc` depending on the model of your SDR. If not using an SDR, leave un-set.     | `--device-type=<type>`         | Unset          |
 | `READSB_RTLSDR_DEVICE` | Select device by serial number.                                                                                                           | `--device=<serial>`            | Unset          |
 | `READSB_RTLSDR_PPM`    | Set oscillator frequency correction in PPM. See section [Estimating PPM](https://github.com/docker-readsb/README.MD#estimating-ppm) below | `--ppm=<correction>`           | Unset          |
@@ -701,7 +706,7 @@ services:
       - LAT=-33.33333
       - LONG=111.11111
       - READSB_DEVICE_TYPE=rtlsdr
-      - READSB_GAIN=43.9
+      - READSB_GAIN=auto
       - READSB_RTLSDR_DEVICE=0
     ports:
       - 8078:80
