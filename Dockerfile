@@ -139,6 +139,7 @@ RUN \
     apt-get autoremove -q -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y ${TEMP_PACKAGES[@]} && \
     apt-get clean -q -y && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* /var/cache/* && \
+    bash /scripts/clean-build.sh && \
     # document versions
     cat /VERSIONS
 
