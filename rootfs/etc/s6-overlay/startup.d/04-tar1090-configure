@@ -175,6 +175,10 @@ if [[ -n "$TAR1090_AISCATCHER_SERVER" ]]; then
   echo "aiscatcher_refresh = ${TAR1090_AISCATCHER_REFRESH:-15};"
 fi
 
+if [[ -n "$TAR1090_JAEROLABEL" ]]; then
+  echo "jaeroLabel = \"$TAR1090_JAEROLABEL\";"
+fi
+
 if [[ -n "$TAR1090_CONFIGJS_APPEND" ]]; then
   echo "$TAR1090_CONFIGJS_APPEND"
 fi
