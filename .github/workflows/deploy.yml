@@ -12,15 +12,6 @@ on:
         description: "Use base image testpr"
         default: false
 
-  push:
-    branches:
-      - main
-    # Trigger only on specific files being updated.
-
-    paths:
-      - Dockerfile
-      - rootfs/**
-
 env:
   GHCR_IMAGE: sdr-enthusiasts/docker-tar1090
   GHCR_REGISTRY: ghcr.io
@@ -47,44 +38,30 @@ jobs:
 
   deploy:
     name: Deploy without telegraf
-    uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
+    uses: sdr-enthusiasts/common-github-workflows/.github/workflows/sdre.yml@main
     with:
       push_enabled: true
       push_destinations: ghcr.io
       ghcr_repo_owner: ${{ github.repository_owner }}
       ghcr_repo: ${{ github.repository }}
-      get_version_method: git_commit_hash_short
       # set build_latest to true if github.event.inputs.use_test_image is false
       build_latest: ${{ github.event.inputs.use_test_image == 'false' || github.event.inputs.use_test_image == '' }}
       build_baseimage_test: ${{ github.event.inputs.use_test_image == 'true' }}
-      # only build the entire stack if we are not using the test image
-      build_version_specific: false
-      build_platform_specific: false
-      build_nohealthcheck: false
       build_baseimage_url: wreadsb/wreadsb-test-pr
     secrets:
       ghcr_token: ${{ secrets.GITHUB_TOKEN }}
-
-  # unfortunately we can't use build_and_push_image.yml to build the telegraf label because
-  # that GH Action doesn't have the capability to build specific custom-named labels
-
   deploy_with_telegraf:
     name: Deploy with telegraf and healthcheck
-    uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
+    uses: sdr-enthusiasts/common-github-workflows/.github/workflows/sdre.yml@main
     with:
       push_enabled: true
       push_destinations: ghcr.io
       ghcr_repo_owner: ${{ github.repository_owner }}
       ghcr_repo: ${{ github.repository }}
-      get_version_method: git_commit_hash_short
       # set build_latest to true if github.event.inputs.use_test_image is false
       build_latest: ${{ github.event.inputs.use_test_image == 'false' || github.event.inputs.use_test_image == '' }}
       build_baseimage_test: ${{ github.event.inputs.use_test_image == 'true' }}
       build_baseimage_url: wreadsb/wreadsb-test-pr
-      # only build the entire stack if we are not using the test image
-      build_version_specific: false
-      build_platform_specific: false
-      build_nohealthcheck: false
       docker_latest_tag: telegraf
       dockerfile_changes: |
         ##telegraf##/
