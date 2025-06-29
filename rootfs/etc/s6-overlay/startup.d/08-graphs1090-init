@@ -27,6 +27,11 @@ else
     cp /usr/share/graphs1090/git/collectd.conf /etc/collectd/collectd.conf
 fi
 
+if [[ -n "$GRAPHS1090_CPU_TEMP" ]]; then
+	# change path for cpu temp
+	sed -i -e "s@/sys/class/thermal/thermal_zone0/temp@$GRAPHS1090_CPU_TEMP@" /etc/collectd/collectd.conf
+fi
+
 # other temperature
 if [[ -n "$GRAPHS1090_OTHER_TEMP1" ]]; then
 read -r -d '' _insert <<EOF
