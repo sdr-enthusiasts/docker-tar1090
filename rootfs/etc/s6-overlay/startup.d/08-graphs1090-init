@@ -27,6 +27,22 @@ else
     cp /usr/share/graphs1090/git/collectd.conf /etc/collectd/collectd.conf
 fi
 
+# other temperature
+if [[ -n "$GRAPHS1090_OTHER_TEMP1" ]]; then
+read -r -d '' _insert <<EOF
+\n    <Table "$GRAPHS1090_OTHER_TEMP1">\n\
+        Instance localhost\n\
+        Separator " "\n\
+        <Result>\n\
+            Type gauge\n\
+            InstancePrefix "other_temp1"\n\
+            ValuesFrom 0\n\
+        </Result>\n\
+    </Table>\n
+EOF
+    sed -i -e 's@<Plugin table>.*@\0'"$_insert"'@' /etc/collectd/collectd.conf
+fi
+
 # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
 sed -i '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf
 # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L218
