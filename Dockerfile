@@ -82,16 +82,11 @@ RUN \
     https://github.com/wiedehopf/graphs1090.git \
     /usr/share/graphs1090/git \
     && \
-    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L145
+    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh
     cp -v \
     /usr/share/graphs1090/git/dump1090.db \
-    /usr/share/graphs1090/git/dump1090.py \
-    /usr/share/graphs1090/git/system_stats.py \
+    /usr/share/graphs1090/git/*.py \
     /usr/share/graphs1090/git/LICENSE \
-    /usr/share/graphs1090/ \
-    && \
-    # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L146
-    cp -v \
     /usr/share/graphs1090/git/*.sh \
     /usr/share/graphs1090/ \
     && \
