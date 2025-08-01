@@ -48,6 +48,10 @@ EOF
     sed -i -e 's@<Plugin table>.*@\0'"$_insert"'@' /etc/collectd/collectd.conf
 fi
 
+if chk_enabled "${GRAPHS1090_RANGE_INCLUDE_NONADSB}"; then
+    sed -i -e 's/range_include_nonadsb = False/range_include_nonadsb = True/' /usr/share/graphs1090/dump1090.py
+fi
+
 # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
 sed -i '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf
 # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L218
