@@ -34,7 +34,7 @@ fi
 
 # other temperature
 if [[ -n "$GRAPHS1090_OTHER_TEMP1" ]]; then
-read -r -d '' _insert <<EOF
+read -r -d '' _insert <<EOF || true
 \n    <Table "$GRAPHS1090_OTHER_TEMP1">\n\
         Instance localhost\n\
         Separator " "\n\
