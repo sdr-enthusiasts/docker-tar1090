@@ -9,6 +9,7 @@ fi
 
 # https://github.com/wiedehopf/tar1090#heywhatsthatcom-range-outline
 
+OUT_FILE="${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
 if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
 
     HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:-12192m}"
@@ -39,7 +40,6 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     HEYWHATSTHAT_ALTS="${HEYWHATSTHAT_ALTS:0:-1}"
 
     HEY_URL="http://www.heywhatsthat.com/api/upintheair.json?id=${HEYWHATSTHAT_PANORAMA_ID}&refraction=0.25&alts=${HEYWHATSTHAT_ALTS:-12192}"
-    OFILE="${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
 
     # in many configurations TAR1090_UPDATE_DIR will persist compose down / up
     mkdir -p "${TAR1090_UPDATE_DIR}"
@@ -49,20 +49,28 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
     if [[ -f "${PFILE}" ]] && diff -q "$URL_FILE" <(cat <<<"${HEY_URL}") &>/dev/null; then
         # url identical, use old file
         echo "Using cached HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
-        cp -f "${PFILE}" "${OFILE}"
     else
         echo "Getting HeyWhatsThat Range Outlines for these altitudes (in meters): ${HEYWHATSTHAT_ALTS}"
-        if curl --connect-timeout 2 --silent --show-error --output "${OFILE}" "${HEY_URL}"; then
-            cp -f "${OFILE}" "${PFILE}"
+        if curl --connect-timeout 2 --silent --show-error --output "${PFILE}" "${HEY_URL}"; then
             cat <<<"${HEY_URL}" >"${URL_FILE}"
         else
             echo "WARNING: Unable to download panorama. Outline will not be available."
+            # just in case make sure we clear any existing file
+            rm -f "${OUT_FILE}"
             exit 0
         fi
     fi
+
+    if [[ -z "$READSB_RX_LOCATION_ACCURACY" ]] || [[ ${READSB_RX_LOCATION_ACCURACY} == 2 ]]; then
+        cp -f "${PFILE}" "${OUT_FILE}"
+    else
+        # best effort: redact location identifying details from heywhatsthat panorama
+        # one may still obtain the location with fancy calculations
+        jq < "${PFILE}" > "${OUT_FILE}" 'del(.lat) | del(.lon) | del(.id) | del(.elev_amsl)'
+    fi
 else
     # we need to remove the JSON file if it exists (use case: user removes previously set HEYWHATSTHAT_PANORAMA_ID)
-    rm -f "${TAR1090_INSTALL_DIR}/html-webroot/upintheair.json"
+    rm -f "${OUT_FILE}"
 fi
 
 exit 0
