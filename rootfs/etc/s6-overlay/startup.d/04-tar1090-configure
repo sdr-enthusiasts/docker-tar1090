@@ -188,15 +188,24 @@ fi
 # https://github.com/wiedehopf/adsb-wiki/wiki/offline-map-tiles-tar1090
 # volumes:
 # - /usr/local/share/osm_tiles_offline:/usr/local/share/osm_tiles_offline
-# in case offlinemaps is used, configure via config.js
+# https://github.com/wiedehopf/openfreemap_offline
+# volumes:
+# - /usr/local/share/openfreemap_offline/mnt:/usr/local/share/openfreemap_offline/mnt
 MAX_OFFLINE=""
+MAX_OFFLINE_OFM=""
 for i in {0..15}; do
+    if [[ -d /usr/local/share/openfreemap_offline/mnt/tiles/$i ]]; then
+        MAX_OFFLINE_OFM=$i
+    fi
     if [[ -d /usr/local/share/osm_tiles_offline/$i ]]; then
         MAX_OFFLINE=$i
     fi
 done
 if [[ -n "$MAX_OFFLINE" ]]; then
     echo "offlineMapDetail=$MAX_OFFLINE;" >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
+fi
+if [[ -n "$MAX_OFFLINE_OFM" ]]; then
+    echo "offlineMapDetailOFM=$MAX_OFFLINE_OFM;" >> "${TAR1090_INSTALL_DIR}/html-webroot/config.js"
 fi
 
 if chk_enabled "$TAR1090_LABEL_GROUND_SHOWALL"; then
