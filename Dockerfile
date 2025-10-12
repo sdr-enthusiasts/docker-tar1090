@@ -35,6 +35,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN \
     --mount=type=bind,source=./,target=/app/ \
     set -x && \
+    source /etc/os-release && \
     TEMP_PACKAGES=() && \
     KEPT_PACKAGES=() && \
     TEMP_PACKAGES+=(git) && \
@@ -44,7 +45,11 @@ RUN \
     KEPT_PACKAGES+=(collectd-core) && \
     KEPT_PACKAGES+=(rrdtool) && \
     KEPT_PACKAGES+=(bash-builtins) && \
-    KEPT_PACKAGES+=(libpython3.11) && \
+    if [[ "$VERSION_CODENAME" == "trixie" ]]; then \
+        KEPT_PACKAGES+=(libpython3.13); \
+    else \
+        KEPT_PACKAGES+=(libpython3.11); \
+    fi && \
     KEPT_PACKAGES+=(libncurses6) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
