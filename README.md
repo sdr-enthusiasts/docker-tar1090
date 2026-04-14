@@ -114,8 +114,7 @@ docker run -d \
     -e LAT=xx.xxxxx \
     -e LONG=xx.xxxxx \
     -v /opt/adsb/tar1090/graphs1090:/var/lib/collectd \
-    --tmpfs=/run:exec,size=64M \
-    --tmpfs=/var/log \
+    --tmpfs=/run:exec,size=256M \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
 ```
 
@@ -133,8 +132,7 @@ docker run -d \
     -e LAT=-33.33333 \
     -e LONG=111.11111 \
     -v /opt/adsb/tar1090/graphs1090:/var/lib/collectd \
-    --tmpfs=/run:exec,size=64M \
-    --tmpfs=/var/log \
+    --tmpfs=/run:exec,size=256M \
     ghcr.io/sdr-enthusiasts/docker-tar1090:latest
 ```
 
@@ -173,8 +171,7 @@ services:
     ports:
       - 8078:80
     tmpfs:
-      - /run:exec,size=64M
-      - /var/log
+      - /run:exec,size=256M
 ```
 
 You should now be able to browse to:
@@ -721,7 +718,7 @@ services:
     ports:
       - 8078:80
     tmpfs:
-      - /run:exec,size=64M
+      - /run:exec,size=256M
       - /var/log
     # USB passthrough
     device_cgroup_rules:
