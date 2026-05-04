@@ -9,6 +9,7 @@ ENV BEASTPORT=30005 \
     GITPATH_TIMELAPSE1090=/opt/timelapse1090 \
     HTTP_ACCESS_LOG="false" \
     HTTP_ERROR_LOG="true" \
+    TAR1090_NGINX_PORT=80 \
     TAR1090_INSTALL_DIR=/usr/local/share/tar1090 \
     TAR1090_UPDATE_DIR=/var/globe_history/tar1090-update \
     MLATPORT=30105 \
