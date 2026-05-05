@@ -49,6 +49,11 @@ fi
 # set listen port, defaults to 80 via Dockerfile
 sed -i -e "s/TAR1090_NGINX_PORT/${TAR1090_NGINX_PORT}/" /etc/nginx/sites-enabled/tar1090
 
+# disable IPv6 listen when there is no IPv6 loopback address
+if ! ip a | grep -q -e 'inet6 ::1'; then
+    sed -i -e 's/listen \[::\].*/# IPv6 disabled/' /etc/nginx/sites-enabled/tar1090
+fi
+
 if chk_enabled "${CUSTOM_HTML}"; then
     sed -i \
         -e 's#/usr/local/share/tar1090/html-webroot/.*#/var/custom_html/;\nadd_header Cache-Control "no-cache";#' \
