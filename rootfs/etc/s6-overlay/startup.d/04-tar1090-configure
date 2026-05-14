@@ -125,10 +125,6 @@ if [[ -n "$TAR1090_RANGERINGSDISTANCES" ]]; then
   echo "SiteCirclesDistances = new Array($TAR1090_RANGERINGSDISTANCES);"
 fi
 
-if [[ -n "$TAR1090_BINGMAPSAPIKEY" ]]; then
-  echo "BingMapsAPIKey = \"$TAR1090_BINGMAPSAPIKEY\";"
-fi
-
 if chk_enabled "$TAR1090_FLIGHTAWARELINKS"; then
   echo "flightawareLinks = true;"
 fi
