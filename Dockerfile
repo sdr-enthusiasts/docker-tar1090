@@ -32,7 +32,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # add telegraf binary
 ##telegraf##COPY --from=telegraf /usr/bin/telegraf /usr/bin/telegraf
-
+# hadolint ignore=SC2068
 RUN \
     --mount=type=bind,source=./,target=/app/ \
     set -x && \

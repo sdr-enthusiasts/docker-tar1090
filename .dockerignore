@@ -5,3 +5,7 @@
 READMETEMPLATE.md
 README.md
 buildx.sh
+.direnv
+source-stubs
+.pre-commit-config.yaml
+.envrc
