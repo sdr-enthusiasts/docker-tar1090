@@ -348,4 +348,3 @@ done < <(echo "$instances")
 if [[ $lighttpd == yes ]] || [[ $nginx == yes ]]; then
     true
 fi
-

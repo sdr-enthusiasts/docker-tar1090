@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC2015,SC2016,SC1091,SC2001,SC2154
 
 #---------------------------------------------------------------------------------------------
-# Script to remove Globe_History files older than xxx days - this to ensure that the disk 
+# Script to remove Globe_History files older than xxx days - this to ensure that the disk
 # doesn't fill up with (unwanted) history files)
 
 # Copyright (C) 2023-2024, Ramon F. Kolb (kx1t) and contributors
