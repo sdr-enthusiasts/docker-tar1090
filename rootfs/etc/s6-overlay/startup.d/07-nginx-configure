@@ -50,7 +50,7 @@ fi
 sed -i -e "s/TAR1090_NGINX_PORT/${TAR1090_NGINX_PORT}/" /etc/nginx/sites-enabled/tar1090
 
 # disable IPv6 listen when there is no IPv6 loopback address
-if ! ip a | grep -q -e 'inet6 ::1'; then
+if ! chk_enabled "${ENABLE_IPV6}" && ! ip a | grep -q -e 'inet6 ::1'; then
     sed -i -e 's/listen \[::\].*/# IPv6 disabled/' /etc/nginx/sites-enabled/tar1090
 fi
 
