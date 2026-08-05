@@ -149,4 +149,4 @@ COPY rootfs/ /
 EXPOSE 80/tcp
 
 # Add healthcheck
-HEALTHCHECK --start-period=600s --interval=600s CMD /healthcheck.sh
+HEALTHCHECK --start-period=600s --interval=600s CMD ["/healthcheck.sh"]
