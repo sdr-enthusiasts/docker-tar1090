@@ -21,7 +21,7 @@ if [ -z "${LONG}" ] && [ -z "${READSB_LON}" ]; then
   echo -e "${YELLOW}WARNING: LONG / READSB_LON environment variable not set, Home location will not be accurate${NOCOLOR}"
 fi
 if [ $EXITCODE -ne 0 ]; then
-  exit 1
+  exit 78
 fi
 
 # Set up timezone

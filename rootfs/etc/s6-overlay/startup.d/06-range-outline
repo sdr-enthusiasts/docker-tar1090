@@ -16,7 +16,7 @@ if [ -n "${HEYWHATSTHAT_PANORAMA_ID}" ]; then
 
     if grep -e "[^0-9kmft,]" <<< "${HEYWHATSTHAT_ALTS}" >/dev/null 2>&1; then
         echo "FATAL: Illegal character in HEYWHATSTHAT_ALTS=${HEYWHATSTHAT_ALTS}"
-        exit 1
+        exit 78
     fi
 
     # convert all elements to meters
