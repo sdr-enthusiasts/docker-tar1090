@@ -13,8 +13,13 @@ fi
 cd "$SDIR" || exit 1
 
 for NAME in *; do
-    if ! s6wrap --quiet --prepend="$NAME" --timestamps --args "$SDIR/$NAME"; then
+    s6wrap --quiet --prepend="$NAME" --timestamps --args "$SDIR/$NAME"
+    rc=$?
+    if [ "$rc" -ne 0 ]; then
         s6wrap --quiet --prepend=startup --timestamps --args echo Error running "$SDIR/$NAME"
-        exit 1
+        # Propagate rather than flattening to 1: a child that exits 78 is
+        # declaring an expected environmental failure, and collapsing that to 1
+        # would turn a declared condition into an apparent fault.
+        exit "$rc"
     fi
 done
