@@ -53,7 +53,12 @@ if chk_enabled "${GRAPHS1090_RANGE_INCLUDE_NONADSB}"; then
 fi
 
 # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L171
-sed -i '/<Plugin "interface">/a\ \ \ \ Interface "eth0"' /etc/collectd/collectd.conf
+if [[ -n "${GRAPHS1090_ETHERNET_DEVICE}" ]]; then
+    sed -i -e '/<Plugin "interface">/a\ Interface '"\"${GRAPHS1090_ETHERNET_DEVICE}\"" /etc/collectd/collectd.conf
+fi
+if [[ -n "${GRAPHS1090_WIFI_DEVICE}" ]]; then
+    sed -i -e '/<Plugin "interface">/a\ Interface '"\"${GRAPHS1090_WIFI_DEVICE}\"" /etc/collectd/collectd.conf
+fi
 # ref: https://github.com/wiedehopf/graphs1090/blob/151e63a810d6b087518992d4f366d9776c5c826b/install.sh#L218
 sed -i -e 's?URL .*?URL "file:///usr/share/graphs1090/data-symlink"?' /etc/collectd/collectd.conf
 ## Lines below merge the tar1090 collectd config with the graphs1090 collectd config
@@ -233,8 +238,8 @@ if [[ -n "${GRAPHS1090_DISK_DEVICE}" ]]; then
 fi
 
 # Sets (wired) ethernet device for graphs -- leave empty for default.
-if [[ -n "${GRAPHS1090_ETHER_DEVICE}" ]]; then
-    sed -i "s|ether=.*|ether=${GRAPHS1090_ETHER_DEVICE}|g" /etc/default/graphs1090
+if [[ -n "${GRAPHS1090_ETHERNET_DEVICE}" ]]; then
+    sed -i "s|ether=.*|ether=${GRAPHS1090_ETHERNET_DEVICE}|g" /etc/default/graphs1090
 else
     sed -i "s|ether=.*|ether=|g" /etc/default/graphs1090
 fi
