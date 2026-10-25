@@ -43,15 +43,9 @@ RUN \
     TEMP_PACKAGES+=(git) && \
     # tar1090
     KEPT_PACKAGES+=(nginx-light) && \
-    # graphs1090
-    KEPT_PACKAGES+=(collectd-core) && \
+    # graphs1090 (collectd itself is installed below)
     KEPT_PACKAGES+=(rrdtool) && \
     KEPT_PACKAGES+=(bash-builtins) && \
-    if [[ "$VERSION_CODENAME" == "trixie" ]]; then \
-        KEPT_PACKAGES+=(libpython3.13); \
-    else \
-        KEPT_PACKAGES+=(libpython3.11); \
-    fi && \
     KEPT_PACKAGES+=(libncurses6) && \
     # healthchecks
     KEPT_PACKAGES+=(jq) && \
@@ -61,6 +55,27 @@ RUN \
     ${KEPT_PACKAGES[@]} \
     ${TEMP_PACKAGES[@]} \
     && \
+    # graphs1090: collectd. Debian forky dropped collectd from testing (RC bug
+    # #1128534; it is still in unstable). Where the release has no installable
+    # collectd-core, take just that package from unstable, pinned so nothing else
+    # comes from there, then remove the unstable source again. Stable is
+    # unchanged, and this stops applying once the release ships collectd again.
+    collectd_pkg=collectd-core && \
+    collectd_candidate="$(apt-cache policy collectd-core | sed -n 's/^ *Candidate: //p')" && \
+    if [ -z "$collectd_candidate" ] || [ "$collectd_candidate" = "(none)" ]; then \
+    printf 'Types: deb\nURIs: http://deb.debian.org/debian\nSuites: sid\nComponents: main\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n' > /etc/apt/sources.list.d/collectd-sid.sources && \
+    printf 'Package: *\nPin: release n=sid\nPin-Priority: 1\n' > /etc/apt/preferences.d/collectd-sid && \
+    apt-get update && \
+    collectd_pkg=collectd-core/sid; \
+    fi && \
+    apt-get install -y --no-install-suggests --no-install-recommends "$collectd_pkg" && \
+    rm -f /etc/apt/sources.list.d/collectd-sid.sources /etc/apt/preferences.d/collectd-sid && \
+    apt-get update && \
+    # graphs1090 uses collectd's python plugin: install the libpython it links.
+    collectd_libpython="$(ldd /usr/lib/collectd/python.so | sed -nE 's/^[[:space:]]*(libpython3\.[0-9]+)\.so.*/\1/p' | head -n1)" && \
+    [ -n "$collectd_libpython" ] && \
+    apt-get install -y --no-install-suggests --no-install-recommends "$collectd_libpython" && \
+    ldd /usr/lib/collectd/python.so | grep -q libpython && ! ldd /usr/lib/collectd/python.so | grep -q "not found" && \
     # grab the bias t scripts
     curl -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-init https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-init && \
     curl -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-down  https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-down && \
