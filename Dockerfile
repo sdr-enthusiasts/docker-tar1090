@@ -77,8 +77,8 @@ RUN \
     apt-get install -y --no-install-suggests --no-install-recommends "$collectd_libpython" && \
     ldd /usr/lib/collectd/python.so | grep -q libpython && ! ldd /usr/lib/collectd/python.so | grep -q "not found" && \
     # grab the bias t scripts
-    curl -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-init https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-init && \
-    curl -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-down  https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-down && \
+    curl --fail --retry 3 --location -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-init https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-init && \
+    curl --fail --retry 3 --location -o /etc/s6-overlay/scripts/09-rtlsdr-biastee-down  https://raw.githubusercontent.com/sdr-enthusiasts/sdre-bias-t-common/main/09-rtlsdr-biastee-down && \
     chmod +x /etc/s6-overlay/scripts/09-rtlsdr-biastee-init && \
     chmod +x /etc/s6-overlay/scripts/09-rtlsdr-biastee-down && \
     # nginx: remove default config
@@ -96,7 +96,8 @@ RUN \
     # copy nginx config out of tar1090 install directory which might be updated while the container is running
     cp -v "${TAR1090_INSTALL_DIR}/nginx-tar1090-webroot.conf" /etc/nginx/ && \
     # aircraft-db, file in TAR1090_UPDATE_DIR will be preferred when starting readsb if tar1090-update enabled
-    curl -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
+    curl --fail --retry 3 --location -o "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" && \
+    gzip -t "${TAR1090_INSTALL_DIR}/aircraft.csv.gz" && \
     # clone graphs1090 repo
     git clone \
     -b master \
