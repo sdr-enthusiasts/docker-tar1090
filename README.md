@@ -240,7 +240,7 @@ This container accepts HTTP connections on TCP port `80` by default. You can cha
 | `HTTP_ACCESS_LOG`          | Optional. Set to `true` to display HTTP server access logs.                                                                                                                             | `false`              |
 | `HTTP_ERROR_LOG`           | Optional. Set to `false` to hide HTTP server error logs.                                                                                                                                | `true`               |
 | `READSB_MAX_RANGE`         | Optional. Maximum range (in nautical miles).                                                                                                                                            | Unset                |
-| `ENABLE_TIMELAPSE1090`     | Optional / Legacy. Set to any value to enable btimelapse1090. Once enabled, can be accessed via <http://dockerhost:port/timelapse/>.                                                    | Unset                |
+| `ENABLE_TIMELAPSE1090`     | Optional / Legacy. Set to any value to enable btimelapse1090. Once enabled, can be accessed via `http://dockerhost:port/timelapse/`.                                                    | Unset                |
 | `READSB_EXTRA_ARGS`        | Optional, allows to specify extra parameters for readsb                                                                                                                                 | Unset                |
 | `READSB_DEBUG`             | Optional, used to set debug mode. `n`: network, `P`: CPR, `S`: speed check                                                                                                              | Unset                |
 | `S6_SERVICES_GRACETIME`    | Optional, reduce for faster container stop (graceful stop should not depend on this)                                                                                                    | `3000`               |
@@ -392,7 +392,7 @@ settings be applied. The folder will be served as is with aircraft data availabl
 
 ### `timelapse1090` Configuration
 
-Legacy: we do NOT recommend you enable this feature as it will cause substantial additional writes to disk. On a Pi, this may reduce the lifespan of your SD card. Instead, use <http://dockerhost:port/?replay> which provides the same functionality, but without additional load to the disk.
+Legacy: we do NOT recommend you enable this feature as it will cause substantial additional writes to disk. On a Pi, this may reduce the lifespan of your SD card. Instead, use `http://dockerhost:port/?replay` which provides the same functionality, but without additional load to the disk.
 The feature is included for legacy purposes only, and is disabled by default.
 
 | Environment Variable     | Purpose                                                                         | Default |
@@ -489,7 +489,7 @@ Where the default value is "Unset", `readsb`'s default will be used.
 
 ### Legacy AutoGain for RTLSDR Devices
 
-If you have set `READSB_GAIN=autogain`, then the system will take signal strength measurements to determine the optimal gain. The AutoGain functionality is based on a (slightly) modified version of [Wiedehopf's AutoGain](https://github.com/wiedehopf/autogain). AutoGain will only work with `rtlsdr` style receivers.
+If you have set `READSB_GAIN=autogain`, then the system will take signal strength measurements to determine the optimal gain. The AutoGain functionality is based on a (slightly) modified version of [Wiedehopf's AutoGain](https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-gain-optimization-for-readsb-and-dump1090-fa). AutoGain will only work with `rtlsdr` style receivers.
 
 There are 2 distinct periods in which the container will attempt to figure out the gain:
 
@@ -663,7 +663,7 @@ Enabling this functionality will cause `graphs1090` to temporarily write all dat
 
 Note -- there is a chance that the data isn't written back in time (due to power failures, non-graceful container shutdowns, etc), in which case you may lose statistics data that has been generated since the last write-back.
 
-The feature assumes that you have mapped `/var/lib/collectd` to a volume (to ensure data is persistent across container recreations), and `/run` as a `tmpfs` RAM disk, as shown below and also as per the [`docker-compose.yml` example](docker-compose.yml):
+The feature assumes that you have mapped `/var/lib/collectd` to a volume (to ensure data is persistent across container recreations), and `/run` as a `tmpfs` RAM disk, as shown below and also as per the `docker-compose.yml` example:
 
 ```yaml
 volumes:
@@ -695,7 +695,7 @@ We also have a [Discord channel](https://discord.gg/sTf9uYF), feel free to [join
 | `READSB_GAIN`          | Set gain (in dB). Set to `auto` to use the quickly adjusting readsb's built-in auto-gain. Use `autogain` to use the slow adjusting legacy autogain script. | `--gain=<value>`               | `auto`         |
 | `READSB_DEVICE_TYPE`   | If using an SDR, set this to `rtlsdr`, `modesbeast`, `gnshulc` depending on the model of your SDR. If not using an SDR, leave un-set.                      | `--device-type=<type>`         | Unset          |
 | `READSB_RTLSDR_DEVICE` | Select device by serial number.                                                                                                                            | `--device=<serial>`            | Unset          |
-| `READSB_RTLSDR_PPM`    | Set oscillator frequency correction in PPM. See section [Estimating PPM](https://github.com/docker-readsb/README.MD#estimating-ppm) below                  | `--ppm=<correction>`           | Unset          |
+| `READSB_RTLSDR_PPM`    | Set oscillator frequency correction in PPM. See [Estimating PPM](https://github.com/sdr-enthusiasts/docker-readsb-protobuf#estimating-ppm)                 | `--ppm=<correction>`           | Unset          |
 | `READSB_BEAST_SERIAL`  | only when type `modesbeast` or `gnshulc` is used: Path to Beast serial device.                                                                             | `--beast-serial=<path>`        | `/dev/ttyUSB0` |
 
 Example
