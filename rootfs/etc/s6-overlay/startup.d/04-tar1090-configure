@@ -163,6 +163,10 @@ fi
 
 if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
   echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
+else
+  # adsb.im only accepts http: use it directly on http pages, and via the
+  # same-origin nginx proxy (see nginx sites-enabled/tar1090) on https pages
+  echo 'routeApiUrl = (location.protocol == "https:") ? "route-api/adsb.im/routeset" : "http://adsb.im/api/0/routeset";'
 fi
 
 if [[ -n "$TAR1090_CARTO_API_KEY" ]]; then

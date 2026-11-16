@@ -49,6 +49,10 @@ fi
 # set listen port, defaults to 80 via Dockerfile
 sed -i -e "s/TAR1090_NGINX_PORT/${TAR1090_NGINX_PORT}/" /etc/nginx/sites-enabled/tar1090
 
+# use the container's DNS server for the route API proxy
+ROUTE_API_RESOLVER="$(awk '/^nameserver/ { print ($2 ~ /:/) ? "[" $2 "]" : $2; exit }' /etc/resolv.conf)"
+sed -i -e "s/ROUTE_API_RESOLVER/${ROUTE_API_RESOLVER:-127.0.0.11}/" /etc/nginx/sites-enabled/tar1090
+
 # disable IPv6 listen when there is no IPv6 loopback address
 if ! chk_enabled "${ENABLE_IPV6}" && ! ip a | grep -q -e 'inet6 ::1'; then
     sed -i -e 's/listen \[::\].*/# IPv6 disabled/' /etc/nginx/sites-enabled/tar1090

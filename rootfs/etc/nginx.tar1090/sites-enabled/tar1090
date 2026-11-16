@@ -43,4 +43,12 @@ server {
   # placeholder API proxy
   #sed_placeholder_API_proxy
 
+  # route API proxy: adsb.im only accepts http, which browsers block on https pages.
+  # Resolve at request time so nginx still starts without DNS.
+  location = /route-api/adsb.im/routeset {
+    resolver ROUTE_API_RESOLVER ipv6=off;
+    set $route_api_host adsb.im;
+    proxy_pass http://$route_api_host/api/0/routeset;
+  }
+
 }
