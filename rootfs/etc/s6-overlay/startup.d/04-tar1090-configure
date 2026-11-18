@@ -161,12 +161,13 @@ if chk_enabled "$TAR1090_USEROUTEAPI"; then
   echo "useRouteAPI = true;"
 fi
 
-if [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
-  echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
-else
-  # adsb.im only accepts http: use it directly on http pages, and via the
-  # same-origin nginx proxy (see nginx sites-enabled/tar1090) on https pages
-  echo 'routeApiUrl = (location.protocol == "https:") ? "route-api/adsb.im/routeset" : "http://adsb.im/api/0/routeset";'
+if [[ -z "$TAR1090_ROUTEAPIURL" ]] || grep -qs -e 'adsb.im' <<< "$TAR1090_ROUTEAPIURL"; then
+    # tar1090 default is adsb.im so modify as well if no APIURL is given
+    # adsb.im only accepts http: use it directly on http pages, and via the
+    # same-origin nginx proxy (see nginx sites-enabled/tar1090) on https pages
+    echo 'routeApiUrl = (location.protocol == "https:") ? "route-api/adsb.im/routeset" : "http://adsb.im/api/0/routeset";'
+elif [[ -n "$TAR1090_ROUTEAPIURL" ]]; then
+    echo "routeApiUrl = ${TAR1090_ROUTEAPIURL};"
 fi
 
 if [[ -n "$TAR1090_CARTO_API_KEY" ]]; then
